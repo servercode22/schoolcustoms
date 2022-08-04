@@ -2112,7 +2112,7 @@ class Student extends Admin_Controller
         if ($search_type == "search_filter") {
             $resultlist = $this->student_model->searchdtByClassSection($class, $section);
         } elseif ($search_type == "search_full") {
-            $resultlist = $this->student_model->studentsearchdetail($search_text, $carray);
+            $resultlist = $this->student_model->searchFullText($search_text, $carray);
         }
        
         $students = array();

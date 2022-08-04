@@ -19,9 +19,6 @@ class User extends Student_Controller
         $this->sch_setting_detail = $this->setting_model->getSetting();
         $this->load->model("student_edit_field_model");
         $this->config->load('mailsms');
-        /* ======Amir Code======= */
-		$this->load->model('voucher_settings_model');
-		/* ========End Amir Edit======= */
     }
 
     public function unauthorized()
@@ -137,59 +134,6 @@ class User extends Student_Controller
         $this->load->view('user/dashboard', $data);
         $this->load->view('layout/student/footer', $data);
     }
-
-    /* ======Amir Code======= */
-	public function invoice($id='')
-	{
-		if ($this->input->server('REQUEST_METHOD') == "GET") {
-			$data=[];
-			$student = $this->student_model->getByStudentSession($id);
-			$data['student'] = $student;
-			$data['voucher']= $this->voucher_settings_model->show();
-			$student_due_fee = $this->studentfeemaster_model->getStudentFees($id);
-
-			$student_discount_fee = $this->feediscount_model->getStudentFeesDiscount($id);
-
-			$data['student_discount_fee'] = $student_discount_fee;
-			$data['student_due_fee'] = $student_due_fee;
-			$category = $this->category_model->get();
-			$data['categorylist'] = $category;
-			$class_section = $this->student_model->getClassSection($student["class_id"]);
-			$data["class_section"] = $class_section;
-			$data_to_transform_in_array=[];
-			array_push($data_to_transform_in_array,$data);
-			/* echo '<pre>';
-			print_r($data['student_discount_fee']);
-			exit; */
-
-			$this->load->view('invoice/invoice',['data'=>$data_to_transform_in_array]);
-		}else{
-			$ids=explode(",",$this->input->post('check'));
-			
-			$data=[];
-			foreach($ids as $id){
-				$student=[];
-				$student['student'] = $this->student_model->getByStudentSession($id);
-				$student['voucher']= $this->voucher_settings_model->show();
-
-				$student_due_fee = $this->studentfeemaster_model->getStudentFees($id);
-
-				$student_discount_fee = $this->feediscount_model->getStudentFeesDiscount($id);
-
-				$student['student_discount_fee'] = $student_discount_fee;
-				$student['student_due_fee'] = $student_due_fee;
-				$category = $this->category_model->get();
-				$student['categorylist'] = $category;
-				$class_section = $this->student_model->getClassSection($student['student']["class_id"]);
-				$student["class_section"] = $class_section;
-
-				array_push($data,$student);
-			}
-			
-			$this->load->view('invoice/invoice',['data'=>$data]);
-		}
-	}
-	/* ========Amir code end */
 
     public function changepass()
     {
