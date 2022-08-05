@@ -68,23 +68,93 @@ class Payroll extends Admin_Controller
         $this->load->view("admin/payroll/stafflist", $data);
         $this->load->view("layout/footer", $data);
     }
+	function deduction_type(){
+        
+		if (!$this->rbac->hasPrivilege('expense_head', 'can_view')) {
+            access_denied();
+        }
+        
+        $this->session->set_userdata('top_menu', 'HR');
+        $this->session->set_userdata('sub_menu', 'admin/deductions');
+        $data['title'] = 'Deduction List';
+        $category_result = $this->payroll_model->getAllDeduction();
+        
+        $data['categorylist'] = $category_result;
+        
+        $this->load->view('layout/header', $data);
+        $this->load->view('admin/deduction/deduction_list', $data);
+        $this->load->view('layout/footer', $data);
+	}
 
-    public function create($month, $year, $id)
-    {
+	function creatDeduction(){
+		if (!$this->rbac->hasPrivilege('expense_head', 'can_view')) {
+            access_denied();
+        }
+        $this->session->set_userdata('top_menu', 'HR');
+        $this->session->set_userdata('sub_menu', 'admin/deductions');
+        $data['title'] = 'Deduction List';
+        $category_result = $this->payroll_model->getAllDeduction();
+        $data['categorylist'] = $category_result;
+        $this->form_validation->set_rules('deduction', 'deduction', 'trim|required|xss_clean');
+        if ($this->form_validation->run() == FALSE) {
+            $this->load->view('layout/header', $data);
+			$this->load->view('admin/deduction/deduction_list', $data);
+			$this->load->view('layout/footer', $data);
+        } else {
+            $data = array(
+                'name' => $this->input->post('deduction'),
+            );
+            $this->payroll_model->insertDeduction($data);
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
+            redirect('admin/payroll/deduction_type');
+        }
+	}
+	function editDeuction($id){
+		if (!$this->rbac->hasPrivilege('expense_head', 'can_view')) {
+            access_denied();
+        }
+        $this->session->set_userdata('top_menu', 'HR');
+        $this->session->set_userdata('sub_menu', 'admin/deductions');
+        $data['title'] = 'Deduction List';
+        $category_result = $this->payroll_model->getAllDeduction();
+        $data['categorylist'] = $category_result;
+		$data['deduction'] = $this->payroll_model->getDeduction($id);
+		$data['id'] = $id;
+		
+        $this->form_validation->set_rules('deduction', 'deduction', 'trim|required|xss_clean');
+        if ($this->form_validation->run() == FALSE) {
+            $this->load->view('layout/header', $data);
+			$this->load->view('admin/deduction/edit_deduction', $data);
+			$this->load->view('layout/footer', $data);
+        } else {
+            
+            $this->payroll_model->updateDeduction($this->input->post('deduction'),$id);
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
+            redirect('admin/payroll/deduction_type');
+        }
+	}
+	function deletededuction($id){
+		$this->payroll_model->deleteDeduction($id);
+            $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
+            redirect('admin/payroll/deduction_type');
+	}
+    function create($month, $year, $id) {
+       
+        $this->load->model('loan_model');
 
-        $data["staff_id"]            = "";
-        $data["basic"]               = "";
-        $data["name"]                = "";
-        $data["month"]               = "";
-        $data["year"]                = "";
-        $data["present"]             = 0;
-        $data["absent"]              = 0;
-        $data["late"]                = 0;
-        $data["half_day"]            = 0;
-        $data["holiday"]             = 0;
-        $data["leave_count"]         = 0;
-        $data["alloted_leave"]       = 0;
-        $data['sch_setting']         = $this->sch_setting_detail;
+        $data["staff_id"] = "";
+        $data["basic"] = "";
+        $data["name"] = "";
+        $data["month"] = "";
+        $data["year"] = "";
+        $data["present"] = 0;
+        $data["absent"] = 0;
+        $data["late"] = 0;
+        $data["half_day"] = 0;
+        $data["holiday"] = 0;
+        $data["leave_count"] = 0;
+        $data["alloted_leave"] = 0;
+        $data['sch_setting'] = $this->sch_setting_detail;
         $data['staffid_auto_insert'] = $this->sch_setting_detail->staffid_auto_insert;
         $user_type                   = $this->staff_model->getStaffRole();
         $data['classlist']           = $user_type;
@@ -106,8 +176,9 @@ class Payroll extends Admin_Controller
 
         $data["attendanceType"] = $this->staffattendancemodel->getStaffAttendanceType();
 
-        $data["alloted_leave"] = $alloted_leave[0]["alloted_leave"];
-
+		$data["alloted_leave"] = $alloted_leave[0]["alloted_leave"];
+		$data['deductions'] = $this->payroll_model->getAllDeduction();
+        $data['getloandata'] = $this->loan_model->getUser($id);
         $this->load->view("layout/header", $data);
         $this->load->view("admin/payroll/create", $data);
         $this->load->view("layout/footer", $data);
@@ -171,6 +242,9 @@ class Payroll extends Admin_Controller
         $name            = $this->input->post("name");
         $year            = $this->input->post("year");
         $tax             = $this->input->post("tax");
+        $deductType      = $this->input->post('deductType');
+        $fixAmount       = $this->input->post('fixamount');
+        $percentAmount   = $this->input->post('percentamount');
         $leave_deduction = $this->input->post("leave_deduction");
         $this->form_validation->set_rules('net_salary', 'Net Salary', 'trim|required|xss_clean');
         if ($this->form_validation->run() == false) {
@@ -188,6 +262,9 @@ class Payroll extends Admin_Controller
                 'month'                  => $month,
                 'year'                   => $year,
                 'tax'                    => $tax,
+                'deducttype'             => $deductType,
+                'fix_amount'             => $fixAmount,
+                'percent_value'          => $percentAmount,
                 'leave_deduction'        => '0',
             );
 
@@ -274,6 +351,8 @@ class Payroll extends Admin_Controller
         $month          = $this->input->get_post("month");
         $year           = $this->input->get_post("year");
         $id             = $this->input->get_post("staffid");
+        // print_r($id);
+        // die();
         $searchEmployee = $this->payroll_model->searchPayment($id, $month, $year);
         $data['result'] = $searchEmployee;
         $data["month"]  = $month;
@@ -291,13 +370,14 @@ class Payroll extends Admin_Controller
 
     public function paymentSuccess()
     {
-
+        $this->load->model('loan_model');
         $payment_mode = $this->input->post("payment_mode");
         $date         = $this->input->post("payment_date");
         $payment_date = date('Y-m-d', strtotime($date));
         $remark       = $this->input->post("remarks");
         $status       = 'paid';
         $payslipid    = $this->input->post("paymentid");
+
         $this->form_validation->set_rules('payment_mode', $this->lang->line('payment') . " " . $this->lang->line('mode'), 'trim|required|xss_clean');
         if ($this->form_validation->run() == false) {
 
@@ -307,9 +387,35 @@ class Payroll extends Admin_Controller
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
         } else {
 
+
+            $payamount = $this->input->post('amount');
+            $empid = $this->input->post('empid');
+    
+            $getemploandata = $this->loan_model->getUser($empid);
+            $deductionloanType = $getemploandata->deduct_type;
+            $emploanamount = $getemploandata->loan_amount;
+            if($deductionloanType == "fix"){
+                $fixLoanamount = $getemploandata->deduct_amount;
+                $updatedLoan = $emploanamount -  $fixLoanamount;
+            }         
+            elseif($deductionloanType == "percentage"){
+                $percentLoanamount = $getemploandata->loan_percentage;
+                $percentIntoNumber = $payamount/100 * $percentLoanamount;
+                $updatedLoan = $emploanamount - $percentIntoNumber;
+            }
+            else{
+                $updatedLoan = $emploanamount;
+            }
+            $updateLoanArray = array(
+                'loan_amount'  => $updatedLoan
+            );
+
+            $this->db->where('emp_id', $empid);
+            $this->db->update('manage_loan',$updateLoanArray);
+
             $data = array('payment_mode' => $payment_mode, 'payment_date' => $payment_date, 'remark' => $remark, 'status' => $status);
             $this->payroll_model->paymentSuccess($data, $payslipid);
-            $array = array('status' => 'success', 'error' => '', 'message' => $this->lang->line('success_message'));
+            $array = array('status' => 'success', 'error' => '', 'message' => $this->lang->line('success_message').'And Loan Updated Success');
         }
         echo json_encode($array);
     }
@@ -394,6 +500,46 @@ class Payroll extends Admin_Controller
             $this->load->view("admin/payroll/payrollreport", $data);
             $this->load->view("layout/footer", $data);
         }
+	}
+	function deductionreport() {
+        if (!$this->rbac->hasPrivilege('payroll_report', 'can_view')) {
+            access_denied();
+        }
+        $this->session->set_userdata('top_menu', 'Reports');
+        $this->session->set_userdata('sub_menu', 'Reports/human_resource');
+        $this->session->set_userdata('subsub_menu', 'Reports/human_resource/deduction_report');
+        $month = $this->input->post("month");
+        $year = $this->input->post("year");
+		$role = $this->input->post("role");
+		$deduction = $this->input->post('deduction');
+        $data["month"] = $month;
+        $data["year"] = $year;
+		$data["role_select"] = $role;
+		$data['deduction'] = $deduction;
+        $data['monthlist'] = $this->customlib->getMonthDropdown();
+        $data['yearlist'] = $this->payroll_model->payrollYearCount();
+        $staffRole = $this->staff_model->getStaffRole();
+        $data["role"] = $staffRole;
+		$data["payment_mode"] = $this->payment_mode;
+		$data['deductions'] = $this->payroll_model->getAllDeduction();
+
+        $this->form_validation->set_rules('year', $this->lang->line('year'), 'trim|required|xss_clean');
+        if ($this->form_validation->run() == FALSE) {
+
+            $this->load->view("layout/header", $data);
+            $this->load->view("reports/deduction_type", $data);
+            $this->load->view("layout/footer", $data);
+        } else {
+
+            $result = $this->payroll_model->getDeductionReport($month, $year, $role,$deduction);
+            $data["result"] = $result;
+
+
+
+            $this->load->view("layout/header", $data);
+            $this->load->view("reports/deduction_type", $data);
+            $this->load->view("layout/footer", $data);
+        }
     }
 
     public function deletepayroll($payslipid, $month, $year, $role = '')
@@ -424,3 +570,5 @@ class Payroll extends Admin_Controller
     }
 
 }
+
+?>

@@ -177,7 +177,32 @@ class Payroll_model extends MY_Model
                 //return $return_value;
             }
         }
-    }
+	}
+	
+	public function get_deduction_report($role = null,$month = null,$year = null)
+	{
+		if ($role == "select" && $month != "") {
+            $data = array('staff_payslip.month' => $month, 'staff_payslip.year' => $year, 'staff_payslip.status' => 'paid');
+        } else if ($role == "select" && $month == "") {
+
+            $data = array('staff_payslip.year' => $year, 'staff_payslip.status' => 'paid');
+        } else if ($role != "select" && $month == "") {
+
+            $data = array('staff_payslip.year' => $year, 'roles.name' => $role, 'staff_payslip.status' => 'paid');
+        } else {
+
+            $data = array('staff_payslip.month' => $month, 'staff_payslip.year' => $year, 'roles.name' => $role, 'staff_payslip.status' => 'paid');
+        }
+		$data['staff.is_active'] = 1;
+		$data['payslip_allowance.cal_type']='negative';
+		
+
+		$query = $this->db->select('staff.id,staff.employee_id,staff.name,roles.name as user_type,staff.surname,staff_designation.designation,department.department_name as department,payslip_allowance.*,staff_payslip.*')->join("staff_payslip", "staff_payslip.staff_id = staff.id", "inner")->join("staff_designation", "staff.designation = staff_designation.id", "left")->join("department", "staff.department = department.id", "left")->join("staff_roles", "staff_roles.staff_id = staff.id", "left")->join("roles", "staff_roles.role_id = roles.id", "left")->
+		join('payslip_allowance','staff_payslip.id = payslip_allowance.payslip_id','left')->where($data)->where('payslip_allowance.amount >','0')->get("staff");
+		
+        return $query->result_array();
+		
+	}
 
     public function searchPaylist($name, $month, $year)
     {
@@ -298,14 +323,76 @@ class Payroll_model extends MY_Model
         $query = $this->db->select('staff.id,staff.employee_id,staff.name,roles.name as user_type,staff.surname,staff_designation.designation,department.department_name as department,staff_payslip.*')->join("staff_payslip", "staff_payslip.staff_id = staff.id", "inner")->join("staff_designation", "staff.designation = staff_designation.id", "left")->join("department", "staff.department = department.id", "left")->join("staff_roles", "staff_roles.staff_id = staff.id", "left")->join("roles", "staff_roles.role_id = roles.id", "left")->where($data)->get("staff");
 
         return $query->result_array();
-    }
+	}
+	
+	function getDeductionReport($month, $year, $role,$deduction) {
+
+        if ($role == "select" && $month != "") {
+            $data = array('staff_payslip.month' => $month, 'staff_payslip.year' => $year, 'staff_payslip.status' => 'paid');
+        } else if ($role == "select" && $month == "") {
+
+            $data = array('staff_payslip.year' => $year, 'staff_payslip.status' => 'paid');
+        } else if ($role != "select" && $month == "") {
+
+            $data = array('staff_payslip.year' => $year, 'roles.name' => $role, 'staff_payslip.status' => 'paid');
+        } else {
+
+            $data = array('staff_payslip.month' => $month, 'staff_payslip.year' => $year, 'roles.name' => $role, 'staff_payslip.status' => 'paid');
+        }
+		$data['staff.is_active'] = 1;
+		if($deduction != ''){
+			$data['payslip_allowance.allowance_type'] = $deduction;
+		}
+		
+
+		$query = $this->db->select('staff.id,staff.employee_id,staff.name,roles.name as user_type,staff.surname,staff_designation.designation,department.department_name as department,staff_payslip.*,payslip_allowance.amount,payslip_allowance.allowance_type')->join("staff_payslip", "staff_payslip.staff_id = staff.id", "inner")->join("staff_designation", "staff.designation = staff_designation.id", "left")->join("department", "staff.department = department.id", "left")->join("staff_roles", "staff_roles.staff_id = staff.id", "left")->join('payslip_allowance','payslip_allowance.payslip_id = staff_payslip.id')->join("roles", "staff_roles.role_id = roles.id", "left")->where($data)->where('payslip_allowance.amount !=','0')->where('payslip_allowance.cal_type','negative')->get("staff");
+		/* echo '<pre>';
+		print_r($query->result_array());
+		exit; */
+
+        return $query->result_array();
+	}
+	public function getAllDeduction()
+	{
+		$query = $this->db->get('deduction');
+		return $query->result_array();
+	}
+	public function insertDeduction($data){
+		
+			$this->db->insert('deduction', $data);
+            return $id = $this->db->insert_id();
+            $message = INSERT_RECORD_CONSTANT . " On payslip allowance id " . $id;
+            $action = "Insert";
+            $record_id = $id;
+            $this->log($message, $record_id, $action);
+            //echo $this->db->last_query();die;
+            //======================Code End==============================
+
+            $this->db->trans_complete(); # Completing transaction
+	}
+	public function updateDeduction($name,$id){
+		$data = ['name'=> $name];
+		$this->db->where('id',$id)->update('deduction',$data);
+
+	}
+	public function deleteDeduction($id){
+		$query = $this->db->where('id',$id)->delete('deduction');
+	}
+
+	public function getDeduction($id)
+	{
+		$query = $this->db->where('id',$id)->get('deduction');
+		return $query->row_array();;
+		
+	}
 
     public function deletePayslip($payslipid)
     {
 
         $this->db->where("id", $payslipid)->delete("staff_payslip");
         $this->db->where("payslip_id", $payslipid)->delete("payslip_allowance");
-    }
+	}
+	
 
     public function revertPayslipStatus($payslipid)
     {
@@ -333,3 +420,5 @@ class Payroll_model extends MY_Model
     }
 
 }
+
+?>
