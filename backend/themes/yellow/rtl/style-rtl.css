@@ -1,7 +1,7 @@
 body {
     padding: 0;
     margin:0;
-   font-family:"Open Sans",Helvetica,Arial,sans-serif;
+   font-family: 'Roboto', sans-serif;
   background: #fff;
   text-align:right;
   direction:rtl
@@ -55,28 +55,10 @@ margin-right: -50vw;margin-left: auto;left: 0;}
 
 /*safari Browser*/
 @media screen and (-webkit-min-device-pixel-ratio:0) {
-  /*::i-block-chrome, .chosebtn{margin-top: -4px;} */ 
   ::i-block-chrome, .fullwidth {width: 102em;margin-left: auto;margin-right: -51em;left: 0;right: 50%;}
   ::i-block-chrome, .contact-item img{line-height: normal;}
 }
-/*end footer*/
-@media(max-width: 767px){
-
-
-@media (min-width:900px) {
-
+.catpcha{cursor:pointer; padding-right: 10px; padding-left: 0;}
+@media(max-width:767px){
+   #captcha_image img{margin-bottom:5px;} 
 }
-@media(min-width: 768px) and (max-width:992px){
-
-}
-
-@media(min-width:320px) and (max-width: 480px){
-
-}
-@media(min-width:481px) and (max-width: 767px){
- 
-}
-@media(min-width:992px) and (max-width: 1199px){
-
-}
-

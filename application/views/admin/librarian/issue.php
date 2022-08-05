@@ -77,8 +77,8 @@
                             <input id="member_id" name="member_id"  type="hidden" class="form-control date"  value="<?php echo $memberList->lib_member_id; ?>" />
 
                             <div class="form-group">
-                                <label for="exampleInputEmail1"><?php echo $this->lang->line('books'); ?></label>
-                                <select  autofocus="" id="book_id" name="book_id" class="form-control js-example-basic-single" >
+                                <label for="exampleInputEmail1"><?php echo $this->lang->line('books'); ?>  <small class="req"> *</small></label>
+                                <select autofocus="" id="book_id" name="book_id" class="form-control js-example-basic-single">
                                     <option value=""><?php echo $this->lang->line('select'); ?></option>
                                     <?php
                                     foreach ($bookList as $book) {

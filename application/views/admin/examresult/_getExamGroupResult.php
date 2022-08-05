@@ -313,10 +313,10 @@ if (!empty($exam_groups_attempt)) {
                 }
                 ?>
                 <?php
-            }
+            } 
         }
         if (!empty($exam_group_value->exam_group_connection)) {
-            echo "Consolidated results";
+            echo $this->lang->line("consolidated_results");
             if (!empty($exam_group_value->exam_group_connection['exam_connections'])) {
 //                echo "<pre>";
 //                print_r($exam_group_value->exam_group_connection);
@@ -329,7 +329,7 @@ if (!empty($exam_groups_attempt)) {
                     ?>
                     <table class="table table-stripped table-hover">
                         <thead>
-                        <th>Quality Points --r</th>
+                        <th><?php echo $this->lang->line('quality_points'); ?></th>
                         <?php
                         if (!empty($exam_group_value->exam_group_connection['exam_connections'])) {
 
@@ -397,7 +397,7 @@ if (!empty($exam_groups_attempt)) {
                             }
                         }
                         ?>
-                        <th><?php echo $this->lang->line('combined'); ?>Combined --r</th>
+                        <th><?php echo $this->lang->line('combined'); ?></th>
                     </thead>
                     <tbody>
                         <tr>
@@ -456,7 +456,7 @@ if (!empty($exam_groups_attempt)) {
                             }
                         }
                         ?>
-                        <th>Combined --r</th>
+                        <th><?php echo $this->lang->line('combined'); ?></th>
                     </thead>
                     <tbody>
 

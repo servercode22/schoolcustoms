@@ -221,7 +221,7 @@
                                                     }
                                                     ?>
                                                 </ul>
-                                            </td> 
+                                            </td>  
                                             <td class="mailbox-name"><?php
                                                 if ($data['is_public'] == "Yes") {
                                                     echo "ALL Classes";

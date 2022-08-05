@@ -40,17 +40,16 @@
 
                     <table class="table table-striped">
                         <thead>
-
                             <tr>
                                 <th><?php echo $this->lang->line('admission_no'); ?></th>
                                 <th><?php echo $this->lang->line('roll_no'); ?></th>
-                                <th><?php echo $this->lang->line('student_name'); ?></th> <th><?php echo $this->lang->line('father_name'); ?></th>
+                                <th><?php echo $this->lang->line('student_name'); ?></th> 
+                                <th><?php echo $this->lang->line('father_name'); ?></th>
                                 <th><?php echo $this->lang->line('category'); ?></th>
                                 <th><?php echo $this->lang->line('gender'); ?></th>
                                 <th><?php echo $this->lang->line('attendence'); ?></th>
                                 <th><?php echo $this->lang->line('marks') ?></th>
                                 <th><?php echo $this->lang->line('note') ?></th>
-
                             </tr>
                         </thead>
                         <tbody>
@@ -64,13 +63,17 @@
                             } else {
 
                                 foreach ($resultlist as $student) {
+
                                     ?>
                                     <tr class="std_adm_<?php echo $student['admission_no']; ?>">
                                 <input type="hidden" name="prev_id[<?php echo $student['exam_group_class_batch_exam_students_id'] ?>]" value="<?php echo $student['exam_group_exam_result_id'] ?>">
                                 <input type="hidden" name="exam_group_student_id[]" value="<?php echo $student['exam_group_class_batch_exam_students_id'] ?>">
                                 <td><?php echo $student['admission_no']; ?></td>
-                                <td><?php echo ($student['exam_roll_no'] != 0) ? $student['exam_roll_no'] : '-'; ?></td>
-                                <td><?php echo $student['firstname'] . " " . $student['lastname']; ?></td>
+                                <td><?php 
+  $roll_no=($student['use_exam_roll_no'])?$student['exam_roll_no']:$student['roll_no'];
+
+                                echo ($roll_no != 0) ? $roll_no : '-'; ?></td>
+                                <td><?php echo $this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname);?></td>
                                 <td><?php echo $student['father_name']; ?></td>
                                 <td><?php echo $student['category']; ?></td>
                                 <td><?php echo $student['gender']; ?></td>

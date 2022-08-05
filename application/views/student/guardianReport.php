@@ -155,13 +155,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <th><?php echo $this->lang->line('student_name'); ?></th>
                                         <?php if ($sch_setting->mobile_no) { ?>
                                             <th><?php echo $this->lang->line('mobile_no'); ?></th>
-                                        <?php } ?>
+                                        <?php } if ($sch_setting->guardian_name) { ?>
                                         <th><?php echo $this->lang->line('guardian_name'); ?></th>
-                                        <?php if ($sch_setting->guardian_relation) { ?>
+                                        <?php } if ($sch_setting->guardian_relation) { ?>
                                             <th><?php echo $this->lang->line('guardian_relation'); ?></th>
-                                        <?php } ?>
+                                        <?php } if ($sch_setting->guardian_phone) { ?>
                                         <th><?php echo $this->lang->line('guardian_phone'); ?></th>
-                                        <?php if ($sch_setting->father_name) { ?>
+                                        <?php } if ($sch_setting->father_name) { ?>
                                             <th><?php echo $this->lang->line('father_name'); ?></th>
                                         <?php } if ($sch_setting->father_phone) { ?>
                                             <th><?php echo $this->lang->line('father_phone'); ?></th>
@@ -185,17 +185,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <td><?php echo $student['admission_no']; ?></td>
 
                                                 <td>
-                                                    <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?></a>
+                                                    <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname); ?></a>
                                                 </td>
                                                 <?php if ($sch_setting->mobile_no) { ?>
                                                     <td><?php echo $student['mobileno']; ?></td>
-                                                <?php } ?>
+                                                <?php }if ($sch_setting->guardian_name) { ?>
                                                 <td><?php echo $student['guardian_name']; ?></td>
-                                                <?php if ($sch_setting->guardian_relation) { ?>
+                                                <?php } if ($sch_setting->guardian_relation) { ?>
                                                     <td><?php echo $student['guardian_relation']; ?></td>
-                                                <?php } ?>
+                                                 <?php }if ($sch_setting->guardian_phone) { ?>
                                                 <td><?php echo $student['guardian_phone']; ?></td>
-                                                <?php if ($sch_setting->father_name) { ?>
+                                                <?php } if ($sch_setting->father_name) { ?>
                                                     <td><?php echo $student['father_name']; ?></td>
                                                 <?php } if ($sch_setting->father_phone) { ?>
                                                     <td><?php echo $student['father_phone']; ?></td>

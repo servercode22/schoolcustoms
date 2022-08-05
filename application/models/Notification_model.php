@@ -55,17 +55,13 @@ class Notification_model extends MY_Model {
     public function getUnreadStudentNotification() {
 
 
-        $sql = "select send_notification.* from send_notification INNER JOIN notification_roles on notification_roles.send_notification_id = send_notification.id left JOIN read_notification on  read_notification.notification_id = send_notification.id WHERE  send_notification.visible_student='yes' and read_notification.id IS NULL   order by send_notification.id desc";
-
-
+        $sql = "select send_notification.* from send_notification  left JOIN read_notification on  read_notification.student_id=".$this->customlib->getStudentSessionUserID()." and read_notification.notification_id = send_notification.id WHERE  send_notification.visible_student='yes' and read_notification.id IS NULL  group by send_notification.id order by send_notification.id desc";
         $query = $this->db->query($sql);
         return $query->result();
     }
 
     public function getUnreadParentNotification() {
-        $sql = "select send_notification.* from send_notification INNER JOIN notification_roles on notification_roles.send_notification_id = send_notification.id left JOIN read_notification on  read_notification.notification_id = send_notification.id WHERE  send_notification.visible_parent='yes' and read_notification.id IS NULL   order by send_notification.id desc";
-
-
+        $sql = "select send_notification.* from send_notification  left JOIN read_notification on  read_notification.notification_id = send_notification.id WHERE  send_notification.visible_parent='yes' and read_notification.id IS NULL   order by send_notification.id desc";
         $query = $this->db->query($sql);
         return $query->result();
     }
@@ -165,7 +161,7 @@ LEFT JOIN read_notification ON send_notification.id = read_notification.notifica
             $action = "Insert";
             $record_id = $id;
             $this->log($message, $record_id, $action);
-            //echo $this->db->last_query();die;
+           
             //======================Code End==============================
 
             $this->db->trans_complete(); # Completing transaction
@@ -215,7 +211,6 @@ LEFT JOIN read_notification ON send_notification.id = read_notification.notifica
             $action = "Insert";
             $record_id = $insert_id;
             $this->log($message, $record_id, $action);
-            //echo $this->db->last_query();die;
             //======================Code End==============================
 
             $this->db->trans_complete(); # Completing transaction

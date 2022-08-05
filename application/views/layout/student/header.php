@@ -11,6 +11,7 @@
        
 
         <?php
+        $sch_setting=$this->setting_model->getSetting();
         $this->load->view('layout/theme');
         ?>
         <?php
@@ -19,7 +20,7 @@
             <!-- Bootstrap 3.3.5 RTL -->
             <link rel="stylesheet" href="<?php echo base_url(); ?>backend/rtl/bootstrap-rtl/css/bootstrap-rtl.min.css"/>  
             <!-- Theme RTL style -->
-            <link rel="stylesheet" href="<?php echo base_url(); ?>backend/rtl/dist/css/AdminLTE-rtl.min.css" />
+            <link rel="stylesheet" href="<?php echo base_url(); ?>backend/rtl/dist/css/admin-rtl.min.css" />
             <link rel="stylesheet" href="<?php echo base_url(); ?>backend/rtl/dist/css/ss-rtlmain.css">
             <link rel="stylesheet" href="<?php echo base_url(); ?>backend/rtl/dist/css/skins/_all-skins-rtl.min.css" />
 
@@ -68,12 +69,13 @@
 
         <script type="text/javascript">
             var baseurl = "<?php echo base_url(); ?>";
+            var start_week="<?php echo $this->customlib->getStartWeek();?>";
         </script>
 
     </head>
     <body class="hold-transition skin-blue fixed sidebar-mini">
          <?php
-if ($this->config->item('SSLK') == "") {
+if ($this->config->item('SSLK') !== "") {
     ?>
  <div class="topaleart">
     <div class="slidealert">
@@ -100,14 +102,12 @@ if ($this->config->item('SSLK') == "") {
         }
 
     function checksidebar() {
-       // alert(sessionStorage.getItem('sidebar-toggle-collapsed1'));
         if (Boolean(sessionStorage.getItem('sidebar-toggle-collapsed1'))) {
         var body = document.getElementsByTagName('body')[0];
        
         body.className = body.className + ' sidebar-collapse';
         }
     }
-
     checksidebar();
 
 </script> 
@@ -170,7 +170,7 @@ if($this->studentmodule_lib->hasActive('multi_class')){
                                         </a>
                                         <ul class="dropdown-menu menuboxshadow">
 
-                                            <li class="todoview plr10 ssnoti"><?php echo "Today you have " . $count . " pending task." ?><a href="<?php echo base_url() ?>user/calendar/" class="pull-right pt0"> <?php echo $this->lang->line('view')." ".$this->lang->line('all'); ?></a></li>
+                                            <li class="todoview plr10 ssnoti"><?php echo $this->lang->line('today_you_have')." " . $count . " ".$this->lang->line('pending_task') ?><a href="<?php echo base_url() ?>user/calendar/" class="pull-right pt0"> <?php echo $this->lang->line('view')." ".$this->lang->line('all'); ?></a></li>
                                             <li>
                                                 <ul class="todolist">
                                                     <?php
@@ -189,7 +189,7 @@ if($this->studentmodule_lib->hasActive('multi_class')){
                                    
                                 <?php }  if ($this->studentmodule_lib->hasActive('chat')){
                                 ?>
-                                 <li class="cal15"><a data-placement="bottom" data-toggle="tooltip" title="" href="<?php echo base_url()?>user/chat" data-original-title="Chat" class="todoicon"><i class="fa fa-whatsapp"></i></a></li> 
+                                 <li class="cal15"><a data-placement="bottom" data-toggle="tooltip" title="" href="<?php echo base_url()?>user/chat" data-original-title="<?php echo $this->lang->line('chat');?>" class="todoicon"><i class="fa fa-whatsapp"></i></a></li> 
                                 <?php }
 
 
@@ -212,14 +212,22 @@ if($this->studentmodule_lib->hasActive('multi_class')){
                                     ?>
                                     <li class="dropdown user-menu">
                                         <a class="dropdown-toggle" style="padding: 15px 13px;" data-toggle="dropdown" href="#" aria-expanded="false">
-                                            <img src="<?php echo base_url() . $file; ?>" class="topuser-image" alt="User Image">
+                                            <?php if($sch_setting->student_photo){
+                                                ?>
+                                                <img src="<?php echo base_url() . $file; ?>" class="topuser-image" alt="User Image">
+                                                <?php
+                                            }?>
+                                            
                                         </a>
                                         <ul class="dropdown-menu dropdown-user menuboxshadow">
 
                                             <li> 
                                                 <div class="sstopuser">
-                                                    <div class="ssuserleft">   
+                                                    <div class="ssuserleft">  
+                                                    <?php if($sch_setting->student_photo){
+                                                ?> 
                                                         <img src="<?php echo base_url() . $file; ?>" alt="User Image">
+                                                    <?php } ?>
                                                     </div>
 
                                                     <div class="sstopuser-test">
@@ -270,18 +278,31 @@ if($this->studentmodule_lib->hasActive('multi_class')){
                             <?php
                         }
                         ?>
-                            <?php
-                         if($this->module_lib->hasModule('zoom_live_classes')){
-                       if ($this->studentmodule_lib->hasActive('live_classes')) {
+						
+						
+						<?php
+                       if($this->module_lib->hasModule('online_course') && $this->studentmodule_lib->hasActive('online_course') && $this->auth->addonchk('ssoclc',false)){                    
+                       ?>								
+							<li class="<?php echo set_topmenu('user/studentcourse'); ?>"><a href="<?php echo base_url(); ?>user/studentcourse"><i class="fa fa-file-video-o ftlayer"></i> <span><?php echo $this->lang->line('online_course'); ?></span></a></li>
+							
+						<?php } ?>  
+						
+						
+                               <?php
+                       if($this->module_lib->hasModule('zoom_live_classes') && $this->studentmodule_lib->hasActive('live_classes') && $this->auth->addonchk('sszlc',false)){                     
                             ?>
- <li class="<?php echo set_topmenu('Conference'); ?>"><a href="<?php echo base_url('user/conference'); ?>"><i class="fa fa-video-camera ftlayer"></i> <?php echo $this->lang->line('live_class'); ?></a></li>
-<?php } } ?>
+ <li class="<?php echo set_topmenu('Conference'); ?>"><a href="<?php echo base_url('user/conference'); ?>"><i class="fa fa-video-camera ftlayer"></i> <?php echo $this->lang->line('zoom_live_classes'); ?></a></li>
+<?php 
+}
+
+  ?>
+
  <?php
-                         if($this->module_lib->hasModule('gmeet_live_classes')){
-                       if ($this->studentmodule_lib->hasActive('gmeet_live_classes')) {
+                         if($this->module_lib->hasModule('gmeet_live_classes') && $this->studentmodule_lib->hasActive('gmeet_live_classes') && $this->auth->addonchk('ssglc',false)){
+                     
                             ?>
   <li class="<?php echo set_topmenu('Gmeet'); ?>"><a href="<?php echo base_url('user/gmeet'); ?>"><i class="fa fa-video-camera ftlayer"></i> <?php echo $this->lang->line('gmeet')." ".$this->lang->line('live_class'); ?></a></li>
-<?php } } ?>
+<?php } ?>
                         <?php
 
                         if ($this->studentmodule_lib->hasActive('class_timetable')) {

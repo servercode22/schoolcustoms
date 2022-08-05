@@ -41,7 +41,7 @@
                                                     <?php echo $notification['title']; ?>
                                                 </a>
                                             </h4>
-                                            <div class="pull-right">
+                                            <div class="pull-right pt5">
                                                 <?php if (($this->rbac->hasPrivilege('notice_board', 'can_edit')) || ($notification["created_id"] == $user_id)) { ?>
                                                     <a data-placement="left" href="<?php echo base_url() ?>admin/notification/edit/<?php echo $notification['id'] ?>" class="" data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>" data-original-title="<?php echo $this->lang->line('add'); ?>">
                                                         <i class="fa fa-pencil"></i>
@@ -61,7 +61,7 @@
                                                 <div class="row">
                                                     <div class="col-md-9">
                                                         <?php echo $notification['message']; ?>
-                                                    </div><!-- /.col -->
+                                                    </div><!-- /.col --> 
                                                     <div class="col-md-3">
                                                         <div class="box box-solid">
                                                             <div class="box-body no-padding">
@@ -119,16 +119,7 @@
 </div>
 <script type="text/javascript">
     $(document).ready(function () {
-        var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
-        $('.date').datepicker({
-            format: date_format,
-            autoclose: true
-        });
-
-        $("#btnreset").click(function () {
-            $("#form1")[0].reset();
-        });
-
+  
         $('.detail_popover').popover({
             placement: 'right',
             title: '',

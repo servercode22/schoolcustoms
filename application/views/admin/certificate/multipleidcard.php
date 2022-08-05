@@ -6,11 +6,7 @@
         <meta http-equiv="X-UA-Compatible" content="" />
         <title>Smart School : School Management System by QDOCS</title>
         <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
-        <meta name="theme-color" content="#424242" />
-        <!-- <link rel="stylesheet" href="css/font-awesome.min.css" />
-    <link href="css/bootstrap.min.css" rel="stylesheet" /> -->
-        <!-- <link href="css/ss-main.css" rel="stylesheet"/> -->
-        <!-- <link rel="stylesheet" href="<?php echo base_url(); ?>backend/dist/css/idcard.css"> -->
+        <meta name="theme-color" content="#424242" />       
     </head>
     <body>
         <table cellpadding="0" cellspacing="0" width="100%">
@@ -19,11 +15,9 @@
                 $i = 0;
                 ?>
                 <tr> 
-                    <?php
-                    // echo "<pre>"; print_r($resultlist); echo "</pre>";
+                    <?php                    
                     foreach ($resultlist as $list) {
-                        $i++;
-                        //echo "<pre>"; print_r($list); echo "</pre>"; 
+                        $i++;                         
                         ?>
                         <td valign="top" width="32%" style="padding: 3px;">
                             <table cellpadding="0" cellspacing="0" width="100%" class="tc-container" style="background: #efefef;">

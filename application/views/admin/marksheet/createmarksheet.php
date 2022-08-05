@@ -1,12 +1,3 @@
-<style type="text/css">
-    @media print
-    {
-        .no-print, .no-print *
-        {
-            display: none !important;
-        }
-    }
-</style>
 <?php
 $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 ?>     
@@ -30,16 +21,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         </div><!-- /.box-header -->
 
                         <form id="form1" enctype="multipart/form-data" action="<?php echo site_url('admin/marksheet') ?>"  id="certificateform" name="certificateform" method="post" accept-charset="utf-8">
-                            <div class="box-body">
-                                <?php //echo validation_errors(); ?>
+                            <div class="box-body">                               
                                 <?php if ($this->session->flashdata('msg')) { ?>
                                     <?php echo $this->session->flashdata('msg') ?>
-                                <?php } ?>
-                                <?php
-                                // if (isset($error_message)) {
-                                // echo "<div class='alert alert-danger'>" . $error_message . "</div>";
-                                // }
-                                ?>                           
+                                <?php } ?>                                                         
                                 <div class="form-group">
                                     <label><?php echo $this->lang->line('template'); ?></label><small class="req"> *</small>
                                     <input autofocus="" id="template" value="<?php echo set_value('template'); ?>" name="template" placeholder="" type="text" class="form-control" />
@@ -195,6 +180,21 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     </div>
                                 </div>
 
+                                <div class="form-group switch-inline">
+                                    <label><?php echo $this->lang->line('date_of_birth') ?></label>
+                                    <div class="material-switch switchcheck">
+                                        <input id="is_dob" name="is_dob" type="checkbox" class="chk" value="1">
+                                        <label for="is_dob" class="label-success"></label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group switch-inline">
+                                    <label><?php echo $this->lang->line('remark'); ?></label>
+                                    <div class="material-switch switchcheck">
+                                        <input id="is_teacher_remark" name="is_teacher_remark" type="checkbox" class="chk" value="1">
+                                        <label for="is_teacher_remark" class="label-success"></label>
+                                    </div>
+                                </div>
 
                             </div><!-- /.box-body -->
                             <div class="box-footer">
@@ -251,7 +251,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <?php } ?>
 
                                                 </td>
-                                                <td class="mailbox-date text-right no-print">
+                                                <td class="mailbox-date text-right no-print white-space-nowrap">
                                                     <a  id="<?php echo $certificate->id ?>" class="btn btn-default btn-xs view_data" title="<?php echo $this->lang->line('view'); ?>">
                                                         <i class="fa fa-reorder"></i>
                                                     </a>
@@ -394,9 +394,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
     {
         if ($('#enable_student_img').is(":checked"))
             $("#enableImageDiv").show();
-        // alert("Hii")
         else
             $("#enableImageDiv").hide();
-        //alert("Bye")
     }
 </script>

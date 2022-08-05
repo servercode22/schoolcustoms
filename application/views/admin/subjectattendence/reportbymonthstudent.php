@@ -233,14 +233,6 @@
             <script type="text/javascript">
 
                 $(document).ready(function () {
-
-                    var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy']) ?>';
-                    $('#date').datepicker({
-                        format: date_format,
-                        autoclose: true
-                    });
-
-
                     var section_id_post = "<?php echo set_value('section_id'); ?>";
                     var class_id_post = "<?php echo set_value('class_id'); ?>";
                     var date_post = "<?php echo set_value('date'); ?>";
@@ -295,7 +287,7 @@
                                     if (section_id == obj.section_id) {
                                         sel = "selected=selected";
                                     }
-                                    div_data += "<option value=" + obj.id + ">" + obj.firstname + " " + obj.lastname + "</option>";
+                                    div_data += "<option value=" + obj.id + ">" + obj.full_name  + "</option>";
                                 });
                                 $('#student_id').append(div_data);
 <?php

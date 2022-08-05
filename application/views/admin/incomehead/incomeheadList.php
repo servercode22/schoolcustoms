@@ -70,15 +70,12 @@
                                 <thead>
                                     <tr>
                                         <th><?php echo $this->lang->line('income_head'); ?></th>
-                                        <th class="text-right no-print"><?php echo $this->lang->line('action'); ?></th>
+                                        <th class="text-right "><?php echo $this->lang->line('action'); ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if (empty($categorylist)) {
-                                        ?>
-
-                                        <?php
-                                    } else {
+                                    <?php if (!empty($categorylist)) {
+                                        
                                         $count = 1;
                                         foreach ($categorylist as $category) {
                                             ?>
@@ -145,20 +142,6 @@
         });
     });
 
-</script>
-
-<script>
-    $(document).ready(function () {
-        $('.detail_popover').popover({
-            placement: 'right',
-            trigger: 'hover',
-            container: 'body',
-            html: true,
-            content: function () {
-                return $(this).closest('td').find('.fee_detail_popover').html();
-            }
-        });
-    });
 </script>
 
 <script type="text/javascript">

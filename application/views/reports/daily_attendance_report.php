@@ -83,7 +83,9 @@
                                             <?php
                                         }
                                         ?>
-                                        <tr style="font-weight: bold;">
+                                      
+                                </tbody>
+                                  <tr style="font-weight: bold;">
                                             <td></td>
 
                                             <td><?php echo $all_present ?></td>
@@ -92,7 +94,6 @@
                                             <td><?php echo $all_absent_percent ?></td>
                                         </tr>
                                     <?php } ?>
-                                </tbody>
                             </table>
                         </div>
                     </div>

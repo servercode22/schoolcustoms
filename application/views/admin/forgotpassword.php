@@ -9,7 +9,7 @@
 echo $app_name[0]['name'];
 ?></title>
         <!--favican-->
-        <link href="<?php echo base_url(); ?>uploads/school_content/admin_small_logo/<?php $this->setting_model->getAdminsmalllogo(); ?>" rel="shortcut icon" type="image/x-icon">
+        <link href="<?php echo base_url(); ?>uploads/school_content/admin_small_logo/<?php $this->setting_model->getAdminsmalllogo();?>" rel="shortcut icon" type="image/x-icon">
         <!-- CSS -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
         <link rel="stylesheet" href="<?php echo base_url(); ?>backend/usertemplate/assets/bootstrap/css/bootstrap.min.css">
@@ -32,11 +32,11 @@ echo $app_name[0]['name'];
                     </div> -->
                     <div class="row">
                         <div class="col-lg-4 col-md-4 col-sm-12 nopadding col-md-offset-4">
-                            <div class="bgoffsetbg">     
+                            <div class="bgoffsetbg">
                                 <div class="loginbg">
                                     <div class="form-top">
                                         <div class="form-top-left logowidth">
-                                            <img src="<?php echo base_url(); ?>uploads/school_content/admin_logo/<?php $this->setting_model->getAdminlogo(); ?>" />    
+                                            <img src="<?php echo base_url(); ?>uploads/school_content/admin_logo/<?php $this->setting_model->getAdminlogo();?>" />
                                         </div>
                                         <!-- <div class="form-top-right"><i class="fa fa-key"></i></div> -->
                                     </div>
@@ -44,10 +44,10 @@ echo $app_name[0]['name'];
                                     <div class="form-bottom">
                                         <h3 class="font-white bolds"><?php echo $this->lang->line('forgot_password'); ?></h3>
                                         <?php
-                                        if (isset($error_message)) {
-                                            echo "<div class='alert alert-danger'>" . $error_message . "</div>";
-                                        }
-                                        ?>
+if (isset($error_message)) {
+    echo "<div class='alert alert-danger'>" . $error_message . "</div>";
+}
+?>
                                         <form action="<?php echo site_url('site/forgotpassword') ?>" method="post">
 <?php echo $this->customlib->getCSRF(); ?>
                                             <div class="form-group has-feedback">
@@ -60,8 +60,8 @@ echo $app_name[0]['name'];
                                         </form>
                                         <a href="<?php echo site_url('site/login') ?>" class="forgot"><i class="fa fa-key"></i> <?php echo $this->lang->line('admin_login'); ?></a>
                                     </div>
-                                </div>  
-                            </div>  
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -79,10 +79,7 @@ echo $app_name[0]['name'];
 </html>
 <script type="text/javascript">
     $(document).ready(function () {
-        //var base_url = '<?php echo base_url(); ?>';
-        // $.backstretch([
-        //     base_url + "backend/usertemplate/assets/img/backgrounds/11.jpg"
-        // ], {duration: 3000, fade: 750});
+
         $('.login-form input[type="text"], .login-form input[type="password"], .login-form textarea').on('focus', function () {
             $(this).removeClass('input-error');
         });

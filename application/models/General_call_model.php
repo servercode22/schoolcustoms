@@ -22,7 +22,6 @@ class general_call_model extends MY_Model {
         $action = "Insert";
         $record_id = $id;
         $this->log($message, $record_id, $action);
-        //echo $this->db->last_query();die;
         //======================Code End==============================
         $this->db->trans_complete(); # Completing transaction
         /* Optional */
@@ -48,6 +47,22 @@ class general_call_model extends MY_Model {
         } else {
             return $query->result_array();
         }
+    }
+
+    public function getcalllist($id = null) {
+        
+        if ($id != null) {
+            $this->datatables->where('general_calls.id', $id);
+        } else {
+            $this->datatables->orderable('general_calls.id');
+        }
+       
+         $this->datatables
+            ->select('general_calls.id,general_calls.name,general_calls.contact,general_calls.call_type,general_calls.follow_up_date,general_calls.date')
+            ->searchable('general_calls.name,general_calls.contact,general_calls.date,general_calls.follow_up_date,general_calls.call_type')
+            ->orderable('general_calls.name,general_calls.contact,general_calls.date,general_calls.follow_up_date,general_calls.call_type')
+            ->from('general_calls');
+            return $this->datatables->generate('json');
     }
 
     function delete($id) {

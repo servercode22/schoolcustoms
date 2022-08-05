@@ -17,7 +17,7 @@ if (isset($_POST['date_to']) && !empty($_POST['date_to'])) {
 <div class="col-sm-6 col-md-3">
     <div class="form-group">
         <label><?php echo $this->lang->line('date_from'); ?></label>
-        <input name="date_from" placeholder="" type="text" class="form-control date" value="<?php echo $date_from; ?>"  />
+        <input name="date_from" id="date_from" placeholder="" type="text" class="form-control date" value="<?php echo $date_from; ?>"  />
         <span class="text-danger"><?php echo form_error('date_from'); ?></span>
     </div>
 </div> 
@@ -25,7 +25,7 @@ if (isset($_POST['date_to']) && !empty($_POST['date_to'])) {
 <div class="col-sm-6 col-md-3">
     <div class="form-group">
         <label><?php echo $this->lang->line('date_to'); ?></label>
-        <input  name="date_to" placeholder="" type="text" class="form-control date" value="<?php echo $date_to; ?>"  />
+        <input  name="date_to" id="date_to" placeholder="" type="text" class="form-control date" value="<?php echo $date_to; ?>"  />
         <span class="text-danger"><?php echo form_error('date_to'); ?></span>
     </div>
 </div> 

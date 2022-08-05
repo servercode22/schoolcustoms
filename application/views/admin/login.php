@@ -79,15 +79,27 @@
                                         <form action="<?php echo site_url('site/login') ?>" method="post">
                                             <?php echo $this->customlib->getCSRF(); ?>
                                             <div class="form-group has-feedback">                                            
-                                                <input type="text" name="username" placeholder="<?php echo $this->lang->line('username'); ?>" value="" class="form-username form-control" id="form-username">
+                                                <input type="text" name="username" placeholder="<?php echo $this->lang->line('username'); ?>" value="<?php echo set_value('username') ?>" class="form-username form-control" id="form-username">
                                                 <span class="fa fa-envelope form-control-feedback"></span>
                                                 <span class="text-danger"><?php echo form_error('username'); ?></span>
                                             </div>
                                             <div class="form-group has-feedback">                                           
-                                                <input type="password" value="" name="password" placeholder="<?php echo $this->lang->line('password'); ?>" class="form-password form-control" id="form-password">
+                                                <input type="password" value="<?php echo set_value('password') ?>" name="password" placeholder="<?php echo $this->lang->line('password'); ?>" class="form-password form-control" id="form-password">
                                                 <span class="fa fa-lock form-control-feedback"></span>
                                                 <span class="text-danger"><?php echo form_error('password'); ?></span>
                                             </div>
+                                            <?php if($is_captcha){ ?>
+                                            <div class="form-group has-feedback row"> 
+                                                <div class='col-lg-7 col-md-12 col-sm-6'>
+                                                    <span id="captcha_image"><?php echo $captcha_image; ?></span>
+                                                    <span title='Refresh Catpcha' class="fa fa-refresh catpcha" onclick="refreshCaptcha()"></span>
+                                                </div>
+                                                <div class='col-lg-5 col-md-12 col-sm-6'>
+                                                    <input type="text" name="captcha" placeholder="<?php echo $this->lang->line('captcha'); ?>" class=" form-control" autocomplete="off" id="captcha"> 
+                                                    <span class="text-danger"><?php echo form_error('captcha'); ?></span>
+                                                </div>
+                                            </div>
+                                            <?php } ?>
                                             <button type="submit" class="btn"><?php echo $this->lang->line('sign_in'); ?></button>
                                         </form>
                                         <a href="<?php echo site_url('site/forgotpassword') ?>" class="forgot"><i class="fa fa-key"></i> <?php echo $this->lang->line('forgot_password'); ?>?</a>
@@ -98,7 +110,7 @@
                             if (!$empty_notice) {
                                 ?>
                                 <!-- <div class="col-lg-1 col-sm-1"><div class="separatline"></div></div>  -->
-                                <div class="col-lg-8 col-sm-8 col-sm-12">
+                                <div class="col-lg-8 col-md-8 col-sm-12">
                                     <h3 class="h3"><?php echo $this->lang->line('what_is_new_in'); ?> <?php echo $school['name']; ?></h3>
                                     <div class="loginright mCustomScrollbar">
                                         <div class="messages"> 
@@ -154,19 +166,10 @@
         <script src="<?php echo base_url(); ?>backend/usertemplate/assets/js/jquery.backstretch.min.js"></script>
         <script src="<?php echo base_url(); ?>backend/usertemplate/assets/js/jquery.mCustomScrollbar.min.js"></script>
         <script src="<?php echo base_url(); ?>backend/usertemplate/assets/js/jquery.mousewheel.min.js"></script>
-
-        <!-- <script src="<?php echo base_url(); ?>backend/usertemplate/assets/js/scripts.js"></script> -->
-        <!--[if lt IE 10]>
-            <script src="<?php echo base_url(); ?>backend/usertemplate/assets/js/placeholder.js"></script>
-        <![endif]-->
     </body>
 </html>
 <script type="text/javascript">
     $(document).ready(function () {
-        // var base_url = '<?php //echo base_url();   ?>';
-        // $.backstretch([
-        //     base_url + "backend/usertemplate/assets/img/backgrounds/11.jpg"
-        // ], {duration: 3000, fade: 750});
         $('.login-form input[type="text"], .login-form input[type="password"], .login-form textarea').on('focus', function () {
             $(this).removeClass('input-error');
         });
@@ -181,4 +184,16 @@
             });
         });
     });
+</script>
+<script type="text/javascript">
+    function refreshCaptcha(){
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('site/refreshCaptcha'); ?>",
+            data: {},
+            success: function(captcha){
+                $("#captcha_image").html(captcha);
+            }
+        });
+    }    
 </script>

@@ -9,7 +9,7 @@ class Notification extends Student_Controller {
     public function __construct() {
         parent::__construct();
     }
-
+ 
     public function index() {
         $this->session->set_userdata('top_menu', 'notification');
         $data['title'] = 'Notifications';
@@ -23,10 +23,11 @@ class Notification extends Student_Controller {
         }
         $notification_bydate = array();
         foreach ($notifications as $key => $value) {
-            if (date($this->customlib->getSchoolDateFormat()) >= date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($value['publish_date']))) {
+            
+            if (strtotime(date('Y-m-d')) >= strtotime($value['publish_date'])) {
                 $notification_bydate[] = $value;
             }
-        }
+        }      
 
         $data['notificationlist'] = $notification_bydate;
 

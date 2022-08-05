@@ -68,7 +68,7 @@
                                 <?php echo $this->customlib->getCSRF(); ?>
 
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('field_belongs_to'); ?></label>
+                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('field_belongs_to'); ?></label> <small class="req">*</small>
                                     <select autofocus="" id="belong_to" name="belong_to" class="form-control" >
                                         <option value=""><?php echo $this->lang->line('select'); ?></option>
                                         <?php
@@ -84,7 +84,7 @@
                                     <span class="text-danger"><?php echo form_error('belong_to'); ?></span>
                                 </div>
                                 <div class="form-group">
-                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('field') . ' ' . $this->lang->line('type') ?></label>
+                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('field') . ' ' . $this->lang->line('type') ?></label> <small class="req">*</small>
                                     <select autofocus="" id="type" name="type" class="form-control" >
                                         <option value=""><?php echo $this->lang->line('select'); ?></option>
                                         <?php

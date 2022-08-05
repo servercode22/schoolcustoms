@@ -9,41 +9,44 @@
         <meta name="description" content="<?php echo $page['meta_description']; ?>">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="shortcut icon" href="<?php echo base_url($front_setting->fav_icon); ?>" type="image/x-icon">
-        <link href="<?php echo $base_assets_url; ?>css/owl.carousel.css" rel="stylesheet"> 
+        <link href="<?php echo $base_assets_url; ?>css/owl.carousel.css" rel="stylesheet">
         <link href="<?php echo $base_assets_url; ?>css/font-awesome.min.css" rel="stylesheet">
         <link href="<?php echo $base_assets_url; ?>css/bootstrap.min.css" rel="stylesheet">
         <link href="<?php echo $base_assets_url; ?>css/style.css" rel="stylesheet">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>backend/dist/css/ss-print.css">
         <link rel="stylesheet" href="<?php echo $base_assets_url; ?>datepicker/bootstrap-datepicker3.css"/>
+         <!--file dropify-->
+        <link rel="stylesheet" href="<?php echo base_url(); ?>backend/dist/css/dropify.min.css">
         <script src="<?php echo $base_assets_url; ?>js/jquery.min.js"></script>
+        <!--file dropify-->
+        <script src="<?php echo base_url(); ?>backend/dist/js/dropify.min.js"></script>
         <script type="text/javascript">
             var base_url = "<?php echo base_url() ?>";
         </script>
         <?php
-        //$this->load->view('layout/theme');
 
-        if ($front_setting->is_active_rtl) {
-            ?>
+if ($front_setting->is_active_rtl) {
+    ?>
             <link href="<?php echo $base_assets_url; ?>rtl/bootstrap-rtl.min.css" rel="stylesheet">
             <link href="<?php echo $base_assets_url; ?>rtl/style-rtl.css" rel="stylesheet">
             <?php
-        }
-        ?>
+}
+?>
 
-
-        <?php echo $front_setting->google_analytics; ?> 
+        <?php echo $front_setting->google_analytics; ?>
     </head>
     <body>
         <div class="toparea">
             <div class="container">
                 <div class="row">
-                    <div class="col-lg-3 col-md-4 col-sm-6">
+                    <div class="col-lg-8 col-md-8 col-sm-8">
                         <ul class="social">
-                            <?php $this->view('/themes/darkgray/social_media'); ?>
+                            <?php $this->view('/themes/darkgray/social_media');?>
 
                         </ul>
                     </div><!--./col-md-3-->
 
-                    <div class="col-lg-9 col-md-8 col-sm-6">
+                    <div class="col-lg-4 col-md-4 col-sm-4">
                         <ul class="top-right">
                             <li><a href="<?php echo site_url('site/userlogin') ?>"><i class="fa fa-user"></i>Login</a></li>
 
@@ -58,40 +61,37 @@
         <?php echo $slider; ?>
 
         <?php if (isset($featured_image) && $featured_image != "") {
-            ?>
+    ?>
 
             <?php
-        }
-        ?> 
+}
+?>
 
         <div class="container spacet50">
-            <div class="row"> 
+            <div class="row">
                 <?php
-                $page_colomn = "col-md-12";
+$page_colomn = "col-md-12";
 
-                if ($page_side_bar) {
+if ($page_side_bar) {
 
-                    $page_colomn = "col-md-12 col-sm-12";
-                }
-                ?>
+    $page_colomn = "col-md-12 col-sm-12";
+}
+?>
                 <div class="<?php echo $page_colomn; ?>">
-                    <?php echo $content; ?> 
-                </div>  
+                    <?php echo $content; ?>
+                </div>
                 <?php
-                if ($page_side_bar) {
-                    ?>
-
+if ($page_side_bar) {
+    ?>
 
                     <?php
-                }
-                ?>
-
+}
+?>
 
             </div><!--./row-->
-        </div><!--./container-->  
+        </div><!--./container-->
 
         <?php echo $footer; ?>
-
         <script src="<?php echo $base_assets_url; ?>js/bootstrap.min.js"></script>
         <script type="text/javascript" src="<?php echo $base_assets_url; ?>js/jquery.waypoints.min.js"></script>
         <script type="text/javascript" src="<?php echo $base_assets_url; ?>js/jquery.counterup.min.js"></script>

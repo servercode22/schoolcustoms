@@ -142,9 +142,9 @@
 
 
                                                                 <tr>                
-                                                                    <td width="24%"><?php echo $grade_value->name ?></td>
-                                                                    <td width="40%"><?php echo $grade_value->mark_upto . " " . $this->lang->line('to') . " " . $grade_value->mark_from; ?> </td>
-                                                                    <td width="20%"><?php echo $grade_value->point ?> </td>
+                                                                    <td width="24%" class="text-left"><?php echo $grade_value->name ?></td>
+                                                                    <td width="40%" class="text-left"><?php echo $grade_value->mark_upto . " " . $this->lang->line('to') . " " . $grade_value->mark_from; ?> </td>
+                                                                    <td width="20%" class="text-left"><?php echo $grade_value->point ?> </td>
                                                                     <td class="text-right">
 
                                                                         <?php
@@ -194,17 +194,7 @@
         </div>
     </section>
 </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#postdate').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true
-        });
-        $("#btnreset").click(function () {
-            $("#form1")[0].reset();
-        });
-    });
-</script>
+
 <script>
     $(document).ready(function () {
         $('.detail_popover').popover({

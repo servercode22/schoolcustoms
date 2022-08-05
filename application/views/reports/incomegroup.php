@@ -89,7 +89,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
 
-                    <form role="form" action="<?php echo site_url('report/incomegroup') ?>" method="post" class="">
+                    <form role="form" action="<?php echo site_url('report/getgroupreportparam') ?>" method="post" class="" id="reportform" >
                         <div class="box-body row">
 
                             <?php echo $this->customlib->getCSRF(); ?>
@@ -150,76 +150,22 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         </div>
                         <div class="box-body table-responsive">
                             <div class="download_label"><?php
-                                echo $this->lang->line('income') . " " . $this->lang->line('group') . " " . $this->lang->line('report') . "<br>";
+                                echo $this->lang->line('income') . " " . $this->lang->line('group') . " " . $this->lang->line('report');
                                 $this->customlib->get_postmessage();
                                 ;
                                 ?></div>
-                            <table class="table table-striped table-bordered table-hover example">
+                            <table class="table table-striped table-bordered table-hover income-list" data-export-title="<?php echo $this->lang->line('income') . " " . $this->lang->line('group') . " " . $this->lang->line('report'); ?>">
                                 <thead>
                                     <tr>
                                         <th><?php echo $this->lang->line('income_head'); ?></th>
                                         <th><?php echo $this->lang->line('income_id'); ?></th>
                                         <th><?php echo $this->lang->line('name'); ?></th>
                                         <th><?php echo $this->lang->line('date'); ?></th>
-
-
                                         <th><?php echo $this->lang->line('invoice_no'); ?></th>
                                         <th class="text text-right"><?php echo $this->lang->line('amount'); ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    $grd_total = 0;
-                                    foreach ($incomeList as $key => $value) {
-                                        $incomedata = explode(',', $value['income']);
-                                        $income_id = "";
-                                        $income_name = "";
-                                        $income_date = "";
-                                        $invoice_no = "";
-                                        $income_amount = "";
-                                        foreach ($incomedata as $incomevalue) {
-                                            $incomeexpload = explode('@', $incomevalue);
-
-                                            $income_id .= $incomeexpload[0];
-                                            $income_id .= "<br>";
-                                            $income_name .= $incomeexpload[1];
-                                            $income_name .= "<br>";
-                                            $income_date .= date($this->customlib->getSchoolDateFormat(), strtotime($incomeexpload[3]));
-                                            $income_date .= "<br>";
-                                            $invoice_no .= $incomeexpload[2];
-                                            $invoice_no .= "<br>";
-                                            $income_amount .= $incomeexpload[4];
-                                            $income_amount .= "<br>";
-                                        }
-                                        $grd_total += $value['total_amount'];
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $value['income_category'] ?></td>
-                                            <td><?php echo $income_id; ?></td>
-                                            <td><?php echo $income_name; ?></td>
-                                            <td><?php echo $income_date; ?></td>
-                                            <td><?php echo $invoice_no; ?></td>
-                                            <td class="text text-right"><?php echo $income_amount; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="text text-right"><b><?php echo $value['total_amount']; ?></b></td>
-                                        </tr>
-                                        <?php
-                                    }
-                                    ?>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td><b><?php echo $this->lang->line('total') ?></b></td>
-                                        <td class="text text-right"><b><?php echo $currency_symbol . $grd_total; ?></b></td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -244,4 +190,58 @@ if ($search_type == 'period') {
 }
 ?>
 
+</script>
+<script>
+$(document).ready(function() {
+     emptyDatatable('income-list','data');
+});
+</script>  
+<script>
+$(document).ready(function() {
+    initDatatable('income-list','report/dtincomegroupreport');
+
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+$(document).on('submit','#reportform',function(e){
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+    var $this = $(this).find("button[type=submit]:focus");  
+    var form = $(this);
+    var url = form.attr('action');
+    var form_data = form.serializeArray();
+    $.ajax({
+           url: url,
+           type: "POST",
+           dataType:'JSON',
+           data: form_data, // serializes the form's elements.
+              beforeSend: function () {
+                $('[id^=error]').html("");
+                $this.button('loading');
+               // resetFields($this.attr('name'));
+               },
+              success: function(response) { // your success handler
+               
+                if(!response.status){
+                    $.each(response.error, function(key, value) {
+                    $('#error_' + key).html(value);
+                    });
+                }else{
+                 
+                   initDatatable('income-list','report/dtincomegroupreport',response.params);
+                }
+              },
+             error: function() { // your error handler
+                 $this.button('reset');
+             },
+             complete: function() {
+               $this.button('reset');
+             }
+         });
+
+        });
+
+    });
+     
 </script>

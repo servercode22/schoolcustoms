@@ -1,9 +1,7 @@
 <link rel="stylesheet" href="<?php echo base_url(); ?>backend/calender/zabuto_calendar.min.css">
 <script type="text/javascript" src="<?php echo base_url(); ?>backend/calender/zabuto_calendar.min.js"></script>
 <style>
-
 </style>
-
 <div class="content-wrapper">
     <section class="content-header">
         <h1>
@@ -23,13 +21,13 @@
                     <div class="box-header ptbnull">
                         <h3 class="box-title"> <?php echo $this->lang->line('event_list'); ?></h3>
                         <div class="box-tools pull-right">
-                            <?php if ($this->rbac->hasPrivilege('events', 'can_add')) { ?> <button class="btn btn-primary btn-sm pull-right" onclick="add_event()"><?php echo $this->lang->line('add') . ' ' . $this->lang->line('event') ?></button>
-                            <?php } ?>
+                            <?php if ($this->rbac->hasPrivilege('events', 'can_add')) {?> <button class="btn btn-primary btn-sm pull-right" onclick="add_event()"><?php echo $this->lang->line('add') . ' ' . $this->lang->line('event') ?></button>
+                            <?php }?>
                         </div>
                     </div>
                     <div class="box-body">
                         <div class="download_label"><?php echo $title; ?></div>
-                        <div class="table-responsive"> 
+                        <div class="table-responsive">
                             <table class="table table-striped table-bordered table-hover example" cellspacing="0" width="100%">
                                 <thead>
                                     <tr>
@@ -41,56 +39,55 @@
                                         <th><?php echo $this->lang->line('from'); ?></th>
                                         <th><?php echo $this->lang->line('to'); ?></th>
                                         <th><?php echo $this->lang->line('action'); ?></th>
-                                    </tr> 
+                                    </tr>
                                 </thead>
                                 <tbody>
                                     <?php
-                                    $sl = '';
-                                    foreach ($eventlist as $key => $value) {
-                                        $sl++;
-                                        ?>
+$sl = '';
+foreach ($eventlist as $key => $value) {
+    $sl++;
+    ?>
                                         <tr>
-                                            <td><?php echo $value['title']; ?></td>                                           
+                                            <td><?php echo $value['title']; ?></td>
                                             <td><?php
-                                                if ($value['event_for'] == 'class') {
-                                                    echo $eventclass[$key];
-                                                } else {
-                                                    echo $this->lang->line($value['event_for']);
-                                                }
-                                                ?>
+if ($value['event_for'] == 'class') {
+        echo $eventclass[$key];
+    } else {
+        echo $this->lang->line($value['event_for']);
+    }
+    ?>
                                             </td>
                                             <td><?php
-                                                if ($value['event_for'] == 'class') {
-                                                    $sl = '';
-                                                    foreach ($eventsection[$key] as $eventsection_value) {
+if ($value['event_for'] == 'class') {
+        $sl = '';
+        foreach ($eventsection[$key] as $eventsection_value) {
 
-                                                        $json_array = json_decode($value['section']);
-                                                        if (in_array($eventsection_value['id'], $json_array)) {
-                                                            $sl++;
+            $json_array = json_decode($value['section']);
+            if (in_array($eventsection_value['id'], $json_array)) {
+                $sl++;
 
-                                                            echo $eventsection_value['section'];
-                                                            if (count($json_array) > $sl) {
-                                                                echo ", ";
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                ?>
+                echo $eventsection_value['section'];
+                if (count($json_array) > $sl) {
+                    echo ", ";
+                }
+            }
+        }
+    }
+    ?>
 
                                             </td>
                                             <td><?php
-                                                if ($value['event_for'] == 'class') {
-                                                    echo $eventsession[$key];
-                                                }
-                                                ?></td>
+if ($value['event_for'] == 'class') {
+        echo $eventsession[$key];
+    }
+    ?></td>
                                             <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($value['from_date'])); ?></td>
-                                            <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($value['to_date'])); ?></td>                                  
-
+                                            <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($value['to_date'])); ?></td>
                                             <td>
-                                        <?php if ($this->rbac->hasPrivilege('events', 'can_edit')) { ?>
+                                        <?php if ($this->rbac->hasPrivilege('events', 'can_edit')) {?>
                                                     <a class="btn btn-default btn-xs" onclick="edit('<?php echo $value['id']; ?>')" data-toggle="tooltip" data-placement="left" title="" data-original-title="<?php echo $this->lang->line('edit'); ?>"><i class="fa fa-pencil"></i></a>
-                                        <?php } if ($this->rbac->hasPrivilege('events', 'can_delete')) { ?>
-                                                    <a onclick="event_delete('<?php echo $value['id']; ?>')" class="btn btn-default btn-xs"  data-toggle="tooltip" data-placement="left" title="" data-original-title="<?php echo $this->lang->line('delete') ?>"><i class="fa fa-remove"></i></a><?php } ?></td>
+                                        <?php }if ($this->rbac->hasPrivilege('events', 'can_delete')) {?>
+                                                    <a onclick="event_delete('<?php echo $value['id']; ?>')" class="btn btn-default btn-xs"  data-toggle="tooltip" data-placement="left" title="" data-original-title="<?php echo $this->lang->line('delete') ?>"><i class="fa fa-remove"></i></a><?php }?></td>
                                         </tr>
     <?php
 }
@@ -98,7 +95,7 @@
 
                                 </tbody>
                             </table>
-                        </div>     
+                        </div>
                     </div>
                 </div>
             </div>
@@ -112,10 +109,9 @@
                 <button type="button" class="close" data-dismiss="modal" >&times;</button>
                 <h4 class="modal-title" id="modal-title" ></h4>
             </div>
-            <form role="form" id="addevent_form11" method="post" enctype="multipart/form-data" action="">   
+            <form role="form" id="addevent_form11" method="post" enctype="multipart/form-data" action="">
                 <div class="modal-body">
                     <div class="row">
-
                         <div class="form-group col-md-12">
                             <label><?php echo $this->lang->line('event') . " " . $this->lang->line('for'); ?></label><small class="req"> *</small>&nbsp;&nbsp;&nbsp;
                             <label class="radio-inline">
@@ -124,18 +120,20 @@
                             <label class="radio-inline">
                                 <input onchange="hideshowclass()" type="radio" name="event_for" id="class" value="class" autocomplete="off"> <?php echo $this->lang->line('class'); ?>
                             </label>
-                        </div>						
-
+                        </div>
                         <div id="sessionlist" class="form-group col-xs-10 col-sm-12 col-md-12 col-lg-12 hide">
-                            <label><?php echo $this->lang->line('pass_out_session'); ?></label> <small class="req"> *</small> 
+                            <label><?php echo $this->lang->line('pass_out_session'); ?></label> <small class="req"> *</small>
                             <select autofocus="" id="session_id" name="session_id" class="form-control" >
                                 <option value=""><?php echo $this->lang->line('select'); ?></option>
                                 <?php
-                                foreach ($sessionlist as $sessions) {
-                                    ?>
-                                    <option value="<?php echo $sessions['id'] ?>" <?php if (set_value('session_id') == $sessions['id']) echo "selected=selected" ?>><?php echo $sessions['session'] ?></option>
+foreach ($sessionlist as $sessions) {
+    ?>
+                                    <option value="<?php echo $sessions['id'] ?>" <?php if (set_value('session_id') == $sessions['id']) {
+        echo "selected=selected";
+    }
+    ?>><?php echo $sessions['session'] ?></option>
     <?php
-    $count++;
+$count++;
 }
 ?>
                             </select>
@@ -146,50 +144,45 @@
                             <select onchange="getsectionlist()" id="class_id" name="class_id" class="form-control"  >
                                 <option value=""><?php echo $this->lang->line('select'); ?></option>
                                 <?php
-                                foreach ($classlist as $class) {
-                                    ?>
+foreach ($classlist as $class) {
+    ?>
                                     <option value="<?php echo $class['id'] ?>"<?php
-                                            if (set_value('class_id') == $class['id']) {
-                                                echo "selected=selected";
-                                            }
-                                            ?>><?php echo $class['class'] ?></option>
+if (set_value('class_id') == $class['id']) {
+        echo "selected=selected";
+    }
+    ?>><?php echo $class['class'] ?></option>
     <?php
 }
 ?>
                             </select>
-                        </div>                                            
+                        </div>
                         <div id="sectionlist" class="form-group col-md-12 hide">
                             <label><?php echo $this->lang->line('section'); ?></label><small class="req"> *</small>
                             <ul id="section_list" class="list-group section_list listcheckbox">
                             </ul>
-
-                        </div>                  
-
-
+                        </div>
                         <div class="form-group col-md-12">
                             <label><?php echo $this->lang->line('event') . " " . $this->lang->line('title'); ?></label><small class="req"> *</small>
                             <input type="hidden" name="id" id="id">
-                            <input class="form-control" id="event_title" name="event_title"> 
+                            <input class="form-control" id="event_title" name="event_title">
                             <span class="text-danger"><?php echo form_error('title'); ?></span>
-
                         </div>
-
-                        <div class="form-group col-md-12">
-                            <label for="exampleInputEmail1"><?php echo $this->lang->line('event'); ?> <?php echo $this->lang->line('date'); ?></label>
-                            <div class="input-group">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
-                                </div>
-                                <input type="text" autocomplete="off" name="event_date" class="form-control pull-right " id="event_date">
-                            </div>
-                        </div>						
-
-
+                        <div class="form-group col-md-6">
+                            <label for="exampleInputEmail1"><?php echo $this->lang->line('event'); ?> <?php echo $this->lang->line('from'); ?> <?php echo $this->lang->line('date'); ?></label><small class="req"> *</small>
+                          
+                                <input type="text" autocomplete="off" id="from_date" name="from_date" class="form-control date " >
+                            
+                        </div>
+                         <div class="form-group col-md-6">
+                            <label for="exampleInputEmail1"><?php echo $this->lang->line('event'); ?> <?php echo $this->lang->line('to'); ?> <?php echo $this->lang->line('date'); ?></label><small class="req"> *</small>
+                          
+                                <input type="text" autocomplete="off" id="to_date" name="to_date" class="form-control date " >
+                            
+                        </div>
                         <div class="form-group col-md-12">
                             <label><?php echo $this->lang->line("note"); ?></label>
                             <textarea name="note" id="note" class="form-control"></textarea>
                         </div>
-
                         <div class="form-group col-md-12">
                             <label><?php echo $this->lang->line("event_notification_message"); ?></label>
                             <textarea class="form-control" id="event_notification_message" type="text" autocomplete="off"  name="event_notification_message" placeholder="" ></textarea>
@@ -201,19 +194,17 @@
                                 <label class="checkbox-inline"><input type="checkbox" name="sms" value="1" > <?php echo $this->lang->line('sms'); ?>
                                 </label>
                             </div>
-
                         </div>
                     </div>
                 </div>
-                <div class="modal-footer">    
+                <div class="modal-footer">
                     <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                        <button type="submit" class="btn btn-primary pull-right" data-loading-text="<?php echo $this->lang->line('submitting') ?>" value=""><?php echo $this->lang->line('save'); ?></button></div> 
-                </div>            
-            </form>  
+                        <button type="submit" class="btn btn-primary pull-right" data-loading-text="<?php echo $this->lang->line('submitting') ?>" value=""><?php echo $this->lang->line('save'); ?></button></div>
+                </div>
+            </form>
         </div>
     </div>
 </div>
-
 <script>
     function hideshowclass() {
         var event_for = $("input[name='event_for']:checked").val();
@@ -229,7 +220,6 @@
             $("#sectionlist").addClass("hide");
             $("#sessionlist").addClass("hide");
         }
-
     }
 </script>
 <script >
@@ -255,15 +245,11 @@ if (($userdata["role_id"] == 2)) {
                 $.each(data, function (i, obj)
                 {
                     div_data += '<li class="checkbox"><a href="#" class="small"><label><input type="checkbox" name="user[]" value ="' + obj.section_id + '"/>' + obj.section + '</label></a></li>';
-
-
                 });
 
                 $('#section_list').append(div_data);
-
                 var JSONObject = JSON.parse(newsection);
                 for (var i = 0, l = JSONObject.length; i < l; i++) {
-
                     $('input[name="user[]"][value="' + JSONObject[i] + '"]').prop("checked", true);
                 }
 
@@ -275,10 +261,6 @@ if (($userdata["role_id"] == 2)) {
 
     $(document).ready(function () {
 
-    $("#event_date").daterangepicker({
-    timePickerIncrement: 5, locale: {
-    format: calendar_date_time_format
-    }});
     });
 
     function event_delete(id){
@@ -287,19 +269,12 @@ if (($userdata["role_id"] == 2)) {
     if(result){
     $.ajax({
     url: "<?php echo base_url(); ?>admin/alumni/delete_event/"+id,
-    type: "POST",
-
-    //dataType: 'json',
-    //contentType: false,
-    //cache: false,
-    //processData: false,
+    type: "POST",  
 
     success: function (res)
-    { 
+    {
     successMsg('<?php echo $this->lang->line("delete_message"); ?>');
-
     window.location.reload(true);
-
     },
     error: function (xhr) { // if error occured
     alert("Error occured.please try again");
@@ -311,12 +286,9 @@ if (($userdata["role_id"] == 2)) {
 
     });
     }
-
-
     }
 
     function edit(id,row){
-
     $('#modal-title').html('<?php echo $this->lang->line('edit') . " " . $this->lang->line('event') ?>');
     $.ajax({
     url: "<?php echo site_url("admin/alumni/get_event") ?>/"+id,
@@ -328,14 +300,14 @@ if (($userdata["role_id"] == 2)) {
     processData: false,
 
     success: function (res)
-    { 			
+    {
 
     if (res.event_for == 'class'){
     $("#class").prop("checked", true);
     hideshowclass();
     $('#session_id').val(res.session_id);
-    $('#class_id').val(res.class_id);					
-    getsectionlist(res.section);	
+    $('#class_id').val(res.class_id);
+    getsectionlist(res.section);
 
 
     } else {
@@ -345,16 +317,8 @@ if (($userdata["role_id"] == 2)) {
 
 
     $('#event_title').val(res.title);
-
-    $("#event_date").daterangepicker({
-    startDate: res.from_date,
-    endDate: res.to_date,
-    timePickerIncrement: 5, locale: {
-    format: calendar_date_time_format
-    }
-    });
-
-
+    $("#from_date").val(res.from_date);
+    $("#to_date").val(res.to_date);
     $('#Visibilty').val(res.show_onwebsite);
     $('#id').val(res.id);
     $('#note').val(res.note);
@@ -388,7 +352,7 @@ if (($userdata["role_id"] == 2)) {
     ],
     ajax: {
     url: base_url+"admin/alumni/getevent?grade=1",
-    modal: true, 
+    modal: true,
 
     }
     });
@@ -403,7 +367,7 @@ if (($userdata["role_id"] == 2)) {
 
     }
 
-    function add_event(){
+    function add_event(){ 
     $('#event_title').val('');
     $('#note').val('');
     $('#id').val('');

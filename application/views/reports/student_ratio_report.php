@@ -126,9 +126,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         $total_students += $value['total_student'];
                                     }
                                     ?>
-                                    <tr><td> </td><td><b><?php echo $total_boys; ?></b></td><td><b><?php echo $total_girls; ?></b></td><td><b><?php echo $total_students; ?></b></td><td><b><?php echo $all_boys_girls_ratio; ?></b></td></tr>
-
                                 </tbody>
+                                <tr><td> </td><td><b><?php echo $total_boys; ?></b></td><td><b><?php echo $total_girls; ?></b></td><td><b><?php echo $total_students; ?></b></td><td><b><?php echo $all_boys_girls_ratio; ?></b></td></tr>
                             </table>
                         </div>
                     </div>

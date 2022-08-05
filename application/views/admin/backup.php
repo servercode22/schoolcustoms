@@ -135,15 +135,15 @@
 </div>
 <script type="text/javascript">
     $('#form1').submit(function () {
-        var c = confirm("Are you sure want to make current backup?");
+        var c = confirm("<?php echo $this->lang->line('are_you_sure_want_to_make_current_backup')?>");
         return c;
     });
     $('.formdelete').submit(function () {
-        var c = confirm("Are you sure want to delete backup?");
+        var c = confirm("<?php echo $this->lang->line('are_you_sure_want_to_delete_backup')?>");
         return c;
     });
     $('.formrestore').submit(function () {
-        var c = confirm("Are you sure want to restore backup?");
+        var c = confirm("<?php echo $this->lang->line('are_you_sure_want_to_restore_backup')?>");
         return c;
     });
 

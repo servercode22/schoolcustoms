@@ -1,4 +1,4 @@
-<?php $currency_symbol = $this->customlib->getSchoolCurrencyFormat(); ?>
+<?php $currency_symbol = $this->customlib->getSchoolCurrencyFormat();?>
 <style type="text/css">
     .borderwhite{border-top-color: #fff !important;}
     .box-header>.box-tools {display: none;}
@@ -9,25 +9,25 @@
     <section class="content">
         <div class="">
 
-            <?php if ($mysqlVersion && $sqlMode && strpos($sqlMode->mode, 'ONLY_FULL_GROUP_BY') !== FALSE) { ?>
+            <?php if ($mysqlVersion && $sqlMode && strpos($sqlMode->mode, 'ONLY_FULL_GROUP_BY') !== false) {?>
                 <div class="alert alert-danger">
                     Smart School may not work properly because ONLY_FULL_GROUP_BY is enabled, consult with your hosting provider to disable ONLY_FULL_GROUP_BY in sql_mode configuration.
                 </div>
-            <?php } ?>
+            <?php }?>
 
             <?php
-            $show = false;
-            $role = $this->customlib->getStaffRole();
-            $role_id = json_decode($role)->id;
-            foreach ($notifications as $notice_key => $notice_value) {
+$show    = false;
+$role    = $this->customlib->getStaffRole();
+$role_id = json_decode($role)->id;
+foreach ($notifications as $notice_key => $notice_value) {
 
-                if ($role_id == 7) {
-                    $show = true;
-                } elseif (date($this->customlib->getSchoolDateFormat()) >= date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($notice_value->publish_date))) {
-                    $show = true;
-                }
-                if ($show) {
-                    ?>
+    if ($role_id == 7) {
+        $show = true;
+    } elseif (date($this->customlib->getSchoolDateFormat()) >= date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($notice_value->publish_date))) {
+        $show = true;
+    }
+    if ($show) {
+        ?>
 
                     <div class="dashalert alert alert-success alert-dismissible" role="alert">
                         <button type="button" class="alertclose close close_notice" data-dismiss="alert" aria-label="Close" data-noticeid="<?php echo $notice_value->id; ?>"><span aria-hidden="true">&times;</span></button>
@@ -36,17 +36,17 @@
                     </div>
 
                     <?php
-                }
-            }
-            ?>
+}
+}
+?>
 
-        </div> 
+        </div>
         <div class="row">
             <?php
-            if ($this->module_lib->hasActive('fees_collection')) {
-                if ($this->rbac->hasPrivilege('fees_awaiting_payment_widegts', 'can_view')) {
-                    ?>
-                    <div class="col-lg-3 col-md-6 col-sm-6">
+if ($this->module_lib->hasActive('fees_collection')) {
+    if ($this->rbac->hasPrivilege('fees_awaiting_payment_widegts', 'can_view')) {
+        ?>
+                    <div class="<?php echo $std_graphclass; ?>">
                         <div class="topprograssstart">
                             <p class="text-uppercase mt5 clearfix"><i class="fa fa-money ftlayer"></i><?php echo $this->lang->line('fees') . " " . $this->lang->line('awaiting') . " " . $this->lang->line('payment'); ?><span class="pull-right"><?php echo $total_paid; ?>/<?php echo $total_fees ?></span>
                             </p>
@@ -59,15 +59,15 @@
                     </div><!--./col-md-3-->
 
                     <?php
-                }
-            }
-            ?>
+}
+}
+?>
 
             <?php
-            if ($this->module_lib->hasActive('front_office')) {
-                if ($this->rbac->hasPrivilege('conveted_leads_widegts', 'can_view')) {
-                    ?>
-                    <div class="col-lg-3 col-md-6 col-sm-6">
+if ($this->module_lib->hasActive('front_office')) {
+    if ($this->rbac->hasPrivilege('conveted_leads_widegts', 'can_view')) {
+        ?>
+                    <div class="<?php echo $std_graphclass; ?>">
                         <div class="topprograssstart">
                             <p class="text-uppercase mt5 clearfix"><i class="fa fa-ioxhost ftlayer"></i> <?php echo $this->lang->line('converted') . " " . $this->lang->line('leads') ?><span class="pull-right"><?php echo $total_complete + 0; ?>/<?php echo $total_enquiry; ?></span>
                             </p>
@@ -77,16 +77,16 @@
                                 </div>
                             </div>
                         </div><!--./topprograssstart-->
-                    </div><!--./col-md-3--> 
+                    </div><!--./col-md-3-->
                     <?php
-                }
-            }
-            if ($this->rbac->hasPrivilege('staff_present_today_widegts', 'can_view')) {
-                ?>
-                <div class="col-lg-3 col-md-6 col-sm-6">
+}
+}
+if ($this->rbac->hasPrivilege('staff_present_today_widegts', 'can_view')) {
+    ?>
+                <div class="<?php echo $std_graphclass; ?>">
                     <div class="topprograssstart">
                         <p class="text-uppercase mt5 clearfix"><i class="fa fa-calendar-check-o ftlayer"></i><?php echo $this->lang->line('staff') . ' ' . $this->lang->line('present') . ' ' . $this->lang->line('today'); ?><span class="pull-right"><?php echo $Staffattendence_data + 0; ?>/<?php echo $getTotalStaff_data; ?></span>
-                        </p> 
+                        </p>
                         <div class="progress-group">
                             <div class="progress progress-minibar">
                                 <div class="progress-bar progress-bar-green" style="width: <?php echo $percentTotalStaff_data; ?>%"></div>
@@ -95,46 +95,46 @@
                     </div><!--./topprograssstart-->
                 </div><!--./col-md-3-->
                 <?php
-            }
-            if ($this->module_lib->hasActive('student_attendance')) {
-                if ($this->rbac->hasPrivilege('student_present_today_widegts', 'can_view')) {
-                    ?>
+}
+if ($this->module_lib->hasActive('student_attendance') && $sch_setting->attendence_type == 0) {
+    if ($this->rbac->hasPrivilege('student_present_today_widegts', 'can_view')) {
+        ?>
 
 
-                    <div class="col-lg-3 col-md-6 col-sm-6">
+                    <div class="<?php echo $std_graphclass; ?>">
                         <div class="topprograssstart">
                             <p class="text-uppercase mt5 clearfix"><i class="fa fa-calendar-check-o ftlayer"></i><?php echo $this->lang->line('student') . ' ' . $this->lang->line('present') . ' ' . $this->lang->line('today'); ?><span class="pull-right"> <?php echo 0 + $attendence_data['total_half_day'] + $attendence_data['total_late'] + $attendence_data['total_present']; ?>/<?php echo $total_students; ?></span>
                             </p>
                             <div class="progress-group">
                                 <div class="progress progress-minibar">
-                                    <div class="progress-bar progress-bar-yellow" style="width: <?php echo 0 + $attendence_data['total_half_day'] + $attendence_data['total_late'] + $attendence_data['total_present']; ?>%"></div>
+                                    <div class="progress-bar progress-bar-yellow" style="width: <?php if ($total_students > 0) {echo (0 + $attendence_data['total_half_day'] + $attendence_data['total_late'] + $attendence_data['total_present'] / $total_students * 100);}?>%"></div>
                                 </div>
                             </div>
                         </div><!--./topprograssstart-->
-                    </div><!--./col-md-3--> 
+                    </div><!--./col-md-3-->
                 <?php }
-            }
-            ?>
-        </div><!--./row--> 
+}
+?>
+        </div><!--./row-->
 
 
         <div class="row">
             <?php
-            $bar_chart = true;
+$bar_chart = true;
 
-            if (($this->module_lib->hasActive('fees_collection')) || ($this->module_lib->hasActive('expense'))) {
-                if ($this->rbac->hasPrivilege('fees_collection_and_expense_monthly_chart', 'can_view')) {
+if (($this->module_lib->hasActive('fees_collection')) || ($this->module_lib->hasActive('expense'))) {
+    if ($this->rbac->hasPrivilege('fees_collection_and_expense_monthly_chart', 'can_view')) {
 
-                    $div_rol = 3;
-                    $userdata = $this->customlib->getUserData();
-                    ?>  
+        $div_rol  = 3;
+        $userdata = $this->customlib->getUserData();
+        ?>
                     <div class="col-lg-7 col-md-7 col-sm-12 col60">
 
                         <div class="box box-primary borderwhite">
                             <div class="box-header with-border">
                                 <h3 class="box-title"><?php echo $this->lang->line('fees_collection_&_expenses_for'); ?><?php echo $this->lang->line('_expenses_for') ?> <?php echo $this->lang->line(strtolower(date('F'))) . " " . date('Y');
-                            ;
-                            ?></h3>
+
+        ?></h3>
                                 <div class="box-tools pull-right">
                                     <button class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                                     <button class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
@@ -144,49 +144,49 @@
                             <div class="box-body">
                                 <div class="chart">
                                     <canvas id="barChart" height="95"></canvas>
-                                </div>  
+                                </div>
                             </div>
 
                         </div>
 
                     </div><!--./col-lg-7-->
                 <?php }
-            }
-            ?>
+}
+?>
             <?php
-            if ($this->module_lib->hasActive('income')) {
-                if ($this->rbac->hasPrivilege('income_donut_graph', 'can_view')) {
-                    ?>
+if ($this->module_lib->hasActive('income')) {
+    if ($this->rbac->hasPrivilege('income_donut_graph', 'can_view')) {
+        ?>
                     <div class="col-lg-5 col-md-5 col-sm-12 col40">
 
                         <div class="box box-primary borderwhite">
                             <div class="box-header with-border"><h3 class="box-title"><?php echo $this->lang->line('income') . " - " . $this->lang->line(strtolower(date('F'))) . " " . date('Y');
-                    ;
-                    ?></h3></div>
+
+        ?></h3></div>
 
 
                             <div class="box-body">
                                 <div class="chart-responsive">
                                     <canvas id="doughnut-chart" class="" height="148"></canvas>
-                                </div>  
+                                </div>
                             </div>
 
                         </div><!--./col-md-6-->
 
                     </div><!--./col-lg-5-->
     <?php
-    }
+}
 }
 ?>
-        </div><!--./row--> 
+        </div><!--./row-->
 
         <div class="row">
             <?php
-            $line_chart = true;
-            if (($this->module_lib->hasActive('fees_collection')) || ($this->module_lib->hasActive('expense'))) {
-                if ($this->rbac->hasPrivilege('fees_collection_and_expense_yearly_chart', 'can_view')) {
-                    $div_rol = 3;
-                    ?>
+$line_chart = true;
+if (($this->module_lib->hasActive('fees_collection')) || ($this->module_lib->hasActive('expense'))) {
+    if ($this->rbac->hasPrivilege('fees_collection_and_expense_yearly_chart', 'can_view')) {
+        $div_rol = 3;
+        ?>
                     <div class="col-lg-7 col-md-7 col-sm-12 col60">
 
                         <div class="box box-info borderwhite">
@@ -200,8 +200,8 @@
                             <div class="box-body">
                                 <div class="chart">
                                     <canvas id="lineChart" height="95"></canvas>
-                                </div>  
-                            </div>  
+                                </div>
+                            </div>
 
                             <!--  <div class="box-body">
                                  <div class="chart">
@@ -212,26 +212,27 @@
 
                     </div><!--./col-lg-7-->
                     <?php
-                }
-            }
-            if ($this->module_lib->hasActive('expense')) {
-                ?>
-    <?php if ($this->rbac->hasPrivilege('expense_donut_graph', 'can_view')) { ?>
+}
+}
+if ($this->module_lib->hasActive('expense')) {
+    ?>
+    <?php if ($this->rbac->hasPrivilege('expense_donut_graph', 'can_view')) {
+        ?>
                     <div class="col-lg-5 col-md-5 col-sm-12 col40">
                         <div class="box box-primary borderwhite">
                             <div class="box-header with-border"><h3 class="box-title"><?php echo $this->lang->line('expense') . " - " . $this->lang->line(strtolower(date('F'))) . " " . date('Y');
-        ;
+
         ?></h3>
-                            </div><!--./info-box--> 
+                            </div><!--./info-box-->
 
                             <div class="box-body">
                                 <div class="chart-responsive">
                                     <canvas id="doughnut-chart1" class="" height="148"></canvas>
-                                </div>  
+                                </div>
                             </div>
                          <!--  <div class="full-width-chart"><canvas id="doughnut-chart1" style="height: 340px; width: 100%; white-space: nowrap;"></canvas></div> -->
 
-                        </div>  
+                        </div>
                     </div><!--./col-lg-5-->
     <?php }
 }
@@ -241,7 +242,7 @@
 
 
 
-        <div class="row">    
+        <div class="row">
 
 
 <?php
@@ -279,7 +280,7 @@ if ($this->module_lib->hasActive('fees_collection')) {
 
                     </div><!--./col-md-3-->
         <?php
-    }
+}
 }
 if ($this->module_lib->hasActive('front_office')) {
     if ($this->rbac->hasPrivilege('enquiry_overview_widegts', 'can_view')) {
@@ -331,7 +332,7 @@ if ($this->module_lib->hasActive('front_office')) {
                     </div><!--./col-md-3-->
 
         <?php
-    }
+}
 }
 
 if ($this->module_lib->hasActive('library')) {
@@ -380,7 +381,7 @@ if ($this->module_lib->hasActive('library')) {
 
 
         <?php
-    }
+}
 }
 if ($this->module_lib->hasActive('student_attendance')) {
     if ($this->rbac->hasPrivilege('today_attendance_widegts', 'can_view')) {
@@ -421,46 +422,45 @@ if ($this->module_lib->hasActive('student_attendance')) {
                             </div>
                         </div><!--./topprograssstart-->
 
-                    </div><!--./col-md-3--> 
+                    </div><!--./col-md-3-->
                     <?php
-                }
-            }
+}
+}
 
+$currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
-            $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
+$div_col    = 12;
+$div_rol    = 12;
+$bar_chart  = true;
+$line_chart = true;
+if ($this->rbac->hasPrivilege('staff_role_count_widget', 'can_view')) {
+    $div_col = 9;
+    $div_rol = 12;
+}
 
-            $div_col = 12;
-            $div_rol = 12;
-            $bar_chart = true;
-            $line_chart = true;
-            if ($this->rbac->hasPrivilege('staff_role_count_widget', 'can_view')) {
-                $div_col = 9;
-                $div_rol = 12;
-            }
+$widget_col = array();
+if ($this->rbac->hasPrivilege('Monthly fees_collection_widget', 'can_view')) {
+    $widget_col[0] = 1;
+    $div_rol       = 3;
+}
 
-            $widget_col = array();
-            if ($this->rbac->hasPrivilege('Monthly fees_collection_widget', 'can_view')) {
-                $widget_col[0] = 1;
-                $div_rol = 3;
-            }
+if ($this->rbac->hasPrivilege('monthly_expense_widget', 'can_view')) {
+    $widget_col[1] = 2;
+    $div_rol       = 3;
+}
 
-            if ($this->rbac->hasPrivilege('monthly_expense_widget', 'can_view')) {
-                $widget_col[1] = 2;
-                $div_rol = 3;
-            }
+if ($this->rbac->hasPrivilege('student_count_widget', 'can_view')) {
+    $widget_col[2] = 3;
+    $div_rol       = 3;
+}
+$div = sizeof($widget_col);
+if (!empty($widget_col)) {
+    $widget = 12 / $div;
+} else {
 
-            if ($this->rbac->hasPrivilege('student_count_widget', 'can_view')) {
-                $widget_col[2] = 3;
-                $div_rol = 3;
-            }
-            $div = sizeof($widget_col);
-            if (!empty($widget_col)) {
-                $widget = 12 / $div;
-            } else {
-
-                $widget = 12;
-            }
-            ?> 
+    $widget = 12;
+}
+?>
 
 
             <div class="row">
@@ -502,7 +502,7 @@ if ($this->module_lib->hasActive('expense')) {
                                     </div>
                                 </div>
     <?php
-    }
+}
 }
 
 if ($this->rbac->hasPrivilege('student_count_widget', 'can_view')) {
@@ -520,12 +520,13 @@ if ($this->rbac->hasPrivilege('student_count_widget', 'can_view')) {
                                     </a>
                                 </div>
                             </div>
-<?php } ?>
-                    </div>   
+<?php }?>
+                    </div>
 
 
 <?php
-if ($this->rbac->hasPrivilege('calendar_to_do_list', 'can_view')) {
+if ($this->module_lib->hasActive('calendar_to_do_list')) {
+    if ($this->rbac->hasPrivilege('calendar_to_do_list', 'can_view')) {
     $div_rol = 3;
     ?>
                         <div class="box box-primary borderwhite">
@@ -536,12 +537,12 @@ if ($this->rbac->hasPrivilege('calendar_to_do_list', 'can_view')) {
                             <!-- /.box-body -->
                         </div>
                         <!-- /. box -->
-                    <?php } ?> 
+<?php } } ?>
 
                 </div><!--./col-lg-9-->
 <?php
 if ($this->rbac->hasPrivilege('staff_role_count_widget', 'can_view')) {
-    // print_r($roles);
+
     ?>
 
                     <div class="col-lg-3 col-md-3 col-sm-12 col20">
@@ -556,13 +557,13 @@ if ($this->rbac->hasPrivilege('staff_role_count_widget', 'can_view')) {
                                         <span class="info-box-number"><?php echo $value; ?></span>
                                     </div>
                                 </a>
-                            </div>     
-    <?php } ?>
+                            </div>
+    <?php }?>
 
 
 
                     </div><!--./col-lg-3-->
-<?php } ?>
+<?php }?>
             </div><!--./row-->
 
 
@@ -581,7 +582,7 @@ if ($this->rbac->hasPrivilege('staff_role_count_widget', 'can_view')) {
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal">&times;</button>
-                <h4 class="modal-title"><?php echo "Add New Event"; ?></h4>
+                <h4 class="modal-title"><?php echo $this->lang->line("add_new_event"); ?></h4>
             </div>
             <div class="modal-body">
 
@@ -589,7 +590,7 @@ if ($this->rbac->hasPrivilege('staff_role_count_widget', 'can_view')) {
                     <form role="form"  id="addevent_form" method="post" enctype="multipart/form-data" action="">
                         <div class="form-group col-md-12">
                             <label for="exampleInputEmail1"><?php echo $this->lang->line('event'); ?> <?php echo $this->lang->line('title'); ?></label><small class="req"> *</small>
-                            <input class="form-control" name="title" id="input-field"> 
+                            <input class="form-control" name="title" id="input-field">
                             <span class="text-danger"><?php echo form_error('title'); ?></span>
 
                         </div>
@@ -597,38 +598,49 @@ if ($this->rbac->hasPrivilege('staff_role_count_widget', 'can_view')) {
                         <div class="form-group col-md-12">
                             <label for="exampleInputEmail1"><?php echo $this->lang->line('description'); ?></label>
                             <textarea name="description" class="form-control" id="desc-field"></textarea></div>
-                        <div class="form-group col-md-12">
-                            <label for="exampleInputEmail1"><?php echo $this->lang->line('event'); ?> <?php echo $this->lang->line('date'); ?></label>
+                     <div class="row">
+
+                        <div class="form-group col-md-6">
+                            <label for="exampleInputEmail1"><?php echo $this->lang->line('event') . " " . $this->lang->line('from') ?></label>
                             <div class="input-group">
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
                                 </div>
-                                <input type="text" autocomplete="off" name="event_dates" class="form-control pull-right" id="date-field">
+                                <input type="text" autocomplete="off" name="event_from" class="form-control pull-right event_from">
                             </div>
-                              <!-- <input class="form-control" type="text" autocomplete="off"  name="event_dates" id="date-field"> --></div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="exampleInputEmail1"><?php echo $this->lang->line('event') . " " . $this->lang->line('to') ?></label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <input type="text" autocomplete="off" name="event_to" class="form-control pull-right event_to">
+                            </div>
+                        </div>
+                            </div>
                         <div class="form-group col-md-12">
                             <label for="exampleInputEmail1"><?php echo $this->lang->line('event'); ?> <?php echo $this->lang->line('color'); ?></label>
                             <input type="hidden" name="eventcolor" autocomplete="off" id="eventcolor" class="form-control">
                         </div>
                         <div class="form-group col-md-12">
-                            <?php //print_r($event_colors)   ?>
 
                             <?php
-                            $i = 0;
-                            $colors = '';
-                            foreach ($event_colors as $color) {
-                                $color_selected_class = 'cpicker-small';
-                                if ($i == 0) {
-                                    $color_selected_class = 'cpicker-big';
-                                }
-                                $colors .= "<div class='calendar-cpicker cpicker " . $color_selected_class . "' data-color='" . $color . "' style='background:" . $color . ";border:1px solid " . $color . "; border-radius:100px'></div>";
-                                //   echo $colors ;
-                                $i++;
-                            }
-                            echo '<div class="cpicker-wrapper">';
-                            echo $colors;
-                            echo '</div>';
-                            ?>
+$i      = 0;
+$colors = '';
+foreach ($event_colors as $color) {
+    $color_selected_class = 'cpicker-small';
+    if ($i == 0) {
+        $color_selected_class = 'cpicker-big';
+    }
+    $colors .= "<div class='calendar-cpicker cpicker " . $color_selected_class . "' data-color='" . $color . "' style='background:" . $color . ";border:1px solid " . $color . "; border-radius:100px'></div>";
+    $i++;
+}
+echo '<div class="cpicker-wrapper">';
+echo $colors;
+echo '</div>';
+?>
                         </div>
 
                         <div class="form-group col-md-12">
@@ -658,7 +670,7 @@ if ($this->rbac->hasPrivilege('staff_role_count_widget', 'can_view')) {
             </div>
         </div>
     </div>
-</div>  
+</div>
 <div id="viewEventModal" class="modal fade " role="dialog">
     <div class="modal-dialog modal-dialog2 modal-lg">
         <div class="modal-content">
@@ -672,46 +684,56 @@ if ($this->rbac->hasPrivilege('staff_role_count_widget', 'can_view')) {
                     <form role="form"   method="post" id="updateevent_form"  enctype="multipart/form-data" action="" >
                         <div class="form-group col-md-12">
                             <label for="exampleInputEmail1"><?php echo $this->lang->line('event') ?><?php echo $this->lang->line('title') ?></label>
-                            <input class="form-control" name="title" placeholder="Event Title" id="event_title"> 
+                            <input class="form-control" name="title" placeholder="" id="event_title">
                         </div>
                         <div class="form-group col-md-12">
                             <label for="exampleInputEmail1"><?php echo $this->lang->line('description') ?></label>
-                            <textarea name="description" class="form-control" placeholder="Event Description" id="event_desc"></textarea></div>
-                        <div class="form-group col-md-12">
-                            <label for="exampleInputEmail1"><?php echo $this->lang->line('event') ?><?php echo $this->lang->line('date') ?></label>
+                            <textarea name="description" class="form-control" placeholder="" id="event_desc"></textarea></div>
+                      <div class="row">
+
+                        <div class="form-group col-md-6">
+                            <label for="exampleInputEmail1"><?php echo $this->lang->line('event') . " " . $this->lang->line('from') ?></label>
                             <div class="input-group">
                                 <div class="input-group-addon">
                                     <i class="fa fa-calendar"></i>
                                 </div>
-                                <input type="text" autocomplete="off" name="eventdates" class="form-control pull-right" id="eventdates">
+                                <input type="text" autocomplete="off" name="event_from" class="form-control pull-right event_from">
                             </div>
-                              <!-- <input class="form-control" type="text" autocomplete="off" name="eventdates" placeholder="Event Dates" id="eventdates"> --></div>
+                        </div>
+
+                        <div class="form-group col-md-6">
+                            <label for="exampleInputEmail1"><?php echo $this->lang->line('event') . " " . $this->lang->line('to') ?></label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-calendar"></i>
+                                </div>
+                                <input type="text" autocomplete="off" name="event_to" class="form-control pull-right event_to">
+                            </div>
+                        </div>
+                            </div>
                         <input type="hidden" name="eventid" id="eventid">
                         <div class="form-group col-md-12">
                             <label for="exampleInputEmail1"><?php echo $this->lang->line('event') ?><?php echo $this->lang->line('color') ?></label>
                             <input type="hidden" name="eventcolor" autocomplete="off" placeholder="Event Color" id="event_color" class="form-control">
                         </div>
                         <div class="form-group col-md-12">
-                            <?php //print_r($event_colors)  ?>
-
+                            
                             <?php
-                            $i = 0;
-                            $colors = '';
-                            foreach ($event_colors as $color) {
-                                $colorid = trim($color, "#");
-                                // print_r($colorid);
-                                $color_selected_class = 'cpicker-small';
-                                if ($i == 0) {
-                                    $color_selected_class = 'cpicker-big';
-                                }
-                                $colors .= "<div id=" . $colorid . " class='calendar-cpicker cpicker " . $color_selected_class . "' data-color='" . $color . "' style='background:" . $color . ";border:1px solid " . $color . "; border-radius:100px'></div>";
-                                //   echo $colors ;
-                                $i++;
-                            }
-                            echo '<div class="cpicker-wrapper selectevent">';
-                            echo $colors;
-                            echo '</div>';
-                            ?>
+$i      = 0;
+$colors = '';
+foreach ($event_colors as $color) {
+    $colorid = trim($color, "#");
+    $color_selected_class = 'cpicker-small';
+    if ($i == 0) {
+        $color_selected_class = 'cpicker-big';
+    }
+    $colors .= "<div id=" . $colorid . " class='calendar-cpicker cpicker " . $color_selected_class . "' data-color='" . $color . "' style='background:" . $color . ";border:1px solid " . $color . "; border-radius:100px'></div>";
+    $i++;
+}
+echo '<div class="cpicker-wrapper selectevent">';
+echo $colors;
+echo '</div>';
+?>
                         </div>
                         <div class="form-group col-md-12">
                             <label for="exampleInputEmail1"><?php echo $this->lang->line('event') ?><?php echo $this->lang->line('type') ?></label>
@@ -721,7 +743,7 @@ if ($this->rbac->hasPrivilege('staff_role_count_widget', 'can_view')) {
                             </label>
                             <label class="radio-inline">
 
-                                <input type="radio" name="eventtype" value="private" id="private"><?php echo $this->lang->line('private') ?> 
+                                <input type="radio" name="eventtype" value="private" id="private"><?php echo $this->lang->line('private') ?>
                             </label>
                             <label class="radio-inline">
 
@@ -729,7 +751,7 @@ if ($this->rbac->hasPrivilege('staff_role_count_widget', 'can_view')) {
                             </label>
                             <label class="radio-inline">
 
-                                <input type="radio" name="eventtype" value="protected" id="public"><?php echo $this->lang->line('protected') ?> 
+                                <input type="radio" name="eventtype" value="protected" id="public"><?php echo $this->lang->line('protected') ?>
                             </label>
                         </div>
 
@@ -738,10 +760,10 @@ if ($this->rbac->hasPrivilege('staff_role_count_widget', 'can_view')) {
                             <input type="submit" class="btn btn-primary submit_update pull-right" value="<?php echo $this->lang->line('save'); ?>">
                         </div>
                         <div class="col-xs-1 col-sm-1 col-md-1 col-lg-1">
-<?php if ($this->rbac->hasPrivilege('calendar_to_do_list', 'can_delete')) { ?>
+<?php if ($this->rbac->hasPrivilege('calendar_to_do_list', 'can_delete')) {?>
                                 <input type="button" id="delete_event" class="btn btn-primary submit_delete pull-right" value="<?php echo $this->lang->line('delete'); ?>">
-<?php } ?>
-                        </div>       
+<?php }?>
+                        </div>
                     </form>
                 </div>
 
@@ -760,25 +782,26 @@ if ($this->rbac->hasPrivilege('staff_role_count_widget', 'can_view')) {
 <!-- <script src="<?php echo base_url() ?>backend/js/Chart.min.js"></script>
 <script src="<?php echo base_url() ?>backend/js/utils.js"></script> -->
 <script type="text/javascript">
-
+ <?php if ($this->rbac->hasPrivilege('income_donut_graph', 'can_view')) {
+    ?>
     new Chart(document.getElementById("doughnut-chart"), {
     type: 'doughnut',
             data: {
-            labels: [<?php foreach ($incomegraph as $value) { ?>"<?php echo $value['income_category']; ?>", <?php } ?> ],
+            labels: [<?php foreach ($incomegraph as $value) {?>"<?php echo $value['income_category']; ?>", <?php }?> ],
                     datasets: [
                     {
                     label: "Income",
                             backgroundColor: [<?php $s = 1;
-foreach ($incomegraph as $value) {
-    ?>"<?php echo incomegraphColors($s++); ?>", <?php
-    if ($s == 8) {
-        $s = 1;
+    foreach ($incomegraph as $value) {
+        ?>"<?php echo incomegraphColors($s++); ?>", <?php
+if ($s == 8) {
+            $s = 1;
+        }
     }
-}
-?> ],
+    ?> ],
                             data: [<?php $s = 1;
-foreach ($incomegraph as $value) {
-    ?><?php echo $value['total']; ?>, <?php } ?>]
+    foreach ($incomegraph as $value) {
+        ?><?php echo $value['total']; ?>, <?php }?>]
                     }
                     ]
             },
@@ -798,22 +821,25 @@ foreach ($incomegraph as $value) {
                     }
             }
     });
+    <?php
+}if ($this->rbac->hasPrivilege('expense_donut_graph', 'can_view')) {
+    ?>
     new Chart(document.getElementById("doughnut-chart1"), {
     type: 'doughnut',
             data: {
-            labels: [<?php foreach ($expensegraph as $value) { ?>"<?php echo $value['exp_category']; ?>", <?php } ?>],
+            labels: [<?php foreach ($expensegraph as $value) {?>"<?php echo $value['exp_category']; ?>", <?php }?>],
                     datasets: [
                     {
                     label: "Population (millions)",
                             backgroundColor: [<?php $ss = 1;
-foreach ($expensegraph as $value) {
-    ?>"<?php echo expensegraphColors($ss++); ?>", <?php
-    if ($ss == 8) {
-        $ss = 1;
+    foreach ($expensegraph as $value) {
+        ?>"<?php echo expensegraphColors($ss++); ?>", <?php
+if ($ss == 8) {
+            $ss = 1;
+        }
     }
-}
-?>],
-                            data: [<?php foreach ($expensegraph as $value) { ?><?php echo $value['total']; ?>, <?php } ?>]
+    ?>],
+                            data: [<?php foreach ($expensegraph as $value) {?><?php echo $value['total']; ?>, <?php }?>]
                     }
                     ]
             },
@@ -834,6 +860,7 @@ foreach ($expensegraph as $value) {
             }
     });
 <?php
+}
 if (($this->module_lib->hasActive('fees_collection')) || ($this->module_lib->hasActive('expense'))) {
     ?>
         $(function () {
@@ -858,6 +885,9 @@ if (($this->module_lib->hasActive('fees_collection')) || ($this->module_lib->has
         };
         var bar_chart = "<?php echo $bar_chart ?>";
         var line_chart = "<?php echo $line_chart ?>";
+         <?php
+if ($this->rbac->hasPrivilege('fees_collection_and_expense_yearly_chart', 'can_view')) {
+        ?>
         if (line_chart) {
 
 
@@ -924,7 +954,36 @@ if (($this->module_lib->hasActive('fees_collection')) || ($this->module_lib->has
                 }
                 ]
         };
+         <?php }if ($this->rbac->hasPrivilege('fees_collection_and_expense_monthly_chart', 'can_view')) {?>
         if (bar_chart) {
+             var current_month_days = <?php echo json_encode($current_month_days) ?>;
+        var days_collection = <?php echo json_encode($days_collection) ?>;
+        var days_expense = <?php echo json_encode($days_expense) ?>;
+        var areaChartData_classAttendence = {
+        labels: current_month_days,
+                datasets: [
+                {
+                label: "Electronics",
+                        fillColor: "rgba(102, 170, 24, 0.6)",
+                        strokeColor: "rgba(102, 170, 24, 0.6)",
+                        pointColor: "rgba(102, 170, 24, 0.6)",
+                        pointStrokeColor: "#c1c7d1",
+                        pointHighlightFill: "#fff",
+                        pointHighlightStroke: "rgba(220,220,220,1)",
+                        data: days_collection
+                },
+                {
+                label: "Digital Goods",
+                        fillColor: "rgba(233, 30, 99, 0.9)",
+                        strokeColor: "rgba(233, 30, 99, 0.9)",
+                        pointColor: "rgba(233, 30, 99, 0.9)",
+                        pointStrokeColor: "rgba(233, 30, 99, 0.9)",
+                        pointHighlightFill: "rgba(233, 30, 99, 0.9)",
+                        pointHighlightStroke: "rgba(60,141,188,1)",
+                        data: days_expense
+                }
+                ]
+        };
         var barChartCanvas = $("#barChart").get(0).getContext("2d");
         var barChart = new Chart(barChartCanvas);
         var barChartData = areaChartData_classAttendence;
@@ -948,6 +1007,7 @@ if (($this->module_lib->hasActive('fees_collection')) || ($this->module_lib->has
         barChartOptions.datasetFill = false;
         barChart.Bar(barChartData, barChartOptions);
         }
+         <?php }?>
         });
     <?php
 }

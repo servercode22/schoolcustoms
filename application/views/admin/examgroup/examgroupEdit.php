@@ -1,9 +1,5 @@
 <?php $currency_symbol = $this->customlib->getSchoolCurrencyFormat(); ?>
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-
-
-
     <!-- Main content -->
     <section class="content">
         <div class="row">
@@ -130,7 +126,7 @@
                                                 </td>
 
 
-                                                <td class="mailbox-date pull-right">
+                                                <td class="mailbox-date pull-right white-space-nowrap">
                                                     <?php if ($this->rbac->hasPrivilege('exam', 'can_view')) { ?>
                                                         <a href="<?php echo base_url(); ?>admin/examgroup/addexam/<?php echo $examgroup->id ?>"
                                                            class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('add') . " " . $this->lang->line('exam') ?>">

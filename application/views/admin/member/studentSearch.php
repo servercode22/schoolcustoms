@@ -1,7 +1,7 @@
 <?php
 $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 ?>
-<div class="content-wrapper" style="min-height: 946px;">    
+<div class="content-wrapper">    
     <section class="content-header">
         <h1>
             <i class="fa fa-book"></i> <?php echo $this->lang->line('library'); ?></h1>
@@ -85,10 +85,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <th><?php echo $this->lang->line('father_name'); ?></th>
                                                 <th><?php echo $this->lang->line('date_of_birth'); ?></th>
                                                 <th><?php echo $this->lang->line('gender'); ?></th>
-
                                                 <th><?php echo $this->lang->line('mobile_no'); ?></th>
-
-                                                <th class="text text-right"><?php echo $this->lang->line('action'); ?></th>
+                                                <th class="text text-right noExport"><?php echo $this->lang->line('action'); ?></th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -115,7 +113,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         <td><?php echo $library_card_no; ?></td>
                                                         <td><?php echo $student['admission_no']; ?></td>
                                                         <td>
-                                                            <?php echo $student['firstname'] . " " . $student['lastname']; ?>
+                                                            <?php echo $this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname); ?>
 
                                                         </td>
                                                         <td><?php echo $student['class'] . "(" . $student['section'] . ")" ?></td>

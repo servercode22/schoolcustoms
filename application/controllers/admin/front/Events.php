@@ -1,57 +1,61 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
-class Events extends Admin_Controller {
+class Events extends Admin_Controller
+{
 
-    function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $config = array(
             'field' => 'slug',
             'title' => 'title',
             'table' => 'front_cms_programs',
-            'id' => 'id',
+            'id'    => 'id',
         );
         $this->load->library('slug', $config);
 
         $this->load->library('imageResize');
     }
 
-    function index() {
+    public function index()
+    {
         if (!$this->rbac->hasPrivilege('event', 'can_view')) {
             access_denied();
         }
         $this->session->set_userdata('top_menu', 'Front CMS');
         $this->session->set_userdata('sub_menu', 'admin/front/events');
-        $data['title'] = 'Add Book';
+        $data['title']      = 'Add Book';
         $data['title_list'] = 'Book Details';
-        $event_content = $this->config->item('ci_front_event_content');
-        $listResult = $this->cms_program_model->getByCategory($event_content);
+        $event_content      = $this->config->item('ci_front_event_content');
+        $listResult         = $this->cms_program_model->getByCategory($event_content);
         $data['listResult'] = $listResult;
         $this->load->view('layout/header');
         $this->load->view('admin/front/events/index', $data);
         $this->load->view('layout/footer');
     }
 
-    function create() {
+    public function create()
+    {
         if (!$this->rbac->hasPrivilege('event', 'can_add')) {
             access_denied();
         }
         $this->session->set_userdata('top_menu', 'Front CMS');
         $this->session->set_userdata('sub_menu', 'admin/front/events');
-        $data['title'] = 'Add Book';
+        $data['title']      = 'Add Book';
         $data['title_list'] = 'Book Details';
         $this->form_validation->set_rules('title', $this->lang->line('title'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('start_date', $this->lang->line('start_date'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('end_date', $this->lang->line('event_date'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('description', $this->lang->line('description'), 'trim|required');
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == false) {
             $this->load->view('layout/header');
             $this->load->view('admin/front/events/create', $data);
             $this->load->view('layout/footer');
         } else {
-
 
             $category = $this->input->post('content_category');
             if (isset($category)) {
@@ -60,31 +64,32 @@ class Events extends Admin_Controller {
                 $contents_category = "";
             }
             $data = array(
-                'title' => $this->input->post('title'),
-                'description' => htmlspecialchars_decode($this->input->post('description')),
-                'meta_title' => $this->input->post('meta_title'),
-                'meta_keyword' => $this->input->post('meta_keywords'),
-                'event_start' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('start_date'))),
-                'event_end' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('end_date'))),
-                'event_venue' => $this->input->post('venue'),
-                'feature_image' => $this->input->post('image'),
-                'sidebar' => $this->input->post('sidebar'),
-                'sidebar' => $this->input->post('sidebar'),
-                'type' => $this->config->item('ci_front_event_content'),
-                'meta_description' => $this->input->post('meta_description')
+                'title'            => $this->input->post('title'),
+                'description'      => htmlspecialchars_decode($this->input->post('description', false)),
+                'meta_title'       => $this->input->post('meta_title'),
+                'meta_keyword'     => $this->input->post('meta_keywords'),
+                'event_start'      => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('start_date'))),
+                'event_end'        => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('end_date'))),
+                'event_venue'      => $this->input->post('venue'),
+                'feature_image'    => $this->input->post('image'),
+                'sidebar'          => $this->input->post('sidebar'),
+                'sidebar'          => $this->input->post('sidebar'),
+                'type'             => $this->config->item('ci_front_event_content'),
+                'meta_description' => $this->input->post('meta_description'),
             );
             $data['slug'] = $this->slug->create_uri($data);
-            $data['url'] = $this->config->item('ci_front_page_read_url') . $data['slug'];
+            $data['url']  = $this->config->item('ci_front_page_read_url') . $data['slug'];
             $this->cms_program_model->add($data);
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
             redirect('admin/front/events', 'refresh');
         }
     }
 
-    function delete_image() {
+    public function delete_image()
+    {
         $delte_image = $this->input->post('id');
         if ($delte_image == "" && !isset($delte_image)) {
-            
+
         } else {
             $this->cms_program_model->removeImage($delte_image);
             echo json_encode(array('status' => 0, 'msg' => $this->lang->line('image_deleted_successfully')));
@@ -93,11 +98,12 @@ class Events extends Admin_Controller {
         echo json_encode(array('status' => 1, 'msg' => $this->lang->line('something_wrong')));
     }
 
-    function enableFeatured() {
-        $id = $this->input->post('id');
+    public function enableFeatured()
+    {
+        $id        = $this->input->post('id');
         $record_id = $this->input->post('record_id');
         if ($id == "" && !isset($id)) {
-            
+
         } else {
             $this->cms_program_model->updateFeaturedImage($id, $record_id);
             echo json_encode(array('status' => 0, 'msg' => $this->lang->line('update_message')));
@@ -106,7 +112,8 @@ class Events extends Admin_Controller {
         echo json_encode(array('status' => 1, 'msg' => $this->lang->line('something_wrong')));
     }
 
-    function ajaxupload() {
+    public function ajaxupload()
+    {
 
         if (isset($_FILES['files']) && !empty($_FILES['files'])) {
             $no_files = count($_FILES["files"]['name']);
@@ -115,24 +122,23 @@ class Events extends Admin_Controller {
                     echo "Error: " . $_FILES["files"]["error"][$i] . "<br>";
                 } else {
 
-
                     $destination_path = "./uploads/gallery/event_images/";
-                    $thumb_path = "./uploads/gallery/event_images/thumb/";
-                    $responses = $this->imageresize->resize($_FILES["files"], $destination_path, $thumb_path);
+                    $thumb_path       = "./uploads/gallery/event_images/thumb/";
+                    $responses        = $this->imageresize->resize($_FILES["files"], $destination_path, $thumb_path);
                     if (!empty($responses)) {
 
                         foreach ($responses["images"] as $response) {
                             $data = array(
                                 'program_id' => $this->input->post('record_id'),
-                                'image' => $response['file_name'],
+                                'image'      => $response['file_name'],
                                 'thumb_path' => $response['thumb_path'],
-                                'dir_path' => $response['dir_path'],
-                                'img_name' => $response['store_name'],
-                                'thumb_name' => 'thumb_' . $response['store_name']
+                                'dir_path'   => $response['dir_path'],
+                                'img_name'   => $response['store_name'],
+                                'thumb_name' => 'thumb_' . $response['store_name'],
                             );
-                            $insert_id = $this->cms_program_model->addImage($data);
+                            $insert_id        = $this->cms_program_model->addImage($data);
                             $data['image_id'] = $insert_id;
-                            $msg = 'Image upload successfully';
+                            $msg              = 'Image upload successfully';
                             echo json_encode(array('status' => 0, 'msg' => $msg, 'image_array' => $data));
                         }
                     }
@@ -144,7 +150,8 @@ class Events extends Admin_Controller {
         }
     }
 
-    function edit($slug) {
+    public function edit($slug)
+    {
 
         if (!$this->rbac->hasPrivilege('event', 'can_edit')) {
             access_denied();
@@ -152,19 +159,18 @@ class Events extends Admin_Controller {
 
         $this->session->set_userdata('top_menu', 'Front CMS');
         $this->session->set_userdata('sub_menu', 'admin/front/events');
-        $data['title'] = 'Edit Book';
+        $data['title']      = 'Edit Book';
         $data['title_list'] = 'Book Details';
-        $result = $this->cms_program_model->getBySlug(urldecode($slug));
-
+        $result             = $this->cms_program_model->getBySlug(urldecode($slug));
 
         $data['result'] = $result;
         $this->form_validation->set_rules('title', $this->lang->line('title'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('start_date', $this->lang->line('start_date'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('end_date', $this->lang->line('event_date'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('description', $this->lang->line('description'), 'trim|required');
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == false) {
 
-            $listbook = $this->book_model->listbook();
+            $listbook         = $this->book_model->listbook();
             $data['listbook'] = $listbook;
             $this->load->view('layout/header');
             $this->load->view('admin/front/events/edit', $data);
@@ -172,18 +178,18 @@ class Events extends Admin_Controller {
         } else {
 
             $data = array(
-                'id' => $this->input->post('id'),
-                'title' => $this->input->post('title'),
-                'description' => htmlspecialchars_decode($this->input->post('description')),
-                'meta_title' => $this->input->post('meta_title'),
-                'meta_keyword' => $this->input->post('meta_keywords'),
-                'event_start' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('start_date'))),
-                'event_end' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('end_date'))),
-                'event_venue' => $this->input->post('venue'),
-                'feature_image' => $this->input->post('image'),
-                'sidebar' => $this->input->post('sidebar'),
-                'type' => $this->config->item('ci_front_event_content'),
-                'meta_description' => $this->input->post('meta_description')
+                'id'               => $this->input->post('id'),
+                'title'            => $this->input->post('title'),
+                'description'      => htmlspecialchars_decode($this->input->post('description', false)),
+                'meta_title'       => $this->input->post('meta_title'),
+                'meta_keyword'     => $this->input->post('meta_keywords'),
+                'event_start'      => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('start_date'))),
+                'event_end'        => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('end_date'))),
+                'event_venue'      => $this->input->post('venue'),
+                'feature_image'    => $this->input->post('image'),
+                'sidebar'          => $this->input->post('sidebar'),
+                'type'             => $this->config->item('ci_front_event_content'),
+                'meta_description' => $this->input->post('meta_description'),
             );
 
             $data['slug'] = $this->slug->create_uri($data, $this->input->post('id'));
@@ -193,7 +199,8 @@ class Events extends Admin_Controller {
         }
     }
 
-    function delete($id) {
+    public function delete($id)
+    {
 
         if (!$this->rbac->hasPrivilege('event', 'can_delete')) {
             access_denied();
@@ -206,5 +213,3 @@ class Events extends Admin_Controller {
     }
 
 }
-
-?>

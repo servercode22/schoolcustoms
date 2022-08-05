@@ -179,7 +179,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                     ?>
                                                                 <input type="hidden" name="student_list[]" value="<?php echo $student['student_session_id'] ?>">
                                                                 <tr>
-
                                                                     <td> 
                                                                         <?php
                                                                         if ($student['student_fees_discount_id'] != 0) {
@@ -190,9 +189,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                         ?>
                                                                         <input class="checkbox" type="checkbox" name="student_session_id[]"  value="<?php echo $student['student_session_id']; ?>" <?php echo $sel; ?>/>
                                                                     </td>
-
                                                                     <td><?php echo $student['admission_no']; ?></td>
-                                                                    <td><?php echo $student['firstname'] . " " . $student['lastname']; ?></td>
+                                                                    <td><?php echo $this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname); ?></td>
                                                                     <td><?php echo $student['class'] . "(" . $student['section'] . ")" ?></td>
                                                                     <td><?php echo $student['father_name']; ?></td>
                                                                     <td><?php echo $student['category']; ?></td>
@@ -320,8 +318,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 <p><?php echo $this->lang->line('are_you_sure_assign_fees_discount') ?></p>
             </div>
             <div class="modal-footer">
-                <a href="#" data-dismiss="modal" aria-hidden="true" class="btn btn-danger btn secondary">No</a>
-                <a href="#" id="delete-btn" class="btn btn-confirm confirm">Yes</a>
+                <a href="#" data-dismiss="modal" aria-hidden="true" class="btn btn-danger btn secondary"><?php echo $this->lang->line('no') ?></a>
+                <a href="#" id="delete-btn" class="btn btn-confirm confirm"><?php echo $this->lang->line('yes') ?></a>
 
             </div>
         </div>

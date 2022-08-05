@@ -17,8 +17,7 @@
                         <?php }
                         ?>
                     </div>
-                    <form id="form1" action="<?php echo site_url('student/create') ?>"  id="employeeform" name="employeeform" method="post" accept-charset="utf-8" enctype="multipart/form-data">
-                        <?php //echo validation_errors();  ?>
+                    <form id="form1" action="<?php echo site_url('student/create') ?>"  id="employeeform" name="employeeform" method="post" accept-charset="utf-8" enctype="multipart/form-data">                       
                         <div class="">
                             <div class="bozero">
                                 <h4 class="pagetitleh-whitebg"><?php echo $this->lang->line('student'); ?> <?php echo $this->lang->line('admission'); ?> </h4>
@@ -56,7 +55,7 @@
                                             <div class="form-group">
                                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
                                                 <select  id="class_id" name="class_id" class="form-control"  >
-                                                    <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                                     <option value=""><?php echo $this->lang->line('select'); ?></option>
                                                     <?php
                                                     foreach ($classlist as $class) {
                                                         ?>
@@ -93,6 +92,15 @@
                                                 <span class="text-danger"><?php echo form_error('firstname'); ?></span>
                                             </div>
                                         </div>
+                                        <?php if ($sch_setting->middlename) { ?>
+                                            <div class="col-md-3">
+                                                <div class="form-group">
+                                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('middle_name'); ?></label>
+                                                    <input id="middlename" name="middlename" placeholder="" type="text" class="form-control"  value="<?php echo set_value('middlename'); ?>" />
+                                                    <span class="text-danger"><?php echo form_error('middlename'); ?></span>
+                                                </div>
+                                            </div>
+                                        <?php } ?>
                                         <?php if ($sch_setting->lastname) { ?>
                                             <div class="col-md-3">
                                                 <div class="form-group">
@@ -302,6 +310,7 @@
 
                                 </div>
                             </div>
+                           <?php  if(($sch_setting->father_name) || ($sch_setting->father_phone) || ($sch_setting->father_occupation) || ($sch_setting->father_pic) || ($sch_setting->mother_name) || ($sch_setting->mother_phone) || ($sch_setting->mother_occupation) || ($sch_setting->mother_pic) || ($sch_setting->guardian_name) || ($sch_setting->guardian_occupation) || ($sch_setting->guardian_relation) || ($sch_setting->guardian_phone) || ($sch_setting->guardian_email) || ($sch_setting->guardian_pic) || ($sch_setting->guardian_address)){ ?>
                             <div class="bozero">
                                 <h4 class="pagetitleh2"><?php echo $this->lang->line('parent_guardian_detail'); ?></h4>
                                 <div class="around10">
@@ -375,7 +384,10 @@
                                             </div>
 <?php } ?>
                                     </div>
-                                    <div class="row">
+                                    <?php 
+                                    if($sch_setting->guardian_name){
+                                        ?>
+                                        <div class="row">
                                         <div class="form-group col-md-12">
                                             <label><?php echo $this->lang->line('if_guardian_is'); ?><small class="req"> *</small>&nbsp;&nbsp;&nbsp;</label>
                                             <label class="radio-inline">
@@ -396,9 +408,16 @@
                                             <span class="text-danger"><?php echo form_error('guardian_is'); ?></span>
                                         </div>
                                     </div>
+                                        <?php
+                                    }
+                                    ?>
+                                    
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="row">
+                                                 <?php 
+                                    if($sch_setting->guardian_name){
+                                        ?>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_name'); ?></label><small class="req"> *</small>
@@ -406,7 +425,7 @@
                                                         <span class="text-danger"><?php echo form_error('guardian_name'); ?></span>
                                                     </div>
                                                 </div>
-<?php if ($sch_setting->guardian_relation) { ?>
+<?php } if ($sch_setting->guardian_relation) { ?>
                                                     <div class="col-md-6">
                                                         <div class="form-group">
                                                             <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_relation'); ?></label>
@@ -414,9 +433,12 @@
                                                             <span class="text-danger"><?php echo form_error('guardian_relation'); ?></span>
                                                         </div>
                                                     </div>
-<?php } ?>
+                                    <?php } ?>
                                             </div>
                                             <div class="row">
+                                                <?php 
+                                    if($sch_setting->guardian_phone){
+                                        ?>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_phone'); ?></label><small class="req"> *</small>
@@ -424,6 +446,9 @@
                                                         <span class="text-danger"><?php echo form_error('guardian_phone'); ?></span>
                                                     </div>
                                                 </div>
+                                            <?php } 
+                                    if($sch_setting->guardian_occupation){
+                                        ?>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_occupation'); ?></label>
@@ -431,9 +456,10 @@
                                                         <span class="text-danger"><?php echo form_error('guardian_occupation'); ?></span>
                                                     </div>
                                                 </div>
+                                            <?php } ?>
                                             </div>
                                         </div>
-<?php if ($sch_setting->guardian_email) { ?>
+                                    <?php if ($sch_setting->guardian_email) { ?>
                                             <div class="col-md-3">
                                                 <div class="form-group">
                                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('guardian_email'); ?></label>
@@ -446,7 +472,7 @@
                                                 <div class="form-group">
                                                     <label for="exampleInputFile"><?php echo $this->lang->line('guardian'); ?> <?php echo $this->lang->line('photo'); ?></label>
                                                     <div><input class="filestyle form-control" type='file' name='guardian_pic' id="file" size='20' />
-                                                    </div>
+                                                    </div> 
                                                     <span class="text-danger"><?php echo form_error('file'); ?></span></div>
                                             </div>
 <?php } if ($sch_setting->guardian_address) { ?>
@@ -460,7 +486,7 @@
                                 </div>
                             </div>
 
-
+                        <?php } ?>
                             <div class="box-group collapsed-box">
                                 <div class="panel box collapsed-box border0 mb0">
                                     <div class="addmoredetail-title">
@@ -602,22 +628,23 @@
                                         <div class="tshadow mb25 bozero">
                                             <h4 class="pagetitleh2"><?php echo $this->lang->line('miscellaneous_details'); ?>
                                             </h4>
-<?php if ($sch_setting->bank_account_no) { ?>
+
                                                 <div class="row around10">
+                                                    <?php if ($sch_setting->bank_account_no) { ?>
                                                     <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="exampleInputEmail1"><?php echo $this->lang->line('bank_account_no'); ?></label>
                                                             <input id="bank_account_no" name="bank_account_no" placeholder="" type="text" class="form-control"  value="<?php echo set_value('bank_account_no'); ?>" />
                                                             <span class="text-danger"><?php echo form_error('bank_account_no'); ?></span>
                                                         </div>
-                                                    </div>
+                                                    </div><?php } if ($sch_setting->bank_name) { ?>
                                                     <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="exampleInputEmail1"><?php echo $this->lang->line('bank_name'); ?></label>
                                                             <input id="bank_name" name="bank_name" placeholder="" type="text" class="form-control"  value="<?php echo set_value('bank_name'); ?>" />
                                                             <span class="text-danger"><?php echo form_error('bank_name'); ?></span>
                                                         </div>
-                                                    </div>
+                                                    </div><?php } if ($sch_setting->ifsc_code) { ?>
                                                     <div class="col-md-4">
                                                         <div class="form-group">
                                                             <label for="exampleInputEmail1"><?php echo $this->lang->line('ifsc_code'); ?></label>
@@ -625,8 +652,9 @@
                                                             <span class="text-danger"><?php echo form_error('ifsc_code'); ?></span>
                                                         </div>
                                                     </div>
-                                                </div>
                                                 <?php } ?>
+                                                </div>
+                                          
                                             <div class="row around10">
 <?php if ($sch_setting->national_identification_no) { ?>
                                                     <div class="col-md-4">
@@ -769,11 +797,12 @@
             <div class="modal-body">
                 <div class="form-horizontal">
                     <div class="box-body">
-                        <div class="sibling_msg">
-
-                        </div>
+                        
                         <input  type="hidden" class="form-control" id="transport_student_session_id"  value="0" readonly="readonly"/>
                         <div class="form-group">
+                            <div class="sibling_msg">
+
+                        </div>
                             <label for="inputEmail3" class="col-sm-2 control-label"><?php echo $this->lang->line('class'); ?></label>
                             <div class="col-sm-10">
                                 <select  id="sibiling_class_id" name="sibiling_class_id" class="form-control"  >
@@ -846,9 +875,9 @@
 
 
 
-        $('.datetime').datetimepicker({
+        // $('.datetime').datetimepicker({
 
-        });
+        // });
         $(".color").colorpicker();
 
         $("#btnreset").click(function () {
@@ -961,15 +990,17 @@
                 if ($(this).is(':checked')) {
                     var value = $(this).val();
                     if (value == "father") {
+                        var father_relation = "<?php echo $this->lang->line('father'); ?>";
                         $('#guardian_name').val($('#father_name').val());
                         $('#guardian_phone').val($('#father_phone').val());
                         $('#guardian_occupation').val($('#father_occupation').val());
-                        $('#guardian_relation').val("Father")
+                        $('#guardian_relation').val(father_relation);
                     } else if (value == "mother") {
+                        var mother_relation = "<?php echo $this->lang->line('mother'); ?>";
                         $('#guardian_name').val($('#mother_name').val());
                         $('#guardian_phone').val($('#mother_phone').val());
                         $('#guardian_occupation').val($('#mother_occupation').val());
-                        $('#guardian_relation').val("Mother")
+                        $('#guardian_relation').val(mother_relation);
                     } else {
                         $('#guardian_name').val("");
                         $('#guardian_phone').val("");
@@ -1040,15 +1071,15 @@
                     if (section_id == obj.section_id) {
                         sel = "selected=selected";
                     }
-
+ 
 
                     if (obj.roll_no == null) {
 
-                        div_data += "<option value=" + obj.id + ">" + obj.firstname + " " + obj.lastname + "</option>";
+                        div_data += "<option value=" + obj.id + ">" + obj.full_name +  "</option>";
 
 
                     } else {
-                        div_data += "<option value=" + obj.id + ">" + obj.firstname + " " + obj.lastname + " (" + obj.roll_no + ") " + "</option>";
+                        div_data += "<option value=" + obj.id + ">" + obj.full_name +  " (" + obj.roll_no + ") " + "</option>";
                     }
 
                 });
@@ -1067,7 +1098,7 @@
                 data: {'student_id': student_id},
                 dataType: "json",
                 success: function (data) {
-                    $('#sibling_name').text("Sibling: " + data.firstname + " " + data.lastname);
+                    $('#sibling_name').text("Sibling: " + data.full_name);
                     $('#sibling_name_next').val(data.firstname + " " + data.lastname);
                     $('#sibling_id').val(student_id);
                     $('#father_name').val(data.father_name);
@@ -1082,7 +1113,7 @@
                     $('#guardian_phone').val(data.guardian_phone);
                     $('#state').val(data.state);
                     $('#city').val(data.city);
-                    $('#pincode').val(data.pincode);
+                    $('#pincode').val(data.pincode); 
                     $('#current_address').val(data.current_address);
                     $('#permanent_address').val(data.permanent_address);
                     $('#guardian_occupation').val(data.guardian_occupation);
@@ -1091,7 +1122,7 @@
                 }
             });
         } else {
-            $('.sibling_msg').html("<div class='alert alert-danger'>No Student Selected</div>");
+            $('.sibling_msg').html("<div class='alert alert-danger text-center'><?php echo $this->lang->line('no_student_selected')?></div>");
         }
 
     });

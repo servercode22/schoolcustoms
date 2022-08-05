@@ -1,5 +1,5 @@
 
-<div class="content-wrapper" style="min-height: 348px;">  
+<div class="content-wrapper">  
     <section class="content-header">
         <h1>
             <i class="fa fa-ioxhost"></i> <?php echo $this->lang->line('front_office'); ?></h1>
@@ -100,13 +100,13 @@
                                                     </div></td>
 
 
-                                                <td class="mailbox-date pull-right">
+                                                <td class="mailbox-date pull-right white-space-nowrap">
                                                     <?php if ($this->rbac->hasPrivilege('setup_font_office', 'can_edit')) { ?>
-                                                        <a data-placement="left" href="<?php echo base_url(); ?>admin/complainttype/editcomplainttype/<?php echo $value['id']; ?>"  class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="Edit">
+                                                        <a data-placement="left" href="<?php echo base_url(); ?>admin/complainttype/editcomplainttype/<?php echo $value['id']; ?>"  class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('edit') ?>">
                                                             <i class="fa fa-pencil"></i>
                                                         </a>
                                                     <?php } if ($this->rbac->hasPrivilege('setup_font_office', 'can_delete')) { ?>
-                                                        <a data-placement="left" href="<?php echo base_url(); ?>admin/complainttype/delete/<?php echo $value['id']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');" data-original-title="Delete">
+                                                        <a data-placement="left" href="<?php echo base_url(); ?>admin/complainttype/delete/<?php echo $value['id']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');" data-original-title="<?php echo $this->lang->line('delete') ?>">
                                                             <i class="fa fa-remove"></i>
                                                         </a>
 

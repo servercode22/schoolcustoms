@@ -177,7 +177,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <h3 class="box-title titlefix"><i class="fa fa-money"></i> <?php echo $this->lang->line('student') . " " . $this->lang->line('profile'); ?></h3>
                         </div>
                         <div class="box-body table-responsive">
-                            <div class="download_label"> <?php echo $this->lang->line('student') . " " . $this->lang->line('profile') . "<br>";
+                            <div class="download_label"> <?php echo $this->lang->line('student') . " " . $this->lang->line('profile');
                                             $this->customlib->get_postmessage();
                                             ?></div>
                             <table class="table table-striped table-bordered table-hover example">
@@ -195,7 +195,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <th><?php echo $this->lang->line('class'); ?></th>
                                         <th><?php echo $this->lang->line('section'); ?></th>
                                         <th><?php echo $this->lang->line('first_name'); ?></th>
-<?php if ($sch_setting->lastname) { ?>
+                                        <?php if ($sch_setting->middlename) { ?>
+                                         <th><?php echo $this->lang->line('middle_name'); ?></th>
+<?php } if ($sch_setting->lastname) { ?>
                                             <th><?php echo $this->lang->line('last_name'); ?></th>
                                         <?php } ?>
                                         <th><?php echo $this->lang->line('gender'); ?></th>
@@ -234,16 +236,19 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <th><?php echo $this->lang->line('mother_name'); ?></th>
                                         <?php } if ($sch_setting->mother_phone) { ?>
                                             <th><?php echo $this->lang->line('mother_phone'); ?></th>
-<?php } if ($sch_setting->mother_occupation) { ?>
+                                       <?php } if ($sch_setting->mother_occupation) { ?>
                                             <th><?php echo $this->lang->line('mother_occupation'); ?></th>
                                         <?php } ?>
-                                        <th><?php echo $this->lang->line('if_guardian_is'); ?></th>
+                                        
+                                         <?php if ($sch_setting->guardian_name) { ?>
+                                            <th><?php echo $this->lang->line('if_guardian_is'); ?></th>
                                         <th><?php echo $this->lang->line('guardian_name'); ?></th>
-<?php if ($sch_setting->guardian_relation) { ?>
+                                        <?php } if ($sch_setting->guardian_relation) { ?>
                                             <th><?php echo $this->lang->line('guardian_relation'); ?></th>
-                                        <?php } ?>
+                                        <?php } if ($sch_setting->guardian_phone) { ?>
                                         <th><?php echo $this->lang->line('guardian_phone'); ?></th>
-                                        <th><?php echo $this->lang->line('guardian_occupation'); ?></th><?php if ($sch_setting->guardian_email) { ?>
+                                   <?php } if ($sch_setting->guardian_occupation) { ?>
+                                        <th><?php echo $this->lang->line('guardian_occupation'); ?></th><?php } if ($sch_setting->guardian_email) { ?>
                                             <th><?php echo $this->lang->line('guardian_email'); ?></th>
                                         <?php } if ($sch_setting->guardian_address) { ?>
                                             <th><?php echo $this->lang->line('guardian_address'); ?></th>
@@ -260,11 +265,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <th><?php echo $this->lang->line('room_no'); ?></th>
                                         <?php if ($sch_setting->bank_account_no) { ?>
                                             <th><?php echo $this->lang->line('bank_account_no'); ?></th>
-                                        <?php } if ($sch_setting->national_identification_no) { ?>
+                                        <?php } if ($sch_setting->bank_name) { ?>
                                             <th><?php echo $this->lang->line('bank_name'); ?></th>
-                                        <?php } ?>
+                                         <?php } if ($sch_setting->ifsc_code) { ?>
                                         <th><?php echo $this->lang->line('ifsc_code'); ?></th>
-                                        <?php if ($sch_setting->national_identification_no) { ?>
+                                        <?php } if ($sch_setting->national_identification_no) { ?>
                                             <th><?php echo $this->lang->line('national_identification_no'); ?></th>
                                         <?php } if ($sch_setting->local_identification_no) { ?>
                                             <th><?php echo $this->lang->line('local_identification_no'); ?></th>
@@ -293,6 +298,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <td><?php echo $value['class']; ?></td>
                                                 <td><?php echo $value['section'] ?></td>
                                                 <td><?php echo $value['firstname'] ?></td>
+                                                 <?php if ($sch_setting->middlename) { ?>
+                                                    <td><?php echo $value['middlename'] ?></td>
+                                                <?php } ?>
         <?php if ($sch_setting->lastname) { ?>
                                                     <td><?php echo $value['lastname'] ?></td>
                                                 <?php } ?>
@@ -330,17 +338,18 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <?php } if ($sch_setting->mother_name) { ?>                                         <td><?php echo $value['mother_name']; ?></td>
                                                 <?php } if ($sch_setting->mother_phone) { ?>
                                                     <td><?php echo $value['mother_phone']; ?></td>
-        <?php } if ($sch_setting->mother_occupation) { ?>
+                                                 <?php } if ($sch_setting->mother_occupation) { ?>
                                                     <td><?php echo $value['mother_occupation']; ?></td>
-                                                <?php } ?>
+                                                <?php } if ($sch_setting->guardian_name) { ?>
                                                 <td><?php echo $value['guardian_is']; ?></td>
                                                 <td><?php echo $value['guardian_name']; ?></td>
-        <?php if ($sch_setting->guardian_relation) { ?>
+                                                <?php } if ($sch_setting->guardian_relation) { ?>
                                                     <td><?php echo $value['guardian_relation']; ?></td>
-                                                <?php } ?>
+                                                 <?php } if ($sch_setting->guardian_phone) { ?>
                                                 <td><?php echo $value['guardian_phone']; ?></td>
+                                            <?php } if ($sch_setting->guardian_occupation) { ?>
                                                 <td><?php echo $value['guardian_occupation']; ?></td>
-                                                <?php if ($sch_setting->guardian_email) { ?>
+                                                <?php } if ($sch_setting->guardian_email) { ?>
                                                     <td><?php echo $value['guardian_email']; ?></td>
                                                 <?php } if ($sch_setting->guardian_address) { ?>
                                                     <td><?php echo $value['guardian_address']; ?></td>
@@ -354,11 +363,21 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <td><?php echo $value['hostel_name']; ?></td>
                                                 <?php } ?>
                                                 <td><?php echo $value['room_no']; ?></td>
-        <?php if ($sch_setting->bank_account_no) { ?>
+                                                <?php if ($sch_setting->bank_account_no) { ?>
                                                     <td><?php echo $value['bank_account_no']; ?></td>
                                                 <?php } ?>
-                                                <td><?php echo $value['bank_name']; ?></td>
-                                                <td><?php echo $value['ifsc_code']; ?></td>
+                                                        
+                                                    <?php if ($sch_setting->bank_name) {
+                                                         ?>
+                                                                 <td><?php echo $value['bank_name']; ?></td>
+                                                             <?php
+                                                     }?>
+                                                    <?php if ($sch_setting->ifsc_code) {
+                                                         ?>
+                                                                 <td><?php echo $value['ifsc_code']; ?></td>
+                                                             <?php
+                                                     }?>
+                                                     
                                                 <?php if ($sch_setting->national_identification_no) { ?>
                                                     <td><?php echo $value['samagra_id']; ?></td>
                                                 <?php } if ($sch_setting->local_identification_no) { ?>

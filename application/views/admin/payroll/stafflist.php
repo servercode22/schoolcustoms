@@ -188,7 +188,7 @@ if (isset($resultlist)) {
             <?php
             if ($this->rbac->hasPrivilege('staff_payroll', 'can_add')) {
                 ?>
-                                                        <a class="btn btn-default btn-xs" onclick="return confirm('Are you sure you want to revert this record')" href="<?php echo base_url() . "admin/payroll/revertpayroll/" . $staff["payslip_id"] . "/" . $month_selected . "/" . date("Y") . "/" . $role_selected ?>" title="Revert">
+                                                        <a class="btn btn-default btn-xs" onclick="return confirm('<?php echo $this->lang->line("are_you_sure_you_want_to_revert_this_record")?>')" href="<?php echo base_url() . "admin/payroll/revertpayroll/" . $staff["payslip_id"] . "/" . $month_selected . "/" . date("Y") . "/" . $role_selected ?>" title="Revert">
                                                             <i class="fa fa-undo"> </i>
                                                         </a>
                                                     <?php } ?>
@@ -202,7 +202,7 @@ if (isset($resultlist)) {
             <?php
             if ($this->rbac->hasPrivilege('staff_payroll', 'can_delete')) {
                 ?>
-                                                        <a href="<?php echo base_url() ?>admin/payroll/deletepayroll/<?php echo $staff["payslip_id"] . "/" . $month_selected . "/" . date("Y") . "/" . $role_selected ?>" class="btn btn-default btn-xs" onclick="return confirm('Are you sure you want to revert this record')" title="Revert">
+                                                        <a href="<?php echo base_url() ?>admin/payroll/deletepayroll/<?php echo $staff["payslip_id"] . "/" . $month_selected . "/" . date("Y") . "/" . $role_selected ?>" class="btn btn-default btn-xs" onclick="return confirm('<?php echo $this->lang->line("are_you_sure_you_want_to_revert_this_record")?>')" title="Revert">
                                                             <i class="fa fa-undo"> </i>
                                                         </a>
                 <?php
@@ -339,20 +339,14 @@ if (isset($resultlist)) {
     </div>
 </div>
 <script type="text/javascript">
-
-
     function getRecord(id, year) {
-        //  alert(year);
         $('input[name="amount"]').val('');
         $('input[name="emp_name"]').val('');
         $('input[name="paymentid"]').val('');
         $('input[name="paymentmonth"]').val('');
         $('input[name="paymentyear"]').val('');
         $('#monthid').val('');
-
-        var month = '<?php echo $month_selected ?>';
-        // var year = '<?php echo date('Y'); ?>';
-        var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
+        var month = '<?php echo $month_selected ?>';       
         var base_url = '<?php echo base_url() ?>';
         $.ajax({
             url: base_url + 'admin/payroll/paymentRecord',
@@ -361,22 +355,16 @@ if (isset($resultlist)) {
             dataType: "json",
             success: function (result) {
 
-
                 $('input[name="amount"]').val(result.result.net_salary);
                 $('input[name="emp_name"]').val(result.result.name + ' ' + result.result.surname + ' (' + result.result.employee_id + ')');
                 $('input[name="paymentid"]').val(result.result.id);
                 $('input[name="paymentmonth"]').val(month);
                 $('input[name="paymentyear"]').val(year);
                 $('#monthid').val(month + '-' + year);
-
-
             }
         });
 
-        $('#payment_date').datepicker({
-            format: date_format,
-            autoclose: true
-        });
+    
         $('#proceedtopay').modal({
             show: true,
             backdrop: 'static',
@@ -385,7 +373,6 @@ if (isset($resultlist)) {
 
     }
     ;
-
 
     function popup(data)
     {
@@ -427,24 +414,16 @@ if (isset($resultlist)) {
     }
 
     function getPayslip(id) {
-
-
-
         var base_url = '<?php echo base_url() ?>';
         $.ajax({
             url: base_url + 'admin/payroll/payslipView',
             type: 'POST',
-            data: {payslipid: id},
-            //dataType: "json",
+            data: {payslipid: id},           
             success: function (result) {
                 $("#print1").html("<a href='#'  class='pull-right modal-title moprintblack'  onclick='printData(" + id + ")'  title='Print' ><i class='fa fa-print'></i></a>");
-                //$("#print1").html("<a  class='pull-right modal-title moprint'  onclick='printData("+id+")'  title='Print' ><i class='fa fa-print'></i></a>"); remove moprint class  
                 $("#testdata").html(result);
-
             }
         });
-
-
 
         $('#payslipview').modal({
             show: true,
@@ -456,22 +435,19 @@ if (isset($resultlist)) {
     ;
 
     function printData(id) {
-
         var base_url = '<?php echo base_url() ?>';
         $.ajax({
             url: base_url + 'admin/payroll/payslipView',
             type: 'POST',
-            data: {payslipid: id},
-            //dataType: "json",
+            data: {payslipid: id},           
             success: function (result) {
-
                 $("#testdata").html(result);
                 popup(result);
             }
         });
     }
-    function getEmployeeName(role) {
 
+    function getEmployeeName(role) {
         var base_url = '<?php echo base_url() ?>';
         $("#name").html("<option value=''>select</option>");
         var div_data = "";
@@ -490,8 +466,8 @@ if (isset($resultlist)) {
             }
         });
     }
-    function create(id) {
 
+    function create(id) {
         var month = '<?php
 if (isset($_POST["month"])) {
     echo $_POST["month"];
@@ -507,8 +483,6 @@ if (isset($_POST["year"])) {
         $("#year").val(year);
         $("#staffid").val(id);
         $("#formsubmit").submit();
-
-
     }
 
 
@@ -522,12 +496,9 @@ if (isset($_POST["year"])) {
             data: $('#schsetting_form').serialize(),
             dataType: 'json',
             success: function (data) {
-
-
                 if (data.status == "fail") {
                     var message = "";
                     $.each(data.error, function (index, value) {
-
                         message += value;
                     });
                     errorMsg(message);

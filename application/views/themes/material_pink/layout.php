@@ -13,14 +13,18 @@
         <link href="<?php echo $base_assets_url; ?>css/owl.carousel.css" rel="stylesheet">
         <link href="<?php echo $base_assets_url; ?>css/font-awesome.min.css" rel="stylesheet">
         <link href="<?php echo $base_assets_url; ?>css/style.css" rel="stylesheet">
+        <link rel="stylesheet" href="<?php echo base_url(); ?>backend/dist/css/ss-print.css">
         <link rel="stylesheet" href="<?php echo $base_assets_url; ?>datepicker/bootstrap-datepicker3.css"/>
-        <script src="<?php echo $base_assets_url; ?>js/jquery.min.js"></script>
-
+            <script src="<?php echo base_url(); ?>backend/dist/js/moment.min.js"></script>
+        <!--file dropify-->
+        <link rel="stylesheet" href="<?php echo base_url(); ?>backend/dist/css/dropify.min.css">
+        <script src="<?php echo base_url(); ?>backend/custom/jquery.min.js"></script>
+        <!--file dropify-->
+        <script src="<?php echo base_url(); ?>backend/dist/js/dropify.min.js"></script>
         <script type="text/javascript">
             var base_url = "<?php echo base_url() ?>";
         </script>
-        <?php
-        //$this->load->view('layout/theme');
+        <?php        
 
         if ($front_setting->is_active_rtl) {
             ?>
@@ -32,6 +36,8 @@
         <?php echo $front_setting->google_analytics; ?>
     </head>
     <body>
+    <div id="alert" class="affix-top">  
+      <div class="topsection">  
         <section class="newsarea">
             <div class="container">
                 <div class="row">
@@ -73,10 +79,6 @@
                                 <?php
                             }
                             ?>
-
-
-
-
                         </div><!--./sidebar-->
 
                     </div><!--./col-md-12-->
@@ -91,9 +93,7 @@
                             <li>
                                 <a href="mailto:<?php echo $school_setting->email; ?>"><i class="fa fa-envelope-o"></i><?php echo $school_setting->email; ?></a>
                         </ul>
-                        <!-- <ul class="top-right">
-                            <li><a href="<?php //echo site_url('site/userlogin')    ?>"><i class="fa fa-user"></i>Login</a></li>
-                        </ul> -->
+                        
                     </div><!--./col-md-5-->
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <ul class="topicon">
@@ -106,6 +106,7 @@
                 </div>
             </div>
         </div><!--./toparea-->
+     </div><!--./topsection-->   
 
         <?php echo $header; ?>
 
@@ -117,10 +118,10 @@
         }
         ?>
 
-        <div class="container spacet50">
+        <div class="container spacet60">
             <div class="row">
                 <?php
-                $page_colomn = "col-md-12";
+                $page_colomn = "col-md-12 spacet60 pt-0-mobile";
 
                 if ($page_side_bar) {
 

@@ -66,7 +66,7 @@ class Chat_model extends Admin_Model {
 
     public function conversation_student($sender_id) {
 
-        $this->db->select('chat.receiver_id, students.firstname,students.lastname, chat.sender_type,chat.receiver_type,"Student" as role,students.image as image')->from('chat')->join('students', 'students.id=chat.receiver_id', 'inner');
+        $this->db->select('chat.receiver_id, students.firstname,students.middlename,students.lastname, chat.sender_type,chat.receiver_type,"Student" as role,students.image as image')->from('chat')->join('students', 'students.id=chat.receiver_id', 'inner');
         $this->db->where("(sender_id='" . $sender_id . "' or sender_type=2  and receiver_id='" . $sender_id . "' or receiver_type=2)");
         $this->db->group_by('receiver_id');
         $this->db->order_by('chat.id', 'desc');
@@ -133,7 +133,7 @@ class Chat_model extends Admin_Model {
 
     public function get_student($student) {
 
-        $this->db->select('students.firstname , students.lastname,students.id,"Student" as role')->from('students');
+        $this->db->select('students.firstname ,students.middlename, students.lastname,students.id,"Student" as role')->from('students');
         $this->db->like('students.firstname', $student);
         $this->db->or_like('students.lastname', $student);
 
@@ -160,7 +160,7 @@ class Chat_model extends Admin_Model {
         } elseif ($type == '3') {
             $this->db->select('students.father_name as name," " as surname," " as image,"Parent" as role')->from('students')->where('students.parent_id', $receiver_id);
         } elseif ($type == '2') {
-            $this->db->select('students.firstname as name,students.lastname as surname,students.image as image,"Student" as role')->from('students')->where('students.id', $receiver_id);
+            $this->db->select('students.firstname as name,students.middlename,students.lastname as surname,students.image as image,"Student" as role')->from('students')->where('students.id', $receiver_id);
         }
 
         $query = $this->db->get();

@@ -93,7 +93,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <div class="tab-content">
                             <div class="tab-pane active table-responsive no-padding" id="tab_1">
                                 <div class="download_label"><?php echo $this->lang->line('student_lists'); ?></div>
-                                <table class="table table-striped table-bordered table-hover example">
+                                 <table class="table table-striped table-bordered table-hover header-student-list" data-export-title="<?php echo $this->lang->line('student_lists'); ?>">
                                     <thead>
                                         <tr>
                                             <th><?php echo $this->lang->line('admission_no'); ?></th>
@@ -124,79 +124,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if (empty($resultlist)) { ?>
-                                            <?php
-                                        } else {
-                                            $count = 1;
-                                            foreach ($resultlist as $student) {
-                                                ?>
-                                                <tr>
-
-                                                    <td><?php echo $student['admission_no']; ?></td>
-
-                                                    <td>
-                                                        <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?>
-                                                        </a>
-                                                    </td>
-                                                    <td><?php echo $student['class'] . "(" . $student['section'] . ")" ?></td>
-                                                    <?php if ($sch_setting->father_name) { ?>
-                                                        <td><?php echo $student['father_name']; ?></td>
-                                                    <?php } ?>
-                                                    <td><?php
-                                                        if (!empty($student['dob'])) {
-                                                            echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob']));
-                                                        }
-                                                        ?></td>
-                                                    <td><?php echo $student['gender']; ?></td>
-                                                    <?php if ($sch_setting->category) { ?>
-                                                        <td><?php echo $student['category']; ?></td>
-                                                    <?php }if ($sch_setting->mobile_no) { ?>
-                                                        <td><?php echo $student['mobileno']; ?></td>
-                                                    <?php } ?>
-
-                                                    <?php
-                                                    if (!empty($fields)) {
-
-                                                        foreach ($fields as $fields_key => $fields_value) {
-                                                            $display_field = $student[$fields_value->name];
-                                                            if ($fields_value->type == "link") {
-                                                                $display_field = "<a href=" . $student[$fields_value->name] . " target='_blank'>" . $student[$fields_value->name] . "</a>";
-                                                            }
-                                                            ?>
-                                                            <td>
-                                                                <?php echo $display_field; ?>
-
-                                                            </td>
-                                                            <?php
-                                                        }
-                                                    }
-                                                    ?>
-
-                                                    <td class="pull-right">
-                                                        <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id'] ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('show'); ?>" >
-                                                            <i class="fa fa-reorder"></i>
-                                                        </a>
-                                                        <?php if ($this->rbac->hasPrivilege('student', 'can_edit')) {
-                                                            ?>
-                                                            <a href="<?php echo base_url(); ?>student/edit/<?php echo $student['id'] ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
-                                                                <i class="fa fa-pencil"></i>
-                                                            </a>
-                                                            <?php
-                                                        }
-                                                        ?>
-                                                        <?php if ($this->rbac->hasPrivilege('collect_fees', 'can_add')) {
-                                                            ?>
-                                                            <a href="<?php echo base_url(); ?>studentfee/addfee/<?php echo $student['student_session_id'] ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('add_fees'); ?>">
-                                                                <?php echo $currency_symbol; ?>
-                                                            </a>
-                                                        <?php } ?>
-                                                    </td>
-                                                </tr>
-                                                <?php
-                                                $count++;
-                                            }
-                                        }
-                                        ?>
                                     </tbody>
                                 </table>
                             </div>
@@ -223,12 +150,14 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <div id="carousel-2" class="carousel slide slide-carousel" data-ride="carousel">
                                                     <div class="carousel-inner">
                                                         <div class="item active">
-                                                            <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id'] ?>"> <img class="img-responsive img-thumbnail width150" alt="<?php echo $student["firstname"] . " " . $student["lastname"] ?>"  src="<?php echo base_url() . $image ?>" alt="Image"></a>
+                                                            <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id'] ?>"> 
+                                                                <?php if($sch_setting->student_photo){?>
+                                                                <img class="img-responsive img-thumbnail width150" alt="<?php echo $this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname); ?>"  src="<?php echo base_url() . $image ?>" alt="Image"><?php } ?></a>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="slide-content">
-                                                    <h4><a href="<?php echo base_url(); ?>student/view/<?php echo $student['id'] ?>"> <?php echo $student['firstname'] . " " . $student['lastname'] ?></a></h4>
+                                                    <h4><a href="<?php echo base_url(); ?>student/view/<?php echo $student['id'] ?>"><?php echo$this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname);  ?></a></h4>
                                                     <div class="row">
                                                         <div class="col-xs-6 col-md-6">
                                                             <address>
@@ -236,16 +165,16 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                 <?php if (!$adm_auto_insert) { ?>
                                                                     <b><?php echo $this->lang->line('admission_no'); ?>: </b><?php echo $student['admission_no'] ?><br/><?php } ?>
                                                                 <b><?php echo $this->lang->line('date_of_birth'); ?>:</b>
-                                                                <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob'])); ?><br>
+                                                                <?php if ($student["dob"] != null && $student["dob"]!='0000-00-00') { echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob'])); } ?><br>
                                                                 <b><?php echo $this->lang->line('gender'); ?>:&nbsp;&nbsp;</b><?php echo $student['gender'] ?><br>
                                                             </address>
                                                         </div>
                                                         <div class="col-xs-6 col-md-6">
                                                             <?php if ($sch_setting->local_identification_no) { ?>
-                                                                <b><?php echo $this->lang->line('local_identification_no'); ?> : &nbsp;&nbsp;</b><?php echo $student['samagra_id'] ?><br><?php } ?>
-                                                            <b><?php echo $this->lang->line('guardian_name'); ?> :&nbsp;&nbsp;</b><?php echo $student['guardian_name'] ?><br>
+                                                                <b><?php echo $this->lang->line('local_identification_no'); ?> : &nbsp;&nbsp;</b><?php echo $student['samagra_id'] ?><br><?php } if($sch_setting->guardian_name){?>
+                                                            <b><?php echo $this->lang->line('guardian_name'); ?> :&nbsp;&nbsp;</b><?php echo $student['guardian_name'] ?><br> <?php } if($sch_setting->guardian_name){?>
                                                             <b><?php echo $this->lang->line('guardian_phone'); ?>: </b> <abbr title="Phone"><i class="fa fa-phone-square"></i>&nbsp;&nbsp;</abbr> <?php echo $student['guardian_phone'] ?><br>
-                                                            <?php if ($sch_setting->current_address) { ?>
+                                                            <?php } if ($sch_setting->current_address) { ?>
                                                                 <b><?php echo $this->lang->line('current_address'); ?>:&nbsp;&nbsp;</b><?php echo $student['current_address'] ?>, <?php echo $student['city'] ?><br><?php } ?>
                                                         </div>
                                                     </div>
@@ -285,3 +214,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         </div>
     </section>
 </div>
+
+<script>
+$(document).ready(function() {
+     var search_text ='<?php echo $search_text; ?>' ;
+     
+     if(search_text!=""){
+        search_text = search_text
+     }else{
+        search_text=0
+     }
+      initDatatable('header-student-list','admin/admin/dtstudentlist/'+search_text);
+
+});
+</script>                                                       

@@ -14,13 +14,14 @@
                         </div>
                     </div>
                     <div class="box-body">
-                        <div class="form-group">
-                            <label for="exampleInputEmail1"><?php echo $this->lang->line('date'); ?></label>
-                            <input id="dob" name="dob" placeholder="" type="text" class="form-control date" value="<?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat(date('Y-m-d'))); ?>" />
-
-
-
-                        </div>
+                        <div class="row">
+                            <div class="col-lg-3 col-md-3 col-sm-4">
+                                <div class="form-group">
+                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('date'); ?></label>
+                                    <input id="dob" name="dob" placeholder="" type="text" class="form-control date" value="<?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat(date('Y-m-d'))); ?>" />
+                                </div>
+                            </div>    
+                        </div>    
                         <div class="attendance_result">
 
                         </div>
@@ -39,6 +40,7 @@
         $('.date').datepicker({
             format: date_format,
             autoclose: true,
+            weekStart : start_week,
 
         }).on('changeDate', dateChanged);
 

@@ -1,13 +1,6 @@
-<?php
-//$response = $this->customlib->getResponse();
-//$enquiry_type = $this->customlib->getenquiryType();
-//$Source = $this->customlib->getComplaintSource();
-//$Reference = $this->customlib->getReference();
-?>
 <div class="row">
     <div class="col-lg-12 col-md-12 col-sm-12">
         <!-- Horizontal Form -->
-        <?php // print_r($enquiry_data); ?>
         <form  action="<?php echo site_url('admin/enquiry') ?>" id="myForm1"  method="post"  class="ptt10">
             <div class="row">
                 <div class="col-sm-4">
@@ -38,22 +31,18 @@
                         <span class="text-danger"><?php echo form_error('address'); ?></span>
                     </div>
                 </div>
-
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="email"><?php echo $this->lang->line('description'); ?></label>
                         <textarea name="description" class="form-control" ><?php echo set_value('description', $enquiry_data['description']); ?></textarea>
                     </div>
                 </div>
-
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="pwd"><?php echo $this->lang->line('note'); ?></label> 
                         <textarea name="note" class="form-control" ><?php echo set_value('note', $enquiry_data['note']); ?></textarea>
-
                     </div>
                 </div>
-
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label for="pwd"><?php echo $this->lang->line('date'); ?></label>
@@ -64,7 +53,6 @@
                         ?>" readonly="">
                     </div>
                 </div>
-
                 <div class="col-lg-4">
                     <div class="form-group">
                         <label for="pwd"><?php echo $this->lang->line('next_follow_up_date'); ?></label>
@@ -74,21 +62,18 @@
                         }
                         ?>" readonly="">
                     </div>
-
                 </div>
-
                 <div class="col-sm-4">
                     <div class="form-group">
                         <label><?php echo $this->lang->line('assigned'); ?></label>
-                        <input type="text" value="<?php echo set_value('assigned', $enquiry_data['assigned']); ?>" name="assigned" class="form-control">
+						<select name="assigned" class="form-control">
+                            <option value=""><?php echo $this->lang->line('select') ?></option>  
+                            <?php foreach ($stff_list as $key => $stff_list_value) { ?>
+                                 <option value="<?php echo $stff_list_value['name'].' '.$stff_list_value['surname']; ?>" <?php if ($stff_list_value['name'].' '.$stff_list_value['surname'] == $enquiry_data['assigned']) { ?>selected=""<?php } ?> ><?php echo $stff_list_value['name'].' '.$stff_list_value['surname']; ?></option>    
+                            <?php }   ?>
+                        </select>
                     </div>
                 </div>
-
-
-
-
-
-
                 <div class="col-sm-3">
                     <div class="form-group">
                         <label for="pwd"><?php echo $this->lang->line('reference'); ?></label>   
@@ -103,7 +88,6 @@
                     </div>
                 </div>    
                 <div class="col-sm-3">
-
                     <div class="form-group">
                         <label for="pwd"><?php echo $this->lang->line('source'); ?></label><small class="req"> *</small>
                         <select name="source" class="form-control">
@@ -145,18 +129,10 @@
                 </div>                    
                 <div class="row">    
                     <div class="box-footer col-md-12">
-
                         <a onclick="postRecord(<?php echo $enquiry_data['id'] ?>)" class="btn btn-info pull-right"><?php echo $this->lang->line('save'); ?></a>
                     </div>
                 </div>  
             </div><!--./row--> 
         </form>
     </div><!--./col-md-12-->
-
-
-
 </div><!--./row--> 
-
-<script>
-
-</script>

@@ -29,7 +29,8 @@ foreach ($examList as $exam_key => $exam_value) {
             if ($this->rbac->hasPrivilege('exam_assign_view_student', 'can_view')) {
                 ?>
                 <button type="button" data-toggle="tooltip"
-                        title = "<?php echo $this->lang->line('assign / view'); ?>" class="btn btn-default btn-xs assignStudent"  id="load" data-examid="<?php echo $exam_value->id; ?>" ><i class="fa fa-tag"></i></button>
+                        title = "<?php echo $this->lang->line('assign / view'); ?>" class="btn btn-default btn-xs assignStudent"  id="load" data-examid="<?php echo $exam_value->id; ?>" ><i class="fa fa-tag"></i>
+                    </button>
                         <?php
                     }
                     if ($this->rbac->hasPrivilege('exam_subject', 'can_view')) {
@@ -42,6 +43,13 @@ foreach ($examList as $exam_key => $exam_value) {
                 <button type="button" class="btn btn-default btn-xs examMarksSubject" id="load" data-toggle="tooltip"  data-recordid="<?php echo $exam_value->id; ?>" title="<?php echo $this->lang->line('exam_marks'); ?>" data-loading-text="<i class='fa fa-spinner fa-spin'></i>"><i class="fa fa-newspaper-o"></i></button>
                 <?php
             }
+
+             if ($this->rbac->hasPrivilege('exam_marks', 'can_view')) {
+                ?>
+               <button type="button" class="btn btn-default btn-xs examTeacherReamark" id="load" data-toggle="tooltip"  data-recordid="<?php echo $exam_value->id; ?>" title="<?php echo $this->lang->line('teacher_remark'); ?>" data-loading-text="<i class='fa fa-spinner fa-spin'></i>"><i class="fa fa-comment"></i></button>
+                <?php
+            }
+            
             if ($this->rbac->hasPrivilege('exam', 'can_edit')) {
                 ?>
                 <button class="btn btn-default btn-xs editexamModalButton" data-toggle="tooltip" data-exam_id="<?php echo $exam_value->id; ?>"  title="<?php echo $this->lang->line('edit') ?>"><i class="fa fa-pencil" aria-hidden="true"></i></button>

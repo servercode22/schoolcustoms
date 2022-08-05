@@ -169,7 +169,7 @@
                                     <input type="hidden" name="class_id" value="<?php echo $class_id; ?>">
                                     <input type="hidden" name="section_id" value="<?php echo $section_id; ?>">
                                     <input type="hidden" name="date" value="<?php echo $date; ?>">
-                                    <div class="download_label"><?php echo $this->lang->line('attendance'); ?> <?php echo $this->lang->line('list') . "<br>";
+                                    <div class="download_label"><?php echo $this->lang->line('attendance'); ?> <?php echo $this->lang->line('list') . " ";
                             $this->customlib->get_postmessage();
                                     ?></div>
                                     <div class="table-responsive">    
@@ -181,31 +181,28 @@
                                                     <th><?php echo $this->lang->line('roll_no'); ?></th>
                                                     <th><?php echo $this->lang->line('name'); ?></th>
                                                     <th><?php echo $this->lang->line('note'); ?></th>
-                                                    <th class="text-right"><?php echo $this->lang->line('attendance'); ?></th>
+                                                    <th class="noteinput"><?php echo $this->lang->line('attendance'); ?></th>
                                                 </tr>
                                             </thead>
-                                            <tbody>
+                                            <tbody> 
                                                 <?php
                                                 $row_count = 1;
                                                 foreach ($resultlist as $key => $value) {
                                                     ?>
                                                     <tr>
-                                                    <!--   <td>
-                                                      <input type="hidden" name="student_session[]" value="<?php echo $value['student_session_id']; ?>">
-                                                      <input  type="hidden" value="<?php echo $value['attendence_id']; ?>"  name="attendendence_id<?php echo $value['student_session_id']; ?>">
-
-                                                      </td> -->
+                                                  
                                                         <td> <?php echo $row_count; ?></td>
                                                         <td><?php echo $value['admission_no']; ?>   </td>
                                                         <td><?php echo $value['roll_no']; ?>   </td>
                                                         <td>
-            <?php echo $value['firstname'] . " " . $value['lastname']; ?>
+                                  <?php echo 
+                $this->customlib->getFullName($value['firstname'],$value['middlename'],$value['lastname'],$sch_setting->middlename,$sch_setting->lastname);?>
                                                         </td>
                                                         <td>
 
             <?php echo $value['remark']; ?>
                                                         </td>
-                                                        <td class="pull-right">
+                                                        <td class="noteinput">
                                                             <?php
                                                             $c = 1;
                                                             foreach ($attendencetypeslist as $key => $type) {

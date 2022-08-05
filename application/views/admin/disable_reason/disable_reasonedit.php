@@ -34,7 +34,7 @@
 
                                     <div class="col-sm-12">
                                         <div class="form-group">
-                                            <label for="pwd"><?php echo $this->lang->line('name'); ?></label>
+                                            <label for="pwd"><?php echo $this->lang->line('name'); ?></label><small class="req"> *</small>
                                             <input type="text" value="<?php echo set_value('name', $name); ?>" name="name" id="name" class="form-control "><span class="text-danger"><p><?php echo form_error('name') ?></p></span>
 
                                         </div>

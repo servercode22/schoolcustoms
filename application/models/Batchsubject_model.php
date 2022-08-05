@@ -101,7 +101,7 @@ class Batchsubject_model extends CI_Model {
     }
 
     public function attempt_exam_students($class_id, $batch_id, $exam_group_class_batch_exams_id) {
-        $sql = "SELECT exam_group_students.*,student.admission_no , student.id as `student_id`, student.roll_no,student.admission_date,student.firstname, student.lastname,student.image, student.mobileno, student.email ,student.state , student.city , student.pincode,student.father_name,student.dob,student.gender FROM `exam_group_students` INNER JOIN exam_groups on exam_groups.id= exam_group_students.exam_group_id INNER join (SELECT exam_groups.id FROM `exam_group_class_batch_exam_subjects` INNER JOIN exam_group_class_batch_exams on exam_group_class_batch_exam_subjects.exam_group_class_batch_exams_id=exam_group_class_batch_exams.id inner JOIN exam_groups on exam_groups.id= exam_group_class_batch_exams.exam_group_id  where exam_group_class_batch_exams_id=" . $exam_group_class_batch_exams_id . " GROUP by exam_group_class_batch_exams_id ORDER BY `exam_group_class_batch_exams_id`) as exam_group on exam_group.id=exam_group_students.exam_group_id INNER JOIN (SELECT students.* from student_session INNER JOIN students on students.id=student_session.student_id WHERE student_session.class_id=" . $class_id . " and students.batch_id=" . $batch_id . " GROUP BY student_session.student_id) as student on student.id=exam_group_students.student_id";
+        $sql = "SELECT exam_group_students.*,student.admission_no , student.id as `student_id`, student.roll_no,student.admission_date,student.firstname,student.middlename, student.lastname,student.image, student.mobileno, student.email ,student.state , student.city , student.pincode,student.father_name,student.dob,student.gender FROM `exam_group_students` INNER JOIN exam_groups on exam_groups.id= exam_group_students.exam_group_id INNER join (SELECT exam_groups.id FROM `exam_group_class_batch_exam_subjects` INNER JOIN exam_group_class_batch_exams on exam_group_class_batch_exam_subjects.exam_group_class_batch_exams_id=exam_group_class_batch_exams.id inner JOIN exam_groups on exam_groups.id= exam_group_class_batch_exams.exam_group_id  where exam_group_class_batch_exams_id=" . $exam_group_class_batch_exams_id . " GROUP by exam_group_class_batch_exams_id ORDER BY `exam_group_class_batch_exams_id`) as exam_group on exam_group.id=exam_group_students.exam_group_id INNER JOIN (SELECT students.* from student_session INNER JOIN students on students.id=student_session.student_id WHERE student_session.class_id=" . $class_id . " and students.batch_id=" . $batch_id . " GROUP BY student_session.student_id) as student on student.id=exam_group_students.student_id";
         $query = $this->db->query($sql);
         return $query->result();
     }
@@ -337,7 +337,7 @@ class Batchsubject_model extends CI_Model {
 
     public function getBatchByClass($class_id) {
 
-        $this->db->select('student_session.*,students.firstname,students.batch_id,batch.name as `batch_name`')->from('student_session');
+        $this->db->select('student_session.*,students.firstname,students.middlename,students.batch_id,batch.name as `batch_name`')->from('student_session');
         // $this->db->join('class_sections', 'class_batches.class_section_id = class_sections.id');
 
         $this->db->join('classes', 'student_session.class_id = classes.id');

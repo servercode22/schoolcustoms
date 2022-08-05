@@ -12,6 +12,7 @@ class Stuattendence extends Admin_Controller {
         $this->load->library('mailsmsconf');
         $this->config_attendance = $this->config->item('attendence');
         $this->load->model("classteacher_model");
+         $this->sch_setting_detail = $this->setting_model->getSetting();
     }
 
     function index() {
@@ -24,11 +25,8 @@ class Stuattendence extends Admin_Controller {
         $data['title'] = 'Add Fees Type';
         $data['title_list'] = 'Fees Type List';
         $sch_setting = $this->setting_model->getSchoolDetail();
-        $data['sch_setting'] = $sch_setting;
-
-
+        $data['sch_setting'] = $this->sch_setting_detail;
         $class = $this->class_model->get('', $classteacher = 'yes');
-
         $userdata = $this->customlib->getUserData();
         $carray = array();
 
@@ -40,10 +38,7 @@ class Stuattendence extends Admin_Controller {
         }
 
         $userdata = $this->customlib->getUserData();
-
         $role_id = $userdata["role_id"];
-
-
         if (isset($role_id) && ($userdata["role_id"] == 2) && ($userdata["class_teacher"] == "yes")) {
             if ($userdata["class_teacher"] == 'yes') {
                 $carray = array();
@@ -53,7 +48,6 @@ class Stuattendence extends Admin_Controller {
         }
 
         $data['classlist'] = $class;
-
         $data['class_id'] = "";
         $data['section_id'] = "";
         $data['date'] = "";
@@ -67,8 +61,8 @@ class Stuattendence extends Admin_Controller {
             $class = $this->input->post('class_id');
             $section = $this->input->post('section_id');
             $date = $this->input->post('date');
-            $student_list = $this->stuattendence_model->get();
-            $data['studentlist'] = $student_list;
+            // $student_list = $this->stuattendence_model->get();
+            // $data['studentlist'] = $student_list;
             $data['class_id'] = $class;
             $data['section_id'] = $section;
             $data['date'] = $date;
@@ -125,6 +119,7 @@ class Stuattendence extends Admin_Controller {
                 }
                 $absent_config = $this->config_attendance['absent'];
                 if (!empty($absent_student_list)) {
+
                     $this->mailsmsconf->mailsms('absent_attendence', $absent_student_list, $date);
                 }
 
@@ -135,10 +130,6 @@ class Stuattendence extends Admin_Controller {
             $data['attendencetypeslist'] = $attendencetypes;
             $resultlist = $this->stuattendence_model->searchAttendenceClassSection($class, $section, date('Y-m-d', $this->customlib->datetostrtotime($date)));
             $data['resultlist'] = $resultlist;
-
-            // echo "<pre>";
-            // print_r($data);
-            // echo "<pre>";die;
             $this->load->view('layout/header', $data);
             $this->load->view('admin/stuattendence/attendenceList', $data);
             $this->load->view('layout/footer', $data);
@@ -184,8 +175,8 @@ class Stuattendence extends Admin_Controller {
             $class = $this->input->post('class_id');
             $section = $this->input->post('section_id');
             $date = $this->input->post('date');
-            $student_list = $this->stuattendence_model->get();
-            $data['studentlist'] = $student_list;
+            // $student_list = $this->stuattendence_model->get();
+            // $data['studentlist'] = $student_list;
             $data['class_id'] = $class;
             $data['section_id'] = $section;
             $data['date'] = $date;
@@ -217,6 +208,7 @@ class Stuattendence extends Admin_Controller {
             $resultlist = $this->stuattendence_model->searchAttendenceClassSectionPrepare($class, $section, date('Y-m-d', $this->customlib->datetostrtotime($date)));
 
             $data['resultlist'] = $resultlist;
+            $data['sch_setting'] =$this->sch_setting_detail;
             $this->load->view('layout/header', $data);
             $this->load->view('admin/stuattendence/attendencereport', $data);
             $this->load->view('layout/footer', $data);
@@ -259,6 +251,7 @@ class Stuattendence extends Admin_Controller {
         $data['date'] = "";
         $data['month_selected'] = "";
         $data['year_selected'] = "";
+        $data['sch_setting'] = $this->sch_setting_detail;
         $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('month', $this->lang->line('month'), 'trim|required|xss_clean');

@@ -1,24 +1,28 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
-class Page extends Admin_Controller {
+class Page extends Admin_Controller
+{
 
-    function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $config = array(
             'field' => 'slug',
             'title' => 'title',
             'table' => 'front_cms_pages',
-            'id' => 'id',
+            'id'    => 'id',
         );
         $this->load->library('slug', $config);
         $this->load->config('ci-blog');
         $this->load->library('imageResize');
     }
 
-    function index() {
+    public function index()
+    {
         if (!$this->rbac->hasPrivilege('pages', 'can_view')) {
             access_denied();
         }
@@ -33,11 +37,12 @@ class Page extends Admin_Controller {
         $this->load->view('layout/footer');
     }
 
-    function create() {
+    public function create()
+    {
         if (!$this->rbac->hasPrivilege('pages', 'can_add')) {
             access_denied();
         }
-        $data['title'] = 'Add Book';
+        $data['title']      = 'Add Book';
         $data['title_list'] = 'Book Details';
         $this->session->set_userdata('top_menu', 'Front CMS');
         $this->session->set_userdata('sub_menu', 'admin/front/page');
@@ -45,7 +50,7 @@ class Page extends Admin_Controller {
         $this->form_validation->set_rules('title', $this->lang->line('title'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('description', $this->lang->line('description'), 'trim|required');
 
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == false) {
             $this->load->view('layout/header');
             $this->load->view('admin/front/pages/create', $data);
             $this->load->view('layout/footer');
@@ -58,25 +63,24 @@ class Page extends Admin_Controller {
             }
 
             $data = array(
-                'title' => $this->input->post('title'),
-                'description' => htmlspecialchars_decode($this->input->post('description')),
-                'meta_title' => $this->input->post('meta_title'),
-                'meta_keyword' => $this->input->post('meta_keywords'),
-                'feature_image' => $this->input->post('image'),
-                // 'publish' => $this->input->post('publish'),
-                'type' => 'page',
-                'sidebar' => $this->input->post('sidebar'),
-                'meta_description' => $this->input->post('meta_description')
+                'title'            => $this->input->post('title'),
+                'description'      => htmlspecialchars_decode($this->input->post('description', false)),
+                'meta_title'       => $this->input->post('meta_title'),
+                'meta_keyword'     => $this->input->post('meta_keywords'),
+                'feature_image'    => $this->input->post('image'),
+                'type'             => 'page',
+                'sidebar'          => $this->input->post('sidebar'),
+                'meta_description' => $this->input->post('meta_description'),
             );
-            $data['slug'] = $this->slug->create_uri($data);
-            $data['url'] = $this->config->item('ci_front_page_url') . $data['slug'];
-            $insert_id = $this->cms_page_model->add($data);
+            $data['slug']     = $this->slug->create_uri($data);
+            $data['url']      = $this->config->item('ci_front_page_url') . $data['slug'];
+            $insert_id        = $this->cms_page_model->add($data);
             $content_category = $this->input->post('content_category');
             if (isset($content_category)) {
                 if ($content_category != "standard") {
-                    $contents = array();
+                    $contents   = array();
                     $contents[] = array('page_id' => $insert_id, 'content_type' => $content_category);
-                    $insert_id = $this->cms_page_content_model->batch_insert($contents);
+                    $insert_id  = $this->cms_page_content_model->batch_insert($contents);
                 }
             }
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
@@ -84,11 +88,12 @@ class Page extends Admin_Controller {
         }
     }
 
-    function edit($slug) {
+    public function edit($slug)
+    {
         if (!$this->rbac->hasPrivilege('pages', 'can_edit')) {
             access_denied();
         }
-        $data['title'] = 'Edit Book';
+        $data['title']      = 'Edit Book';
         $data['title_list'] = 'Book Details';
         $this->session->set_userdata('top_menu', 'Front CMS');
         $this->session->set_userdata('sub_menu', 'admin/front/page');
@@ -99,48 +104,49 @@ class Page extends Admin_Controller {
         }
 
         $data['category'] = $this->customlib->getPageContentCategory();
-        $data['result'] = $result;
+        $data['result']   = $result;
         $this->form_validation->set_rules('title', $this->lang->line('title'), 'trim|required|xss_clean');
 
         $this->form_validation->set_rules('description', $this->lang->line('description'), 'trim|required');
 
-        if ($this->form_validation->run() == FALSE) {
-            $listbook = $this->book_model->listbook();
+        if ($this->form_validation->run() == false) {
+            $listbook         = $this->book_model->listbook();
             $data['listbook'] = $listbook;
             $this->load->view('layout/header');
             $this->load->view('admin/front/pages/edit', $data);
             $this->load->view('layout/footer');
         } else {
             $data = array(
-                'id' => $this->input->post('id'),
-                'title' => $this->input->post('title'),
-                'description' => htmlspecialchars_decode($this->input->post('description')),
-                'meta_title' => $this->input->post('meta_title'),
-                'meta_keyword' => $this->input->post('meta_keywords'),
-                'feature_image' => $this->input->post('image'),
-                'sidebar' => $this->input->post('sidebar'),
-                'meta_description' => $this->input->post('meta_description')
+                'id'               => $this->input->post('id'),
+                'title'            => $this->input->post('title'),
+                'description'      => htmlspecialchars_decode($this->input->post('description', false)),
+                'meta_title'       => $this->input->post('meta_title'),
+                'meta_keyword'     => $this->input->post('meta_keywords'),
+                'feature_image'    => $this->input->post('image'),
+                'sidebar'          => $this->input->post('sidebar'),
+                'meta_description' => $this->input->post('meta_description'),
             );
 
             $content_category = $this->input->post('content_category');
 
             if (isset($content_category)) {
                 if ($content_category != "standard") {
-                    $contents = array('page_id' => $this->input->post('id'), 'content_type' => $content_category);
+                    $contents  = array('page_id' => $this->input->post('id'), 'content_type' => $content_category);
                     $insert_id = $this->cms_page_content_model->insertOrUpdate($contents);
                 } else {
                     $insert_id = $this->cms_page_content_model->deleteByPageID($this->input->post('id'));
                 }
             }
             $data['slug'] = $this->slug->create_uri($data, $this->input->post('id'));
-            $data['url'] = $this->config->item('ci_front_page_url') . $data['slug'];
+            $data['url']  = $this->config->item('ci_front_page_url') . $data['slug'];
             $this->cms_page_model->add($data);
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('update_message') . '</div>');
             redirect('admin/front/page');
         }
     }
 
-    function delete($slug) {
+    public function delete($slug)
+    {
         if (!$this->rbac->hasPrivilege('pages', 'can_delete')) {
             access_denied();
         }
@@ -150,5 +156,3 @@ class Page extends Admin_Controller {
     }
 
 }
-
-?>

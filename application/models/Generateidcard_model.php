@@ -1,8 +1,7 @@
 <?php
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
 
-/**
- * 
- */
 class Generateidcard_model extends CI_model {
 
     function __construct() {

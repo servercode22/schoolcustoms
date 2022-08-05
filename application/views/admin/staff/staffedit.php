@@ -19,10 +19,7 @@
                             <div class="tshadow mb25 bozero">    
 
                                 <h4 class="pagetitleh2"><?php echo $this->lang->line('basic_information'); ?> </h4>
-
-
                                 <div class="around10">
-                                    <?php //echo validation_errors()?>
                                     <?php if ($this->session->flashdata('msg')) { ?>
                                         <?php echo $this->session->flashdata('msg') ?>
                                     <?php } ?>  

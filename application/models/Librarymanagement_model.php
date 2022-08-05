@@ -81,7 +81,6 @@ class Librarymanagement_model extends MY_Model {
             $record_id = $insert_id;
             $this->log($message, $record_id, $action);
         }
-        //echo $this->db->last_query();die;
         //======================Code End==============================
 
         $this->db->trans_complete(); # Completing transaction

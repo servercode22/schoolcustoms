@@ -102,11 +102,7 @@
                             </div>
                         </div>
                         <div class="table-responsive mailbox-messages" id="transfee">
-
-                            <div class="download_label"><?php echo $this->lang->line('topic') . " " . $this->lang->line('list') ?></div>		  
-                            <a class="btn btn-default btn-xs pull-right" id="print" onclick="printDiv()" ><i class="fa fa-print"></i></a> <a class="btn btn-default btn-xs pull-right" id="btnExport" onclick="fnExcelReport();"> <i class="fa fa-file-excel-o"></i> </a>
-
-                            <table class="table table-hover table-striped" id="headerTable">
+                           <table class="table table-striped table-bordered table-hover topic-list " id="headerTable" data-export-title="<?php echo $this->lang->line('topic') . " " . $this->lang->line('list') ?>" >
                                 <thead>
                                     <tr class="hide" id="visible">
                                         <td colspan="6"><center><b><?php echo $this->lang->line('topic') . " " . $this->lang->line('list') ?></b></center></td>
@@ -118,39 +114,10 @@
                                     <th><?php echo $this->lang->line('subject'); ?></th>
                                     <th><?php echo $this->lang->line('lesson'); ?></th>
                                     <th><?php echo $this->lang->line('topic'); ?></th>
-                                    <th class="pull-right"><?php echo $this->lang->line('action'); ?></th>
+                                    <th class="mailbox-date text-right noExport"><?php echo $this->lang->line('action'); ?></th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    foreach ($result as $key => $result_value) {
-                                        if (in_array($result_value['classid'], $class_array)) {
-                                            $lesson_id = $key;
-                                            ?>	
-                                            <tr>																			
-                                                <td><?php echo $result_value['cname']; ?></td>
-                                                <td><?php echo $result_value['sname']; ?></td>
-                                                <td><?php echo $result_value['sgname']; ?></td>
-                                                <td><?php echo $result_value['subname']; ?></td>
-                                                <td><?php echo $result_value['lessonname']; ?></td>
-
-                                                <td><?php
-                                                    foreach (($topicresult[$lesson_id]) as $rl_value) {
-                                                        echo $rl_value['name'] . '<br>';
-                                                    };
-                                                    ?></td>
-                                                <td class="mailbox-date pull-right no-print">
-                                                    <?php if ($this->rbac->hasPrivilege('topic', 'can_edit')) { ?>
-                                                        <a data-placement="left" href="<?php echo base_url(); ?>admin/lessonplan/edittopic/<?php echo $result_value['lesson_id'] ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>"><i class="fa fa-pencil"></i></a>
-                                                    <?php } if ($this->rbac->hasPrivilege('topic', 'can_delete')) { ?>
-                                                        <a data-placement="left" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="deletetopicbulk('<?php echo $result_value['lesson_id'] ?>');"><i class="fa fa-remove"></i></a> 
-        <?php } ?>
-
-                                                </td>
-                                            </tr>
-    <?php }
-}
-?>                                  
                                 </tbody>
                             </table>
                         </div>
@@ -421,9 +388,6 @@
 
 </script>
 <script>
-
-
-
     document.getElementById("print").style.display = "block";
     document.getElementById("btnExport").style.display = "block";
 
@@ -475,4 +439,12 @@
 
         return (sa);
     }
+</script>
+<script>
+    ( function ( $ ) {
+    'use strict';
+    $(document).ready(function () {
+        initDatatable('topic-list','admin/lessonplan/gettopiclist',[],[],100);
+    });
+} ( jQuery ) )
 </script>

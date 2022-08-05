@@ -1,8 +1,8 @@
 <?php
 
-/**
- * 
- */
+if (!defined('BASEPATH'))
+    exit('No direct script access allowed');
+
 class Leaverequest_model extends MY_model {
 
     public function staff_leave_request($id = null) {
@@ -129,7 +129,6 @@ class Leaverequest_model extends MY_model {
             $action = "Insert";
             $record_id = $id;
             $this->log($message, $record_id, $action);
-            //echo $this->db->last_query();die;
             //======================Code End==============================
 
             $this->db->trans_complete(); # Completing transaction

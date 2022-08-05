@@ -1,12 +1,3 @@
-<style type="text/css">
-    @media print
-    {
-        .no-print, .no-print *
-        {
-            display: none !important;
-        }
-    }
-</style>
 <?php
 $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 ?>     
@@ -195,6 +186,20 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <label for="is_section" class="label-success"></label>
                                     </div>
                                 </div>
+                                      <div class="form-group switch-inline">
+                                    <label><?php echo $this->lang->line('date_of_birth') ?></label>
+                                    <div class="material-switch switchcheck">
+                                        <input id="is_dob" name="is_dob" type="checkbox" class="chk" value="1"  <?php echo set_checkbox('is_dob', '1', (set_value('is_dob', $marksheet->is_dob) == 1) ? TRUE : FALSE); ?>>
+                                        <label for="is_dob" class="label-success"></label>
+                                    </div>
+                                </div>
+                                <div class="form-group switch-inline">
+                                    <label><?php echo $this->lang->line('remark'); ?> </label>
+                                    <div class="material-switch switchcheck">
+                                        <input id="is_teacher_remark" name="is_teacher_remark" type="checkbox" class="chk" value="1" <?php echo set_checkbox('is_teacher_remark', '1', (set_value('is_teacher_remark', $marksheet->is_teacher_remark) == 1) ? TRUE : FALSE); ?>>
+                                        <label for="is_teacher_remark" class="label-success"></label>
+                                    </div>
+                                </div>
 
                             </div><!-- /.box-body -->
                             <div class="box-footer">
@@ -251,7 +256,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <?php } ?>
 
                                                 </td>
-                                                <td class="mailbox-date text-right no-print">
+                                                <td class="mailbox-date text-right no-print white-space-nowrap">
                                                     <a data-placement="left" id="<?php echo $certificate->id ?>" class="btn btn-default btn-xs view_data" title="<?php echo $this->lang->line('view'); ?>">
                                                         <i class="fa fa-reorder"></i>
                                                     </a>
@@ -394,9 +399,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
     {
         if ($('#enable_student_img').is(":checked"))
             $("#enableImageDiv").show();
-        // alert("Hii")
         else
             $("#enableImageDiv").hide();
-        //alert("Bye")
     }
 </script>

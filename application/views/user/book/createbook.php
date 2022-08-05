@@ -67,9 +67,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <td class="mailbox-name"> <?php echo ($currency_symbol . $book['perunitcost']); ?></td>
                                                 <td class="mailbox-name pull-right">
                                                     <?php
-                                                    if ($book['postdate'] != '0000-00-00') {
-                                                        echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($book['postdate']));
-                                                    }
+                                                     echo $this->customlib->dateformat($book['postdate']);
+                                                 
                                                     ?>
                                                 </td>
 

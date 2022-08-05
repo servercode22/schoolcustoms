@@ -222,19 +222,10 @@
 
     $(document).ready(function () {
         var popup_target = 'media_images';
-        var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
-
-        $('.date').datepicker({
-            //  format: "dd-mm-yyyy",
-            format: date_format,
-            autoclose: true
-        });
-
-
+  
 
         CKEDITOR.replace('editor1',
                 {
-                    fullPage: true,
                     allowedContent: true
 
                 });

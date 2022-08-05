@@ -73,8 +73,8 @@
                             <table class="table table-striped table-bordered table-hover example">
                                 <thead>
                                     <tr>
-                                        <th><?php echo $this->lang->line('name'); ?>
-                                        </th>
+                                        <th><?php echo $this->lang->line('name'); ?> </th>
+                                        <th><?php echo $this->lang->line('description'); ?> </th>
 
 
 
@@ -87,21 +87,13 @@
                                         ?>
                                         <tr>
                                             <td class="mailbox-name">
-                                                <a href="#" data-toggle="popover" class="detail_popover"><?php echo $feegroup['name'] ?></a>
-
-                                                <div class="fee_detail_popover" style="display: none">
-                                                    <?php
-                                                    if ($feegroup['description'] == "") {
-                                                        ?>
-                                                        <p class="text text-danger"><?php echo $this->lang->line('no_description'); ?></p>
-                                                        <?php
-                                                    } else {
-                                                        ?>
-                                                        <p class="text text-info"><?php echo $feegroup['description']; ?></p>
-                                                        <?php
-                                                    }
-                                                    ?>
-                                                </div>
+                                                <?php echo $feegroup['name'] ?>                                     
+                                            </td>
+											<td class="mailbox-name">
+                                                
+                                                       <?php echo $feegroup['description']; ?>
+                                                        
+                                                                                 
                                             </td>
 
                                             <td class="mailbox-date pull-right">
@@ -147,23 +139,6 @@
         </div>   <!-- /.row -->
     </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
-
-<script type="text/javascript">
-    $(document).ready(function () {
-        var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
-
-        $('#date').datepicker({
-            //  format: "dd-mm-yyyy",
-            format: date_format,
-            autoclose: true
-        });
-
-        $("#btnreset").click(function () {
-            $("#form1")[0].reset();
-        });
-
-    });
-</script>
 <script>
     $(document).ready(function () {
         $('.detail_popover').popover({

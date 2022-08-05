@@ -9,12 +9,18 @@ class Expensehead_model extends MY_Model {
         parent::__construct();
     }
 
-    /**
-     * This funtion takes id as a parameter and will fetch the record.
-     * If id is not provided, then it will fetch all the records form the table.
-     * @param int $id
-     * @return mixed
-     */
+
+     public function getDatatableExpenseHead()
+    {
+
+        $sql="SELECT * FROM `expense_head`  ";
+        $this->datatables->query($sql)
+        ->searchable('expense_head.exp_category')
+        ->orderable('`expense_head`.`id`,`expense_head`.`exp_category`')
+        ->sort('expense_head.id','asc') ;
+        return $this->datatables->generate('json');   
+    }
+
     public function get($id = null) {
         $this->db->select()->from('expense_head');
         if ($id != null) {
@@ -92,7 +98,6 @@ class Expensehead_model extends MY_Model {
             $action = "Insert";
             $record_id = $id;
             $this->log($message, $record_id, $action);
-            //echo $this->db->last_query();die;
             //======================Code End==============================
 
             $this->db->trans_complete(); # Completing transaction
@@ -109,16 +114,21 @@ class Expensehead_model extends MY_Model {
     }
 
     public function searchexpensegroup($start_date, $end_date, $head_id = null) {
-        $this->db->select('GROUP_CONCAT(expenses.id,"@",expenses.date,"@",expenses.name,"@",expenses.invoice_no,"@",expenses.amount) as expense, expense_head.exp_category,expenses.exp_head_id,sum(expenses.amount) as total_amount')->from('expenses');
-        $this->db->join('expense_head', 'expenses.exp_head_id = expense_head.id');
-        $this->db->where('expenses.date >=', $start_date);
-        $this->db->where('expenses.date <=', $end_date);
+        
+        $this->datatables
+            ->select('expenses.id,expenses.date,expenses.name,expenses.invoice_no,expenses.amount, expense_head.exp_category,expenses.exp_head_id,expenses.amount as total_amount')
+            ->searchable('expense_head.exp_category,expenses.id,expenses.name,expenses.date,expenses.invoice_no,expenses.amount')
+            ->orderable('expense_head.exp_category,expenses.id,expenses.name,expenses.date,expenses.invoice_no')
+            ->join('expense_head', 'expenses.exp_head_id = expense_head.id')
+            ->where('expenses.date >=', $start_date)
+            ->where('expenses.date <=', $end_date)
+            
+            ->from('expenses');
         if ($head_id != null) {
-            $this->db->where('expenses.exp_head_id', $head_id);
+            $this->datatables->where('expenses.exp_head_id', $head_id);
         }
-        $this->db->group_by('expenses.exp_head_id');
-        $query = $this->db->get();
-        return $query->result_array();
+            $this->datatables->sort('expenses.exp_head_id', 'desc');
+        return $this->datatables->generate('json');
     }
 
 }

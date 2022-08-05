@@ -163,13 +163,8 @@
 <script>
     $(document).ready(function () {
         var popup_target = 'media_images';
-        var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
-        $('.date').datepicker({
-            format: date_format,
-            autoclose: true
-        });
-
-        CKEDITOR.replace('editor1',
+     
+           CKEDITOR.replace('editor1',
                 {
                     allowedContent: true
                 });

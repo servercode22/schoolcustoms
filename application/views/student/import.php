@@ -21,24 +21,25 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     </div>
                     <div class="box-body">      
                         <?php if ($this->session->flashdata('msg')) { ?> <div>  <?php echo $this->session->flashdata('msg') ?> </div> <?php } ?>
-                        <br/>           
-                        1. Your CSV data should be in the format below. The first line of your CSV file should be the column headers as in the table example. Also make sure that your file is UTF-8 to avoid unnecessary encoding problems.<br/>
+                        <br/>
+                        1. <?php echo $this->lang->line('import_student_step1'); ?>          
+                      <br/>
 
-                        2. If the column you are trying to import is date make sure that is formatted in format Y-m-d (2018-06-06).<br/>
+                        2. <?php echo $this->lang->line('import_student_step2'); ?> <br/>
+                        3. <?php echo $this->lang->line('import_student_step3'); ?>
+                        <br/>
+                        4. <?php echo $this->lang->line('import_student_step4'); ?>
+                        <br/>
 
-                        3. Duplicate "Admission Number" (unique) and "Roll Number" (unique in class) rows will not be imported.<br/>
+                        5. <?php echo $this->lang->line('import_student_step5'); ?><br/>
 
-                        4. For student "Gender" use Male, Female value.<br/>
+                        6. <?php echo $this->lang->line('import_student_step6'); ?><br/>
 
-                        5. For student "Blood Group" use O+, A+, B+, AB+, O-, A-, B-, AB- value.<br/>
+                        7. <?php echo $this->lang->line('import_student_step7'); ?><br/>
 
-                        6. For "RTE" use Yes, No value.<br/>
+                        8. <?php echo $this->lang->line('import_student_step8'); ?><br/>
 
-                        7. For "If Guardian Is" user father,mother,other value.<br/>
-
-                        8. Category name comes from other table so for "category", enter Category Id (Category Id can be found on category page ).<br/>
-
-                        9. Student house comes from other table so for "student house", enter Student House Id (Student House Id can be found on student house page ).
+                        9. <?php echo $this->lang->line('import_student_step9'); ?>
                         <hr/></div>
                     <div class="box-body table-responsive">
                         <table class="table table-striped table-bordered table-hover" id="sampledata">
@@ -46,6 +47,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 <tr>
                                     <?php
                                     foreach ($fields as $key => $value) {
+echo $value;
 
                                         if ($value == 'adhar_no') {
                                             $value = "national_identification_no";
@@ -56,6 +58,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         }
                                         if ($value == 'firstname') {
                                             $value = "first_name";
+                                        }
+                                         if ($value == 'middlename') {
+                                            $value = "middle_name";
                                         }
                                         if ($value == 'lastname') {
                                             $value = "last_name";
@@ -79,7 +84,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             $value = "previous_school_details";
                                         }
                                         $add = "";
-                                        if (($value == "admission_no") || ($value == "firstname") || ($value == "dob") || ($value == "if_guardian_is") || ($value == "gender") || ($value == "guardian_name") || ($value == "guardian_phone")) {
+                                        
+                                        if (($value == "admission_no") || ($value == "firstname") || ($value == "date_of_birth") || ($value == "if_guardian_is") || ($value == "gender") || ($value == "guardian_name") || ($value == "guardian_phone")) {
                                             $add = "<span class=text-red>*</span>";
                                         }
                                         ?>    
@@ -98,7 +104,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                         </table>        
                     </div>
-                    <hr/>
+                    <hr/> 
 
                     <form action="<?php echo site_url('student/import') ?>"  id="employeeform" name="employeeform" method="post" enctype="multipart/form-data">
                         <div class="box-body">

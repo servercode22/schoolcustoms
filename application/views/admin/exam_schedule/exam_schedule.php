@@ -120,6 +120,10 @@
 
 
 <script type="text/javascript">
+     $(document).ready(function () {
+        $('.select2').select2();
+
+    });
     $(document).ready(function () {
         $.extend($.fn.dataTable.defaults, {
             searching: true,

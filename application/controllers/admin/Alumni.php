@@ -81,7 +81,7 @@ class Alumni extends Admin_Controller {
                     $data['resultlist'] = $resultlist;
                 }
             }
-
+            $data['sch_setting'] = $this->sch_setting_detail;
             $this->load->view('layout/header');
             $this->load->view('admin/alumni/alumnilist', $data);
             $this->load->view('layout/footer');
@@ -138,6 +138,7 @@ class Alumni extends Admin_Controller {
                 $data_img = array('id' => $insert_id, 'photo' => 'uploads/alumni_student_images/' . $img_name);
                 $this->alumni_model->add($data_img);
             }
+         
             $array = array('status' => 'success', 'error' => '', 'message' => $this->lang->line('success_message'));
         }
 
@@ -147,15 +148,17 @@ class Alumni extends Admin_Controller {
     public function handle_upload() {
 
         $image_validate = $this->config->item('image_validate');
-
+        $result = $this->filetype_model->get();
         if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
 
             $file_type = $_FILES["file"]['type'];
             $file_size = $_FILES["file"]["size"];
             $file_name = $_FILES["file"]["name"];
-            $allowed_extension = $image_validate['allowed_extension'];
-            $ext = pathinfo($file_name, PATHINFO_EXTENSION);
-            $allowed_mime_type = $image_validate['allowed_mime_type'];
+
+           $allowed_extension = array_map('trim', array_map('strtolower', explode(',', $result->image_extension)));
+            $allowed_mime_type = array_map('trim', array_map('strtolower', explode(',', $result->image_mime)));
+            $ext               = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
             if ($files = @getimagesize($_FILES['file']['tmp_name'])) {
 
                 if (!in_array($files['mime'], $allowed_mime_type)) {
@@ -167,7 +170,7 @@ class Alumni extends Admin_Controller {
                     $this->form_validation->set_message('handle_upload', 'Extension Not Allowed');
                     return false;
                 }
-                if ($file_size > $image_validate['upload_size']) {
+               if ($file_size > $result->image_size) {
                     $this->form_validation->set_message('handle_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($image_validate['upload_size'] / 1048576, 2) . " MB");
                     return false;
                 }
@@ -228,7 +231,9 @@ class Alumni extends Admin_Controller {
     public function add_event() {
 
         $this->form_validation->set_rules('event_title', $this->lang->line('event') . " " . $this->lang->line('title'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('event_date', $this->lang->line("event_date"), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('from_date', $this->lang->line("event").''.$this->lang->line("from").' '.$this->lang->line("date"), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('to_date', $this->lang->line("event").''.$this->lang->line("to").' '.$this->lang->line("date"), 'trim|required|xss_clean');
+
 
         $studentclass = $this->input->post('event_for');
         if ($studentclass == 'class') {
@@ -240,7 +245,8 @@ class Alumni extends Admin_Controller {
         if ($this->form_validation->run() == false) {
             $msg = array(
                 'event_title' => form_error('event_title'),
-                'event_date' => form_error('event_date'),
+                'from_date' => form_error('from_date'),
+				'to_date' => form_error('to_date'),
             );
             if ($studentclass == 'class') {
                 $msg1 = array(
@@ -259,11 +265,10 @@ class Alumni extends Admin_Controller {
         } else {
             $section = json_encode($this->input->post('user'));
 
-            $event_date = $this->input->post('event_date');
-            $myArray = explode(' - ', $event_date);
 
-            $event_starting_date = date('Y-m-d', $this->customlib->datetostrtotime($myArray[0]));
-            $event_end_date = date('Y-m-d', $this->customlib->datetostrtotime($myArray[1]));
+
+            $event_starting_date = date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('from_date')));
+            $event_end_date = date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('to_date')));
 
             $data = array(
                 'id' => $this->input->post('id'),
@@ -301,7 +306,7 @@ class Alumni extends Admin_Controller {
                     $alumniStudent = $this->alumni_model->alumniMail($this->input->post('class_id'), $this->input->post('session_id'), $section);
                     foreach ($alumniStudent as $alumniStudent_value) {
 
-                        $sender_details = array('student_id' => $insert_id, 'contact_no' => $alumniStudent_value['current_phone'], 'email' => $alumniStudent_value['current_email'], 'email_value' => $email_value, 'sms_value' => $sms_value, 'subject' => $subject, 'body' => $body, 'from_date' => $myArray[0], 'to_date' => $myArray[1]);
+                        $sender_details = array('student_id' => $insert_id, 'contact_no' => $alumniStudent_value['current_phone'], 'email' => $alumniStudent_value['current_email'], 'email_value' => $email_value, 'sms_value' => $sms_value, 'subject' => $subject, 'body' => $body, 'from_date' => $this->input->post('from_date'), 'to_date' => $this->input->post('to_date'));
 
                         $this->mailsmsconf->mailsmsalumnistudent($sender_details);
                     }
@@ -310,7 +315,7 @@ class Alumni extends Admin_Controller {
                 $alumniStudent = $this->alumni_model->get();
                 foreach ($alumniStudent as $alumniStudent_value) {
 
-                    $sender_details = array('student_id' => $insert_id, 'contact_no' => $alumniStudent_value['current_phone'], 'email' => $alumniStudent_value['current_email'], 'email_value' => $email_value, 'sms_value' => $sms_value, 'subject' => $subject, 'body' => $body, 'from_date' => $myArray[0], 'to_date' => $myArray[1]);
+                    $sender_details = array('student_id' => $insert_id, 'contact_no' => $alumniStudent_value['current_phone'], 'email' => $alumniStudent_value['current_email'], 'email_value' => $email_value, 'sms_value' => $sms_value, 'subject' => $subject, 'body' => $body, 'from_date' => $this->input->post('from_date'), 'to_date' => $this->input->post('to_date'));
 
                     $this->mailsmsconf->mailsmsalumnistudent($sender_details);
                 }

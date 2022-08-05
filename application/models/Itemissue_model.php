@@ -18,6 +18,21 @@ class Itemissue_model extends MY_Model {
     }
 
     /**
+     * This function is used to get issue item list
+     * @param $id
+     */
+    public function getitemlist() {
+
+
+         $sql="select item_issue.*,item.name as `item_name`,item.item_category_id,item_category.item_category ,staff.employee_id,staff.name as staff_name,staff.surname,roles.name from item_issue inner join item on item.id=item_issue.item_id inner join item_category on item_category.id=item.item_category_id inner join staff on staff.id=item_issue.issue_to inner join staff_roles on staff_roles.staff_id =staff.id inner join roles on roles.id= staff_roles.role_id ";
+         $this->datatables->query($sql)
+          ->orderable('item.name,item_category,issue_date,staff.name,issue_by,quantity,null')
+          ->searchable('item.name,item_category,issue_date,staff.name,issue_by,item_issue.quantity,null')
+         ->query_where_enable(TRUE);
+         return $this->datatables->generate('json');   
+    }
+
+    /**
      * This function will delete the record based on the id
      * @param $id
      */
@@ -79,7 +94,6 @@ class Itemissue_model extends MY_Model {
             $action = "Insert";
             $record_id = $insert_id;
             $this->log($message, $record_id, $action);
-            //echo $this->db->last_query();die;
             //======================Code End==============================
 
             $this->db->trans_complete(); # Completing transaction
@@ -102,8 +116,14 @@ class Itemissue_model extends MY_Model {
 
         $sql = "SELECT item_issue.*,item.name as `item_name`,item.item_category_id,item_category.item_category ,staff.employee_id,staff.name as staff_name,staff.surname,roles.name FROM `item_issue` INNER JOIN item on item.id=item_issue.item_id INNER JOIN item_category on item_category.id=item.item_category_id INNER JOIN staff on staff.id=item_issue.issue_to INNER JOIN staff_roles on staff_roles.staff_id =staff.id INNER JOIN roles on roles.id= staff_roles.role_id where 1 " . $condition;
 
-        $query = $this->db->query($sql);
-        return $query->result_array();
+       
+         $this->datatables->query($sql)
+          ->orderable('item.name,item_category,issue_date,staff_name,issue_by,quantity')
+          ->searchable('item.name,item_category,issue_date,staff.name,surname,issue_by,item_issue.quantity')
+         ->query_where_enable(TRUE);
+       
+         return $this->datatables->generate('json');   
+
     }
 
 }

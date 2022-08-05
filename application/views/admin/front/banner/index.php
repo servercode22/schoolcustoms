@@ -67,12 +67,7 @@
 <script>
     $(document).ready(function () {
         var popup_target = 'gallery_image';
-        var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
-        $('.date').datepicker({
-            format: date_format,
-            autoclose: true
-        });
-
+      
         $('#mediaModal').modal({
             backdrop: 'static',
             keyboard: false,
@@ -215,12 +210,14 @@
                 },
             });
         }
-
-
-
-
     });
 
+
+  $(document).on("click", ".pagination li a", function (event) {
+            event.preventDefault();
+            var page = $(this).data("ci-pagination-page");
+            load_country_data(page);
+        });
 </script>
 
 

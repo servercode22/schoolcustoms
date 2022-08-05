@@ -36,7 +36,7 @@ class Leaverequest extends Admin_Controller {
         $this->load->view("admin/staff/staffleaverequest", $data);
         $this->load->view("layout/footer", $data);
     }
-
+ 
     function countLeave($id) {
         $lid = $this->input->post("lid");
         $alloted_leavetype = $this->leaverequest_model->allotedLeaveType($id);
@@ -102,18 +102,13 @@ class Leaverequest extends Admin_Controller {
     function leaveRecord() {
 
         $id = $this->input->post("id");
-
         $result = $this->staff_model->getLeaveRecord($id);
-
-        //$leave_from1 = date($this->customlib->getSchoolDateFormat(), $this->customlib->datetostrtotime($result->leave_from));
         $leave_from = date("m/d/Y", strtotime($result->leave_from));
         $result->leavefrom = date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($result->leave_from));
         $result->date = date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($result->date));
-        //$leave_to1 = date($this->customlib->getSchoolDateFormat(), $this->customlib->datetostrtotime($result->leave_to));
         $leave_to = date("m/d/Y", strtotime($result->leave_to));
         $result->leaveto = date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($result->leave_to));
         $result->days = $this->dateDifference($leave_from, $leave_to);
-
         echo json_encode($result);
     }
 
@@ -142,8 +137,11 @@ class Leaverequest extends Admin_Controller {
         $this->form_validation->set_rules('role', $this->lang->line('role'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('empname', $this->lang->line('name'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('applieddate', $this->lang->line('applied_date'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('leavedates', $this->lang->line('leave_from_date'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('leave_from_date', $this->lang->line('leave')." ".$this->lang->line('from')." ".$this->lang->line('date'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('leave_to_date', $this->lang->line('leave')." ".$this->lang->line('to')." ".$this->lang->line('date'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('leave_type', $this->lang->line('available') . " " . $this->lang->line('leave'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('leave_type', $this->lang->line('leave') . " " . $this->lang->line('type'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('userfile', $this->lang->line('file'), 'callback_handle_upload[userfile]');
 
         if ($this->form_validation->run() == FALSE) {
 
@@ -153,15 +151,16 @@ class Leaverequest extends Admin_Controller {
                 'applieddate' => form_error('applieddate'),
                 'leavedates' => form_error('leavedates'),
                 'leave_type' => form_error('leave_type'),
+                'leave_from_date' => form_error('leave_from_date'),
+                'leave_to_date' => form_error('leave_to_date'),
             );
 
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
         } else {
-            $a = $this->input->post("leavedates");
-            $b = explode(' - ', trim($a));
+          
 
-            $leavefrom = date("Y-m-d", $this->customlib->datetostrtotime($b[0]));
-            $leaveto = date("Y-m-d", $this->customlib->datetostrtotime($b[1]));
+            $leavefrom = date("Y-m-d", $this->customlib->datetostrtotime($this->input->post('leave_from_date')));
+            $leaveto = date("Y-m-d", $this->customlib->datetostrtotime($this->input->post('leave_to_date')));
             $applied_by = $this->customlib->getAdminSessionUserName();
             $leave_days = $this->dateDifference($leavefrom, $leaveto);
             $staff_id = $empid;
@@ -209,8 +208,9 @@ class Leaverequest extends Admin_Controller {
 
                 $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
             }
-            echo json_encode($array);
+          
         }
+          echo json_encode($array);
     }
 
     public function add_staff_leave() {
@@ -227,25 +227,28 @@ class Leaverequest extends Admin_Controller {
 
 
         $this->form_validation->set_rules('applieddate', $this->lang->line('applied_date'), 'trim|required|xss_clean');
-        $this->form_validation->set_rules('leavedates', $this->lang->line('leave_from_date'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('leave_from_date', $this->lang->line('leave')." ".$this->lang->line('from')." ".$this->lang->line('date'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('leave_to_date', $this->lang->line('leave')." ".$this->lang->line('to')." ".$this->lang->line('date'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('leave_type', $this->lang->line('available') . " " . $this->lang->line('leave'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('userfile', $this->lang->line('file'), 'callback_handle_upload[userfile]');
 
         if ($this->form_validation->run() == FALSE) {
 
 
             $msg = array(
                 'applieddate' => form_error('applieddate'),
-                'leavedates' => form_error('leavedates'),
+                'leave_from_date' => form_error('leave_from_date'),
+                'leave_to_date' => form_error('leave_to_date'),
                 'leave_type' => form_error('leave_type'),
+				'userfile' => form_error('userfile'),
             );
 
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
         } else {
-            $a = $this->input->post("leavedates");
-            $b = explode(' - ', trim($a));
+            
 
-            $leavefrom = date("Y-m-d", $this->customlib->datetostrtotime($b[0]));
-            $leaveto = date("Y-m-d", $this->customlib->datetostrtotime($b[1]));
+            $leavefrom = date("Y-m-d", $this->customlib->datetostrtotime($this->input->post('leave_from_date')));
+            $leaveto = date("Y-m-d", $this->customlib->datetostrtotime($this->input->post('leave_to_date')));
 
             $staff_id = $userdata["id"];
             $applied_by = $this->customlib->getAdminSessionUserName();
@@ -300,24 +303,48 @@ class Leaverequest extends Admin_Controller {
         echo json_encode($array);
     }
 
-    public function test() {
+  
 
-        $data = Array
-            (
-            "staff_id" => 5,
-            "date" => '2018-06-25',
-            "leave_days" => 1,
-            "leave_type_id" => 5,
-            "leave_from" => '2018-06-25',
-            "leave_to" => '2018-06-25',
-            "employee_remark" => 'safsdf',
-            "status" => 'pending',
-            "admin_remark" => '',
-            "applied_by" => 'admin',
-            "document_file" => '',
-        );
+    public function handle_upload($str,$var)
+    {
 
-        $this->db->insert("staff_leave_request", $data);
+        $image_validate = $this->config->item('file_validate');
+        $result = $this->filetype_model->get();
+        if (isset($_FILES[$var]) && !empty($_FILES[$var]['name'])) {
+
+            $file_type         = $_FILES[$var]['type'];
+            $file_size         = $_FILES[$var]["size"];
+            $file_name         = $_FILES[$var]["name"];
+
+            $allowed_extension = array_map('trim', array_map('strtolower', explode(',', $result->file_extension)));
+            $allowed_mime_type = array_map('trim', array_map('strtolower', explode(',', $result->file_mime)));
+            $ext               = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
+            if ($files = filesize($_FILES[$var]['tmp_name'])) {
+
+                if (!in_array($file_type, $allowed_mime_type)) {
+                    $this->form_validation->set_message('handle_upload', 'File Type Not Allowed');
+                    return false;
+                }
+
+                if (!in_array($ext, $allowed_extension) || !in_array($file_type, $allowed_mime_type)) {
+                    $this->form_validation->set_message('handle_upload', 'Extension Not Allowed');
+                    return false;
+                }
+                if ($file_size > $result->file_size) {
+                    $this->form_validation->set_message('handle_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($image_validate['upload_size'] / 1048576, 2) . " MB");
+                    return false;
+                }
+
+            } else {
+                $this->form_validation->set_message('handle_upload', "File Type / Extension Error Uploading ");
+                return false;
+            }
+
+            return true;
+        }
+        return true;
+
     }
 
 }

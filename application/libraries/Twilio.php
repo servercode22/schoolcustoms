@@ -132,10 +132,7 @@ class TwilioRestResponse {
         $this->HttpStatus = $status;
         if ($this->HttpStatus != 204)
             $this->ResponseXml = @simplexml_load_string($text);
-
-        // if($this->IsError = ($status >= 400))
-        //     $this->ErrorMessage =
-        // (string)$this->ResponseXml->RestException->Message;
+        
     }
 
 }

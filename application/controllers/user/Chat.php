@@ -123,7 +123,7 @@ class Chat extends Student_Controller {
             $chat_user_id = $chat_user->id;
         }
 
-        $data['chat_user'] = $this->chatuser_model->searchForUser($keyword, $chat_user_id, 'student', $student_id);
+        $data['chat_user'] = $this->chatuser_model->searchForUser($keyword, $chat_user_id, $student_id, 'student');
 
         $userlist = $this->load->view('admin/chat/_partialSearchUser', $data, true);
         $array = array('status' => '1', 'error' => '', 'page' => $userlist);
@@ -180,7 +180,7 @@ class Chat extends Student_Controller {
             );
 
             //===================
-            $new_user_record = $this->chatuser_model->addNewUserForStudent($first_entry, $insert_data, 'student', $student_id, $insert_message);
+            $new_user_record = $this->chatuser_model->addNewUserForStudent($first_entry, $insert_data, $student_id, $insert_message, 'student');
             $json_record = json_decode($new_user_record);
 
             //==================

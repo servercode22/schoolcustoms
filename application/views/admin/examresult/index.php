@@ -19,7 +19,7 @@
                                 <div class="col-sm-6 col-lg-3 col-md-3 col20">
                                     <div class="form-group">
                                         <label><?php echo $this->lang->line('exam') . " " . $this->lang->line('group'); ?></label><small class="req"> *</small>
-                                        <select autofocus="" id="exam_group_id" name="exam_group_id" class="form-control" >
+                                        <select autofocus="" id="exam_group_id" name="exam_group_id" class="form-control select2" >
                                             <option value=""><?php echo $this->lang->line('select'); ?></option>
                                             <?php
                                             foreach ($examgrouplist as $ex_group_key => $ex_group_value) {
@@ -40,7 +40,7 @@
                                 <div class="col-sm-6 col-lg-3 col-md-3 col20">
                                     <div class="form-group">
                                         <label><?php echo $this->lang->line('exam') ?></label><small class="req"> *</small>
-                                        <select  id="exam_id" name="exam_id" class="form-control" >
+                                        <select  id="exam_id" name="exam_id" class="form-control select2" >
                                             <option value=""><?php echo $this->lang->line('select'); ?></option>
                                         </select>
                                         <span class="text-danger"><?php echo form_error('exam_id'); ?></span>
@@ -183,7 +183,7 @@
                                                             <td><?php echo $student_value->admission_no; ?></td>
                                                             <td><?php echo ($student_value->exam_roll_no != 0) ? $student_value->exam_roll_no : "-"; ?> </td>
                                                             <td>
-                                                                <a href="<?php echo base_url(); ?>student/view/<?php echo $student_value->student_id; ?>"><?php echo $student_value->firstname . " " . $student_value->lastname; ?>
+                                                                <a href="<?php echo base_url(); ?>student/view/<?php echo $student_value->student_id; ?>"><?php echo $this->customlib->getFullName($student_value->firstname,$student_value->middlename,$student_value->lastname,$sch_setting->middlename,$sch_setting->lastname); ?>
                                                                 </a>
                                                             </td>
                                                             <?php
@@ -375,6 +375,10 @@ function findGradePoints($exam_grades, $percentage) {
 }
 ?>
 <script type="text/javascript">
+     $(document).ready(function () {
+        $('.select2').select2();
+
+    });
     $(document).ready(function () {
         $.extend($.fn.dataTable.defaults, {
             searching: true,
@@ -468,7 +472,9 @@ function findGradePoints($exam_grades, $percentage) {
                         }
                         div_data += "<option value=" + obj.id + " " + sel + ">" + obj.exam + "</option>";
                     });
+
                     $('#exam_id').append(div_data);
+                    $('#exam_id').trigger('change');
                 },
                 complete: function () {
                     $('#exam_id').removeClass('dropdownloading');

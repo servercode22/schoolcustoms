@@ -8,7 +8,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            <i class="fa fa-mortar-board"></i> Timetable --r</h1>
+            <i class="fa fa-mortar-board"></i><?php echo $this->lang->line('timetable'); ?></h1>
     </section>
     <!-- Main content -->
     <section class="content">

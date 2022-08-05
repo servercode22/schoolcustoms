@@ -181,3 +181,38 @@ function markSheetDigit() {
             $words[$point = $point % 10] : '';
     return $result . $points;
 }
+
+function getSecondsFromHMS($time) {
+    $timeArr = array_reverse(explode(":", $time));    
+    $seconds = 0;
+    foreach ($timeArr as $key => $value) {
+        if ($key > 2)
+            break;
+        $seconds += pow(60, $key) * $value;
+    }
+    return $seconds;
+}
+
+function getHMSFromSeconds($seconds) {
+  $t = round($seconds);
+  return sprintf('%02d:%02d:%02d', ($t/3600),($t/60%60), $t%60);
+}
+
+
+function array_insert(&$array, $position, $insert)
+{
+    if (is_int($position)) {
+        array_splice($array, $position, 0, $insert);
+    } else {
+        $pos   = array_search($position, array_keys($array));
+        $array = array_merge(
+            array_slice($array, 0, $pos),
+            $insert,
+            array_slice($array, $pos)
+        );
+    }
+}
+
+function amountFormat($amount){
+    return number_format((float)$amount, 2, '.', '');
+}

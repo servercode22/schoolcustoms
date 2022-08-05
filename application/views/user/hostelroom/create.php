@@ -9,16 +9,13 @@
 </style>
 <?php
 $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
-$student_hostel = $studentList['hostel_room_id'];
-//echo "hostel".$student_hostel ;
-//exit();
+$student_hostel  = $studentList['hostel_room_id'];
 ?>
 <div class="content-wrapper">
-
     <!-- Main content -->
     <section class="content">
-        <div class="row">        
-            <div class="col-md-12">          
+        <div class="row">
+            <div class="col-md-12">
                 <div class="box box-primary" id="hroom">
                     <div class="box-header ptbnull">
                         <h3 class="box-title titlefix"> <?php echo $this->lang->line('hostel_rooms'); ?></h3>
@@ -41,60 +38,50 @@ $student_hostel = $studentList['hostel_room_id'];
                                 </thead>
                                 <tbody>
                                     <?php if (empty($hostelroomlist)) {
-                                        ?>
+    ?>
 
                                         <?php
-                                    } else {
-                                        $count = 1;
-                                        foreach ($hostelroomlist as $hostelroom) {
-                                            ?>
+} else {
+    $count = 1;
+    foreach ($hostelroomlist as $hostelroom) {
+        ?>
                                             <tr>
                                                 <td class="mailbox-name"> <?php echo $hostelroom['hostel_name'] ?></td>
                                                 <td class="mailbox-name"> <?php echo $hostelroom['room_type'] ?></td>
                                                 <td class="mailbox-name"> <?php echo $hostelroom['room_no'] ?></td>
                                                 <td class="mailbox-name"> <?php echo $hostelroom['no_of_bed'] ?></td>
                                                 <td><?php
-                                                    if ($hostelroom["id"] == $student_hostel) {
-                                                        echo "Assigned";
-                                                    }
-                                                    ?></td>
+if ($hostelroom["id"] == $student_hostel) {
+            echo "Assigned";
+        }
+        ?></td>
                                                 <td class="text text-right"> <?php echo $currency_symbol . $hostelroom['cost_per_bed'] ?></td>
                                             </tr>
                                             <?php
-                                        }
-                                        $count++;
-                                    }
-                                    ?>
+}
+    $count++;
+}
+?>
                                 </tbody>
                             </table>
                         </div>
                     </div>
                     <div class="box-footer">
-                        <div class="mailbox-controls">  
+                        <div class="mailbox-controls">
                             <div class="pull-right">
                             </div>
                         </div>
                     </div>
                 </div>
-            </div> 
+            </div>
         </div>
-        <div class="row">           
+        <div class="row">
             <div class="col-md-12">
             </div>
         </div>
     </section>
 </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#postdate').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true
-        });
-        $("#btnreset").click(function () {
-            $("#form1")[0].reset();
-        });
-    });
-</script>
+
 <script type="text/javascript">
     var base_url = '<?php echo base_url() ?>';
     function printDiv(elem) {
@@ -121,8 +108,6 @@ $student_hostel = $studentList['hostel_room_id'];
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/dist/css/skins/_all-skins.min.css">');
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/plugins/iCheck/flat/blue.css">');
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/plugins/morris/morris.css">');
-
-
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/plugins/jvectormap/jquery-jvectormap-1.2.2.css">');
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/plugins/datepicker/datepicker3.css">');
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/plugins/daterangepicker/daterangepicker-bs3.css">');
@@ -137,7 +122,6 @@ $student_hostel = $studentList['hostel_room_id'];
             window.frames["frame1"].print();
             frame1.remove();
         }, 500);
-
 
         return true;
     }

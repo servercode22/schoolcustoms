@@ -4,17 +4,21 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-class Common extends Public_Controller {
+class Common extends Public_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
+		$this->sch_setting_detail = $this->setting_model->getSetting();
     }
 
-    public function parents() {
+    public function parents()
+    {
         $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
-        $sql = "SELECT * FROM `users` WHERE role='parent'";
-        $query = $this->db->query($sql);
+        $sql        = "SELECT * FROM `users` WHERE role='parent'";
+        $query      = $this->db->query($sql);
         $par_result = $query->result();
         foreach ($par_result as $res_key => $res_value) {
             $ids = explode(",", $res_value->childs);
@@ -31,42 +35,43 @@ class Common extends Public_Controller {
         }
     }
 
-    public function getSudentSessions() {
-        $student_id = $this->customlib->getStudentSessionUserID();
-        $session = $this->session_model->getStudentAcademicSession($student_id);
-        $data = array();
-        $session_array = $this->session->has_userdata('session_array');
+    public function getSudentSessions()
+    {
+        $student_id          = $this->customlib->getStudentSessionUserID();
+        $session             = $this->session_model->getStudentAcademicSession($student_id);
+        $data                = array();
+        $session_array       = $this->session->has_userdata('session_array');
         $data['sessionData'] = array('session_id' => 0);
         if ($session_array) {
             $data['sessionData'] = $this->session->userdata('session_array');
         } else {
-            $setting = $this->setting_model->get();
+            $setting             = $this->setting_model->get();
             $data['sessionData'] = array('session_id' => $setting[0]['session_id']);
         }
         $data['sessionList'] = $session;
         $this->load->view('partial/_session', $data);
     }
 
-    public function getStudentSessionClasses() {
+    public function getStudentSessionClasses()
+    {
         $data = array();
 
-        $role = $this->customlib->getUserRole();
+        $role         = $this->customlib->getUserRole();
         $data['role'] = $role;
         if ($role == "student") {
-            $student_id = $this->customlib->getStudentSessionUserID();
+            $student_id             = $this->customlib->getStudentSessionUserID();
             $data['studentclasses'] = $this->studentsession_model->searchMultiClsSectionByStudent($student_id);
         } elseif ($role == "parent") {
-            $parent_id = $this->customlib->getUsersID();
+            $parent_id              = $this->customlib->getUsersID();
             $data['studentclasses'] = $this->student_model->getParentChilds($parent_id);
         }
-
-        // $data['studentclasses'] = $this->studentsession_model->searchMultiClsSectionByStudent($student_detail['student_id']);
-
+		$data['sch_setting'] = $this->sch_setting_detail;
         $page = $this->load->view('partial/_studentSessionClasses', $data, true);
         echo json_encode(array('page' => $page));
     }
 
-    public function getStudentClass() {
+    public function getStudentClass()
+    {
         $this->form_validation->set_error_delimiters('', '');
         $this->form_validation->set_rules('clschg', 'clschg', 'required|trim|xss_clean');
         if ($this->form_validation->run() == false) {
@@ -80,10 +85,10 @@ class Common extends Public_Controller {
 
 //===================
 
-
+          
             $student_session_id = $this->input->post('clschg');
 
-            $student = $this->student_model->getByStudentSession($student_session_id);
+            $student        = $this->student_model->getByStudentSession($student_session_id);
             $logged_In_User = $this->customlib->getLoggedInUserData();
 
             $logged_In_User['student_id'] = $student['id'];
@@ -104,22 +109,24 @@ class Common extends Public_Controller {
         }
     }
 
-    public function getAllSession() {
-        $session = $this->session_model->getAllSession();
-        $data = array();
-        $session_array = $this->session->has_userdata('session_array');
+    public function getAllSession()
+    {
+        $session             = $this->session_model->getAllSession();
+        $data                = array();
+        $session_array       = $this->session->has_userdata('session_array');
         $data['sessionData'] = array('session_id' => 0);
         if ($session_array) {
             $data['sessionData'] = $this->session->userdata('session_array');
         } else {
-            $setting = $this->setting_model->get();
+            $setting             = $this->setting_model->get();
             $data['sessionData'] = array('session_id' => $setting[0]['session_id']);
         }
         $data['sessionList'] = $session;
         $this->load->view('partial/_session', $data);
     }
 
-    public function updateSession() {
+    public function updateSession()
+    {
         $role = $this->customlib->getUserRole();
 
         $redirect_url = site_url('site/userlogin');
@@ -129,7 +136,7 @@ class Common extends Public_Controller {
             $redirect_url = site_url('accountant/accountant/dashboard');
         }
 
-        $session = $this->input->post('popup_session');
+        $session       = $this->input->post('popup_session');
         $session_array = $this->session->has_userdata('session_array');
         if ($session_array) {
             $this->session->unset_userdata('session_array');
@@ -140,11 +147,11 @@ class Common extends Public_Controller {
         $this->session->set_userdata('session_array', $session_array);
 
         if ($role == "student") {
-            $session = $this->input->post('popup_session');
-            $session_Array = $this->session->userdata('student');
-            $student_id = $session_Array['student_id'];
+            $session                 = $this->input->post('popup_session');
+            $session_Array           = $this->session->userdata('student');
+            $student_id              = $session_Array['student_id'];
             $student_display_session = $this->studentsession_model->searchActiveClassSectionStudent($student_id, $session);
-            $student_current_class = array('student_session_id' => $student_display_session->id, 'class_id' => $student_display_session->class_id, 'section_id' => $student_display_session->section_id);
+            $student_current_class   = array('student_session_id' => $student_display_session->id, 'class_id' => $student_display_session->class_id, 'section_id' => $student_display_session->section_id);
             $this->session->unset_userdata('current_class');
             $this->session->set_userdata('current_class', $student_current_class);
         }

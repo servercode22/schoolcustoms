@@ -22,6 +22,10 @@ defined('DEBUG_SYSTEM_AUTO_UPDATE') OR define('DEBUG_SYSTEM_AUTO_UPDATE', 'OE9QN
 defined('DEBUG_SYSTEM_APP') OR define('DEBUG_SYSTEM_APP', 'OE9QNUF1V2pZb21Ta0wwaXJXYkZmSFZWeFNCK0dpbGVxbHg5a0I3cGZiazRtVE4xTmI0akxzVXk2QzREQkx6Uw==');
 
 
+defined('DEBUG_SYSTEM_APP_REG') OR define('DEBUG_SYSTEM_APP_REG', 'OE9QNUF1V2pZb21Ta0wwaXJXYkZmSFZWeFNCK0dpbGVxbHg5a0I3cGZibHgrQVpsN2dMMWJQc0V5K3ZMVlZEdnhNRVdYOGhacVJmVEVOODhWZ01vc3c9PQ==');
+defined('DEBUG_SYSTEM_ADDON') OR define('DEBUG_SYSTEM_ADDON', 'OE9QNUF1V2pZb21Ta0wwaXJXYkZmSDdjNGFmS1U2ZDFLVHFkeDFKcW1xY2Q4ZHRPWDBwRlY5a0RzVlVRY1Z6Lw==');
+
+
 
 /*
   |--------------------------------------------------------------------------
@@ -96,3 +100,4 @@ defined('EXIT__AUTO_MAX') OR define('EXIT__AUTO_MAX', 125); // highest automatic
 define('INSERT_RECORD_CONSTANT', 'New Record inserted');
 define('UPDATE_RECORD_CONSTANT', 'Record updated');
 define('DELETE_RECORD_CONSTANT', 'Record deleted');
+define('IMPORT_RECORD_CONSTANT', 'Record imported');

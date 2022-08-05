@@ -8,21 +8,21 @@
         <ul class="classlist">
             <li><a data-original-title="<?php echo $this->lang->line('print') ?>" data-toggle="tooltip" class="" id="printModal" onclick="printDivModal()" ><i class="fa fa-print"></i></a></li>
             <li> <a data-original-title="<?php echo $this->lang->line('download_excel') ?>" data-toggle="tooltip" class="" id="btnExportModal" onclick="fnExcelReportModal();"> <i class="fa fa-file-excel-o"></i> </a></li>
-            <?php if ($result['attachment'] != '') { ?>
+            <?php if ($result['attachment'] != '') {?>
                 <li><a data-original-title="<?php echo $this->lang->line('download_attachment') ?>" data-toggle="tooltip" href="<?php echo base_url() ?>admin/syllabus/download/<?php echo $result['attachment'] ?>"><i class="fa fa-file-text-o"></i></a></li>
                 <?php
-            }
-            ?>
-            <?php if ($result['lacture_youtube_url'] != '') { ?>
+}
+?>
+            <?php if ($result['lacture_youtube_url'] != '') {?>
                 <li><a data-toggle="tooltip" data-original-title="<?php echo $this->lang->line('youtube_link') ?>" onclick="run_video('<?php echo $result['lacture_youtube_url'] ?>')" ><i class="fa fa-youtube"></i></a></li>
                 <?php
-            }
-            ?>
-            <?php if ($result['lacture_video'] != '') { ?>
+}
+?>
+            <?php if ($result['lacture_video'] != '') {?>
                 <li><a data-toggle="tooltip" data-original-title="<?php echo $this->lang->line('download_video') ?>" href="<?php echo base_url() ?>admin/syllabus/lacture_video_download/<?php echo $result['lacture_video'] ?>"><i class="fa fa-file-video-o"></i></a></li>
                 <?php
-            }
-            ?>
+}
+?>
 
 
         </ul>
@@ -35,15 +35,15 @@
                 <th><?php echo $this->lang->line('class') ?></th>
                 <td><?php echo $result['cname'] . "(" . $result['sname'] . ")"; ?></td>
             </tr>
-            <tr>	
+            <tr>
                 <th><?php echo $this->lang->line('subject') ?></th>
                 <td><?php
-                    echo $result['subname'];
-                    if ($result['scode'] != '') {
-                        echo " (" . $result['scode'] . ")";
-                    }
-                    ?></td>
-            </tr>	
+echo $result['subname'];
+if ($result['scode'] != '') {
+    echo " (" . $result['scode'] . ")";
+}
+?></td>
+            </tr>
             <tr>
                 <th><?php echo $this->lang->line('date') ?></th>
                 <td><?php echo date($this->customlib->getSchoolDateFormat(), strtotime($result['date'])); ?> <?php echo $result['time_from'] . " " . $this->lang->line('to') . " " . $result['time_to'] ?></td>
@@ -74,22 +74,8 @@
             </tr>
             <tr>
                 <td colspan=2><b><?php echo $this->lang->line('presentation') ?></b><br><?php echo $result['presentation'] ?></td>
-            </tr>	
-
+            </tr>
         </table>
-        <!-- <p class="ptt10"><b><?php //echo $this->lang->line('class')  ?> : <?php //echo $result['cname']."(".$result['sname'].")";  ?></b> <?php //echo $this->lang->line('subject')  ?> :<?php //echo $result['subname']." (".$result['scode'].")";   ?></p>
-        <p><b><?php //echo $this->lang->line('date')  ?>: <?php //echo date($this->customlib->getSchoolDateFormat(),strtotime($result['date']));   ?></b> <?php //echo $result['time_from']." ".$this->lang->line('to')." ".$result['time_to']  ?></p>
-        <p><b><?php //echo $this->lang->line('lesson');   ?>:</b><?php //echo $result['lessonname']  ?> <b><?php //echo $this->lang->line('topic')  ?>:</b> <?php //echo $result['topic_name']  ?> <b><?php //echo $this->lang->line('sub_topic');  ?>: <?php //echo $result['sub_topic']  ?></b></p> 
-        <h5><?php //echo $this->lang->line('general_objectives')   ?></h5>
-        <p><?php //echo nl2br($result['general_objectives'])  ?></p>				
-        <h5><?php //echo $this->lang->line('teaching_method')  ?></h5>
-        <p><?php //echo nl2br($result['teaching_method']);  ?></p>				
-        <h5><?php //echo $this->lang->line('previous_knowledge')  ?></h5>
-        <p><?php //echo nl2br($result['previous_knowledge'])  ?></p> 			
-        <h5><?php //echo $this->lang->line('comprehensive_questions');   ?></h5>
-        <p><?php //echo nl2br($result['comprehensive_questions']);  ?></p>	
-        <h5><?php //echo $this->lang->line('presentation')  ?> </h5>
-        <p><?php //echo $result['presentation']  ?></p>	-->		
     </div><!--./classtopic-->
 </div><!--./col-lg-12-->
 

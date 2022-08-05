@@ -15,7 +15,7 @@
                     <!-- Horizontal Form -->
                     <div class="box box-primary">
                         <div class="box-header with-border">
-                            <h3 class="box-title"><?php //echo $title;        ?><?php echo $this->lang->line('assign_vehicle_on_route'); ?></h3>
+                            <h3 class="box-title"><?php echo $this->lang->line('assign_vehicle_on_route'); ?></h3>
                         </div><!-- /.box-header -->
                         <form id="form1" action="<?php echo base_url() ?>admin/vehroute"  method="post" accept-charset="utf-8">
                             <div class="box-body">

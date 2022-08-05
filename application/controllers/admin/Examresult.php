@@ -12,6 +12,7 @@ class Examresult extends Admin_Controller {
         parent::__construct();
         $this->exam_type = $this->config->item('exam_type');
         $this->attendence_exam = $this->config->item('attendence_exam');
+        $this->sch_setting_detail = $this->setting_model->getSetting();
     }
 
     public function printCard() {
@@ -42,7 +43,7 @@ class Examresult extends Admin_Controller {
             $data['admitcard'] = $this->admitcard_model->get($this->input->post('admitcard_template'));
             $data['exam_subjects'] = $this->batchsubject_model->getExamSubjects($post_exam_id);
             $data['student_details'] = $this->examstudent_model->getStudentsAdmitCardByExamAndStudentID($students_array, $post_exam_id);
-
+            $data['sch_setting']= $this->sch_setting_detail;
             $student_admit_cards = $this->load->view('admin/admitcard/_printadmitcard', $data, true);
             $array = array('status' => '1', 'error' => '', 'page' => $student_admit_cards);
             echo json_encode($array);
@@ -89,10 +90,11 @@ class Examresult extends Admin_Controller {
             $data['studentList'] = $this->examgroupstudent_model->searchExamStudents($exam_group_id, $exam_id, $class_id, $section_id, $session_id);
 
             $data['examList'] = $this->examgroup_model->getExamByExamGroup($exam_group_id, true);
-
+ 
             $data['exam_id'] = $exam_id;
             $data['exam_group_id'] = $exam_group_id;
         }
+        $data['sch_setting'] = $this->sch_setting_detail;
         $this->load->view('layout/header', $data);
         $this->load->view('admin/examresult/admitcard', $data);
         $this->load->view('layout/footer', $data);
@@ -143,6 +145,7 @@ class Examresult extends Admin_Controller {
             $data['exam_id'] = $exam_id;
             $data['exam_group_id'] = $exam_group_id;
         }
+        $data['sch_setting'] = $this->sch_setting_detail;
         $this->load->view('layout/header', $data);
         $this->load->view('admin/examresult/marksheet', $data);
         $this->load->view('layout/footer', $data);
@@ -174,10 +177,8 @@ class Examresult extends Admin_Controller {
             $exam_grades = $this->grade_model->getByExamType($exam->exam_group_type);
             $data['exam_grades'] = $exam_grades;
             $data['marksheet'] = $this->examresult_model->getExamResults($post_exam_id, $post_exam_group_id, $students_array);
-
-            $student_exam_page = $this->load->view('admin/examresult/_printmarksheet', $data, true);
-
-
+            $data['sch_setting'] = $this->sch_setting_detail;
+            $student_exam_page = $this->load->view('admin/examresult/_printmarksheet', $data, true); 
             $array = array('status' => '1', 'error' => '', 'page' => $student_exam_page);
             echo json_encode($array);
         }
@@ -231,7 +232,7 @@ class Examresult extends Admin_Controller {
                     $studentList[$student_key]->subject_results = $this->examresult_model->getStudentResultByExam($exam_id, $student_value->exam_group_class_batch_exam_student_id);
                 }
             }
-
+ 
             $data['studentList'] = $studentList;
 
             $exam_grades = $this->grade_model->getByExamType($exam_details->exam_group_type);
@@ -239,7 +240,8 @@ class Examresult extends Admin_Controller {
             $data['exam_details'] = $exam_details;
             $data['exam_id'] = $exam_id;
             $data['exam_group_id'] = $exam_group_id;
-        }
+        }   
+        $data['sch_setting'] = $this->sch_setting_detail;
         $this->load->view('layout/header', $data);
         $this->load->view('admin/examresult/index', $data);
         $this->load->view('layout/footer', $data);
@@ -257,8 +259,6 @@ class Examresult extends Admin_Controller {
         $student_id = $this->input->post('student_id');
 
         $data['examgrouplist'] = $this->examgroup_model->getExamGroupByStudent($student_id);
-        echo $this->db->last_query();
-        die;
         echo json_encode($data);
     }
 
@@ -425,7 +425,7 @@ class Examresult extends Admin_Controller {
             $data['exam_id'] = $exam_id;
             $data['exam_group_id'] = $exam_group_id;
         }
-
+        $data['sch_setting'] = $this->sch_setting_detail;
         $this->load->view('layout/header', $data);
         $this->load->view('admin/examresult/rankreport', $data);
         $this->load->view('layout/footer', $data);

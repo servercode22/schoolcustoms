@@ -46,7 +46,6 @@ class Alumni_model extends MY_Model {
             $action = "Insert";
             $record_id = $insert_id;
             $this->log($message, $record_id, $action);
-            //echo $this->db->last_query();die;
             //======================Code End==============================
 
             $this->db->trans_complete(); # Completing transaction
@@ -94,7 +93,6 @@ class Alumni_model extends MY_Model {
             $action = "Insert";
             $record_id = $insert_id;
             $this->log($message, $record_id, $action);
-            //echo $this->db->last_query();die;
             //======================Code End==============================
 
             $this->db->trans_complete(); # Completing transaction
@@ -129,13 +127,11 @@ class Alumni_model extends MY_Model {
         //=======================Code Start===========================
         $this->db->where('id', $id);
         $this->db->delete('alumni_events');
-
-        //$return_value = $this->db->insert_id();
+       
         $message = DELETE_RECORD_CONSTANT . " On  Alumni Event   id " . $id;
         $action = "Delete";
         $record_id = $id;
         $this->log($message, $record_id, $action);
-        //echo $this->db->last_query();die;
         //======================Code End==============================
 
         $this->db->trans_complete(); # Completing transaction
@@ -158,13 +154,12 @@ class Alumni_model extends MY_Model {
         //=======================Code Start===========================
         $this->db->where('student_id', $id);
         $this->db->delete('alumni_students');
-
-        //$return_value = $this->db->insert_id();
+       
         $message = DELETE_RECORD_CONSTANT . " On  alumni students  id " . $id;
         $action = "Delete";
         $record_id = $id;
         $this->log($message, $record_id, $action);
-        //echo $this->db->last_query();die;
+        
         //======================Code End==============================
 
         $this->db->trans_complete(); # Completing transaction

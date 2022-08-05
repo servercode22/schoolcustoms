@@ -38,7 +38,7 @@
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name"><?php echo $this->lang->line('current_username'); ?>
                                     </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <input  name="current_username" required="required" class="form-control col-md-7 col-xs-12" type="password"  value="<?php echo set_value('currentr_password'); ?>">
+                                        <input  name="current_username" required="required" class="form-control col-md-7 col-xs-12" type="text"  value="<?php echo set_value('currentr_password'); ?>">
 
                                     </div>
                                 </div>
@@ -50,7 +50,7 @@
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name"><?php echo $this->lang->line('new_username'); ?>
                                     </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <input   required="required" class="form-control col-md-7 col-xs-12" name="new_username" placeholder="" type="password"  value="<?php echo set_value('new_username'); ?>">
+                                        <input   required="required" class="form-control col-md-7 col-xs-12" name="new_username" placeholder="" type="text"  value="<?php echo set_value('new_username'); ?>">
 
                                     </div>
                                 </div>
@@ -62,7 +62,7 @@
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="first-name"><?php echo $this->lang->line('confirm_username'); ?>
                                     </label>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <input id="confirm_username" name="confirm_username" placeholder="" type="password"  value="<?php echo set_value('confirm_username'); ?>" class="form-control col-md-7 col-xs-12" >
+                                        <input id="confirm_username" name="confirm_username" placeholder="" type="text"  value="<?php echo set_value('confirm_username'); ?>" class="form-control col-md-7 col-xs-12" >
 
                                     </div>
                                 </div>

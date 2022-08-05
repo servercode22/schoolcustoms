@@ -154,7 +154,7 @@
                                                 <td class="mailbox-name"> <?php echo $value['in_time']; ?></td>
                                                 <td class="mailbox-name"> <?php echo $value['out_time']; ?></td>
                                                 <td class="mailbox-date pull-right">
-                                                    <a  data-placement="left" onclick="getRecord(<?php echo $value['id']; ?>)" class="btn btn-default btn-xs" data-target="#visitordetails" data-toggle="modal"  title="View"><i class="fa fa-reorder"></i></a> 
+                                                    <a  data-placement="left" onclick="getRecord(<?php echo $value['id']; ?>)" class="btn btn-default btn-xs" data-target="#visitordetails" data-toggle="modal"  title="<?php echo $this->lang->line('view') ?>"><i class="fa fa-reorder"></i></a> 
                                                     <?php if ($value['image'] !== "") { ?>
                                                         <a data-placement="left" href="<?php echo base_url(); ?>admin/visitors/download/<?php echo $value['image']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('download'); ?>">
                                                             <i class="fa fa-download"></i>
@@ -214,31 +214,22 @@
 <script src="<?php echo base_url(); ?>backend/plugins/timepicker/bootstrap-timepicker.min.js"></script>
 
 <script type="text/javascript">
-
                                                             $(function () {
-
                                                                 $(".timepicker").timepicker({
-                                                                    // showInputs: false,
-                                                                    // defaultTime: false,
-                                                                    // explicitMode: false,
-                                                                    // minuteStep: 1
+                                                                    
                                                                 });
                                                             });
 
 
                                                             function getRecord(id) {
-                                                                // alert(id);
+                                                               
                                                                 $.ajax({
                                                                     url: '<?php echo base_url(); ?>admin/visitors/details/' + id,
-                                                                    success: function (result) {
-                                                                        //alert(result);
+                                                                    success: function (result) {                                                                     
                                                                         $('#getdetails').html(result);
                                                                     }
-
-
                                                                 });
 
                                                             }
-
 
 </script>

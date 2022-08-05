@@ -82,8 +82,8 @@
 
 
                                         <div class="form-group">
-                                            <label for="exampleInputEmail1"><?php echo $this->lang->line('due_date'); ?></label>
-                                            <input id="due_date" name="due_date" placeholder="" type="text" class="form-control date"  value="<?php echo set_value('due_date'); ?>" readonly="readonly"/>
+                                            <label for="exampleInputEmail1"><?php echo $this->lang->line('due_date'); ?></label><small class="req" id="due_date_error"> </small>
+                                            <input id="due_date" name="due_date" placeholder="" type="text" class="form-control date"  value="<?php echo set_value('due_date'); ?>" />
                                             <span class="text-danger"><?php echo form_error('due_date'); ?></span>
                                         </div>
 
@@ -170,7 +170,7 @@
                     <div class="box-body">
                         <div class="download_label"><?php echo $this->lang->line('fees_master_list') . " : " . $this->setting_model->getCurrentSessionName(); ?></div>
                         <div class="mailbox-messages">
-                            <div class="table-responsive">  
+                            <div class="">  
                                 <table class="table table-striped table-bordered table-hover example">
                                     <thead>
                                         <tr>
@@ -222,13 +222,13 @@
 
                                                 <td class="mailbox-date pull-right">
                                                     <?php if ($this->rbac->hasPrivilege('fees_group_assign', 'can_view')) { ?>
-                                                        <a data-placement="left" href="<?php echo base_url(); ?>admin/feemaster/assign/<?php echo $feegroup->id ?>"
+                                                        <a data-placement="top" href="<?php echo base_url(); ?>admin/feemaster/assign/<?php echo $feegroup->id ?>"
                                                            class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('assign / view'); ?>">
                                                             <i class="fa fa-tag"></i>
                                                         </a>
                                                     <?php } ?>
                                                     <?php if ($this->rbac->hasPrivilege('fees_master', 'can_delete')) { ?>
-                                                        <a data-placement="left" href="<?php echo base_url(); ?>admin/feemaster/deletegrp/<?php echo $feegroup->id ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
+                                                        <a data-placement="top" href="<?php echo base_url(); ?>admin/feemaster/deletegrp/<?php echo $feegroup->id ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
                                                             <i class="fa fa-remove"></i>
                                                         </a>
                                                     <?php } ?>
@@ -264,17 +264,6 @@
         var account_type = "<?php echo set_value('account_type', 0); ?>";
         load_disable(account_type);
 
-        var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy']) ?>';
-
-        $('#date').datepicker({
-            //  format: "dd-mm-yyyy",
-            format: date_format,
-            autoclose: true
-        });
-
-        $("#btnreset").click(function () {
-            $("#form1")[0].reset();
-        });
 
     });
 
@@ -292,12 +281,15 @@
 
     function load_disable(account_type) {
         if (account_type === "percentage") {
+             $('#due_date_error').html(' *');
             $('#fine_amount').prop('readonly', true);
             $('#fine_percentage').prop('readonly', false);
         } else if (account_type === "fix") {
+             $('#due_date_error').html(' *');
             $('#fine_amount').prop('readonly', false);
             $('#fine_percentage').prop('readonly', true);
         } else {
+            $('#due_date_error').html('');
             $('#fine_amount').prop('readonly', true);
             $('#fine_percentage').prop('readonly', true);
         }
@@ -312,13 +304,16 @@
         var finetype = $('input[name=account_type]:checked', '#form1').val();
 
         if (finetype === "percentage") {
+             $('#due_date_error').html(' *');
             fine_amount = ((amount * fine_percentage) / 100).toFixed(2);
             $('#fine_amount').val(fine_amount).prop('readonly', true);
             $('#fine_percentage').prop('readonly', false);
         } else if (finetype === "fix") {
+             $('#due_date_error').html(' *');
             $('#fine_amount').val("").prop('readonly', false);
             $('#fine_percentage').val("").prop('readonly', true);
         } else {
+             $('#due_date_error').html('');
             $('#fine_amount').val("");
             $('#fine_percentage').val("");
             $('#fine_amount').prop('readonly', true);

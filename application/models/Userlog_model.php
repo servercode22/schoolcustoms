@@ -12,7 +12,7 @@ class Userlog_model extends CI_Model {
         parent::__construct();
         $this->load->library('datatables');
     }
-
+ 
     public function get($id = null) {
         $this->db->select()->from('userlog');
         if ($id != null) {
@@ -68,9 +68,10 @@ class Userlog_model extends CI_Model {
     }
 
     public function getAllRecordByRole($role) {
+
         $this->datatables
                 ->select($this->table . '.*,class_sections.id as `class_section_id`,IFNULL(classes.class, "") as `class_name`,IFNULL(sections.section, "") as `section_name`')
-                ->searchable('id,user,role,ipaddress')
+                ->searchable('user,role,ipaddress,classes.class,sections.section,login_datetime')
                 ->join('class_sections', 'class_sections.id = ' . $this->table . '.class_section_id', 'left')
                 ->join('classes', 'classes.id = class_sections.class_id', 'left')
                 ->join('sections', 'sections.id = class_sections.section_id', 'left')
@@ -91,6 +92,11 @@ class Userlog_model extends CI_Model {
                 ->sort('login_datetime', 'desc')
                 ->from($this->table);
         return $this->datatables->generate('json');
+    }
+	
+	public function userlog_delete()
+    {         
+        $this->db->truncate('userlog');        
     }
 
 }

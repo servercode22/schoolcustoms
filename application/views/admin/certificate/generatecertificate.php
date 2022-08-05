@@ -1,11 +1,7 @@
 <?php
 $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 ?>
-<style type="text/css">
-
-</style>
-
-<div class="content-wrapper" style="min-height: 946px;">  
+<div class="content-wrapper">  
     <section class="content-header">
         <h1><i class="fa fa-newspaper-o"></i> <?php echo $this->lang->line('certificate'); ?></h1>
     </section>
@@ -125,12 +121,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                             </td>
                                                             <td><?php echo $student['admission_no']; ?></td>
                                                             <td>
-                                                                <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?>
+                                                                <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname);  ?>
                                                                 </a>
-                                                            </td>
+                                                            </td> 
                                                             <td><?php echo $student['class'] . "(" . $student['section'] . ")" ?></td>
                                                             <td><?php echo $student['father_name']; ?></td>
-                                                            <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob'])); ?></td>
+                                                            <td><?php if($student['dob']!='' && $student['dob']!='0000-00-00'){ echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob'])); } ?></td>
                                                             <td><?php echo $student['gender']; ?></td>
                                                             <td><?php echo $student['category']; ?></td>
                                                             <td><?php echo $student['mobileno']; ?></td>
@@ -250,8 +246,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     type: 'post',
                     dataType: "html",
                     data: {'data': JSON.stringify(array_to_print), 'class_id': classId, 'certificate_id': certificateId, },
-                    success: function (response) {
-                        //alert(response)
+                    success: function (response) {                       
                         Popup(response);
 
                     }

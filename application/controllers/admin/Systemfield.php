@@ -3,7 +3,7 @@
 if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
-
+ 
 class Systemfield extends Admin_Controller {
 
     public $custom_fields_list = array();
@@ -11,6 +11,7 @@ class Systemfield extends Admin_Controller {
     public function __construct() {
         parent::__construct();
         $this->load->library('encoding_lib');
+        $this->load->model("student_edit_field_model");
         $this->custom_fields_list = $this->config->item('custom_fields');
         $this->custom_field_table = $this->config->item('custom_field_table');
     }
@@ -19,6 +20,7 @@ class Systemfield extends Admin_Controller {
         $this->session->set_userdata('top_menu', 'System Settings');
         $this->session->set_userdata('sub_menu', 'System Settings/systemfield');
         $data['result'] = $this->setting_model->getSetting();
+
         $this->load->view('layout/header');
         $this->load->view('admin/systemfield/index', $data);
         $this->load->view('layout/footer');
@@ -49,6 +51,12 @@ class Systemfield extends Admin_Controller {
                 $data['lastname'] = 1;
             } else {
                 $data['lastname'] = 0;
+            }
+        }else if ($role == 'middlename') {
+            if ($status == "yes") {
+                $data['middlename'] = 1;
+            } else {
+                $data['middlename'] = 0;
             }
         } else if ($role == 'category') {
             if ($status == "yes") {
@@ -164,6 +172,24 @@ class Systemfield extends Admin_Controller {
             } else {
                 $data['mother_pic'] = 0;
             }
+        } else if ($role == 'guardian_name') {
+            if ($status == "yes") {
+                $data['guardian_name'] = 1;
+            } else {
+                $data['guardian_name'] = 0;
+            }
+        } else if ($role == 'guardian_phone') {
+            if ($status == "yes") {
+                $data['guardian_phone'] = 1;
+            } else {
+                $data['guardian_phone'] = 0;
+            }
+        } else if ($role == 'guardian_occupation') {
+            if ($status == "yes") {
+                $data['guardian_occupation'] = 1;
+            } else {
+                $data['guardian_occupation'] = 0;
+            }
         } else if ($role == 'guardian_relation') {
             if ($status == "yes") {
                 $data['guardian_relation'] = 1;
@@ -217,6 +243,18 @@ class Systemfield extends Admin_Controller {
                 $data['bank_account_no'] = 1;
             } else {
                 $data['bank_account_no'] = 0;
+            }
+        } else if ($role == 'bank_name') {
+            if ($status == "yes") {
+                $data['bank_name'] = 1;
+            } else {
+                $data['bank_name'] = 0;
+            }
+        } else if ($role == 'ifsc_code') {
+            if ($status == "yes") {
+                $data['ifsc_code'] = 1;
+            } else {
+                $data['ifsc_code'] = 0;
             }
         } else if ($role == 'national_identification_no') {
             if ($status == "yes") {
@@ -399,7 +437,63 @@ class Systemfield extends Admin_Controller {
                 $data['staff_upload_documents'] = 0;
             }
         }
+
+        if($this->findSelected($this->student_edit_field_model->get(),$role)){
+
+            if($status=='no'){
+                 $insert = array(
+                'name'   => $role,
+                'status' => 0,
+            );
+            $this->student_edit_field_model->add($insert);
+            }
+
+            if($role=='guardian_name'){
+                $insert = array(
+                'name'   => 'if_guardian_is',
+                'status' => 0,
+            );
+                
+            $this->student_edit_field_model->add($insert);
+            }
+           
+        }
+
+        // is used to edit data in online admission form fields
+        if($this->findSelected($this->onlinestudent_model->getformfields(),$role)){
+
+            if($status=='no'){
+                 $insert = array(
+                'name'   => $role,
+                'status' => 0,
+                );
+
+                $this->onlinestudent_model->addformfields($insert);
+            }
+
+            if($role=='guardian_name'){
+                $insert = array(
+                'name'   => 'if_guardian_is',
+                'status' => 0,
+            );
+                
+            $this->onlinestudent_model->addformfields($insert);
+            }
+           
+        } 
+       
         $this->setting_model->add($data);
     }
+
+    public function  findSelected($inserted_fields,$find){
+
+    foreach ($inserted_fields as $inserted_key => $inserted_value) {
+      if ($find == $inserted_value->name && $inserted_value->status) {
+        return true;
+       }
+
+    }
+    return false;
+   }
 
 }

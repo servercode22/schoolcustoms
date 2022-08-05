@@ -122,13 +122,14 @@ class Paymentsettings extends Admin_Controller {
 
     public function ccavenue() {
         $this->form_validation->set_error_delimiters('', '');
-
         $this->form_validation->set_rules('ccavenue_secret', $this->lang->line('key'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('ccavenue_salt', $this->lang->line('salt'), 'trim|required|xss_clean');
+         $this->form_validation->set_rules('ccavenue_api_publishable_key', $this->lang->line('access_code'), 'trim|required|xss_clean');
         if ($this->form_validation->run()) {
             $data = array(
                 'api_secret_key' => $this->input->post('ccavenue_secret'),
                 'salt' => $this->input->post('ccavenue_salt'),
+                'api_publishable_key'=>$this->input->post('ccavenue_api_publishable_key'),
                 'payment_type' => 'ccavenue',
             );
             $this->paymentsetting_model->add($data);
@@ -136,7 +137,8 @@ class Paymentsettings extends Admin_Controller {
         } else {
             $data = array(
                 'ccavenue_secret' => form_error('ccavenue_secret'),
-                'ccavenue_salt' => form_error('ccavenue_salt')
+                'ccavenue_salt' => form_error('ccavenue_salt'),
+                'ccavenue_api_publishable_key' => form_error('ccavenue_api_publishable_key')
             );
             echo json_encode(array('st' => 1, 'msg' => $data));
         }
@@ -279,7 +281,183 @@ class Paymentsettings extends Admin_Controller {
         }
     }
 
-    public function setting() {
+  
+  public function pesapal(){
+
+         $this->form_validation->set_error_delimiters('', '');
+
+        $this->form_validation->set_rules('pesapal_consumer_key', $this->lang->line('consumer_key'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('pesapal_consumer_secret', $this->lang->line('consumer_secret'), 'trim|required|xss_clean');
+
+
+
+        if ($this->form_validation->run()) {
+
+            $data = array(
+                'api_secret_key' => $this->input->post('pesapal_consumer_secret'),
+                'api_publishable_key' => $this->input->post('pesapal_consumer_key'),
+                'payment_type' => 'pesapal',
+            );
+
+            $this->paymentsetting_model->add($data);
+            
+            echo json_encode(array('st' => 0, 'msg' => $this->lang->line('update_message')));
+        }else{
+
+            $data = array(
+                'pesapal_consumer_key' => form_error('pesapal_consumer_key'),
+                'pesapal_consumer_secret' => form_error('pesapal_consumer_secret'),
+            );
+            
+            echo json_encode(array('st' => 1, 'msg' => $data));
+        }
+    }
+
+ 
+      public function ipayafrica()
+    {
+        $this->form_validation->set_error_delimiters('', '');
+
+        $this->form_validation->set_rules('ipayafrica_vendorid', $this->lang->line('vendorid'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('ipayafrica_hashkey', $this->lang->line('hashkey'), 'trim|required|xss_clean');
+
+        if ($this->form_validation->run()) {
+
+            $data = array(
+                'api_secret_key'      => $this->input->post('ipayafrica_hashkey'),
+                'api_publishable_key' => $this->input->post('ipayafrica_vendorid'),
+                'payment_type'        => 'ipayafrica',
+            );
+
+            $this->paymentsetting_model->add($data);
+            echo json_encode(array('st' => 0, 'msg' => $this->lang->line('update_message')));
+
+        } else {
+
+            $data = array(
+                'ipayafrica_vendorid'     => form_error('ipayafrica_vendorid'),
+                'ipayafrica_hashkey' => form_error('ipayafrica_hashkey'),
+
+            );
+            echo json_encode(array('st' => 1, 'msg' => $data));
+        }
+    }
+
+     public function flutterwave(){
+
+        $this->form_validation->set_error_delimiters('', '');
+        $this->form_validation->set_rules('public_key', $this->lang->line('public')." ".$this->lang->line('Key'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('secret_key', $this->lang->line('secret_key'), 'trim|required|xss_clean');
+
+        if ($this->form_validation->run()) {
+
+            $data = array(
+              
+                'api_publishable_key' => $this->input->post('public_key'),
+                'api_secret_key' => $this->input->post('secret_key'),
+                'payment_type' => 'flutterwave',
+            );
+
+            $this->paymentsetting_model->add($data);
+            echo json_encode(array('st' => 0, 'msg' => $this->lang->line('update_message')));
+        }else{
+
+            $data = array(
+                'public_key' => form_error('public_key'),
+                'secret_key' => form_error('secret_key'),
+            );
+            
+            echo json_encode(array('st' => 1, 'msg' => $data));
+        }
+    }
+
+    public function jazzcash() {
+      
+        $this->form_validation->set_error_delimiters('', '');
+
+        $this->form_validation->set_rules('jazzcash_pp_MerchantID', $this->lang->line('pp_MerchantID'), 'trim|required|xss_clean');
+         $this->form_validation->set_rules('jazzcash_pp_Password', $this->lang->line('pp_password'), 'trim|required|xss_clean');
+
+
+
+        if ($this->form_validation->run()) {
+
+            $data = array(
+                'api_secret_key' => $this->input->post('jazzcash_pp_MerchantID'),
+                 'api_password' => $this->input->post('jazzcash_pp_Password'),
+                'payment_type' => 'jazzcash',
+            );
+
+            $this->paymentsetting_model->add($data);
+            echo json_encode(array('st' => 0, 'msg' => $this->lang->line('update_message')));
+        } else {
+
+            $data = array(
+                'jazzcash_pp_MerchantID' => form_error('jazzcash_pp_MerchantID'),
+                'jazzcash_pp_Password' => form_error('jazzcash_pp_Password'),
+            );
+            echo json_encode(array('st' => 1, 'msg' => $data));
+        }
+    }
+
+    public function billplz() {
+      
+        $this->form_validation->set_error_delimiters('', '');
+        $this->form_validation->set_rules('billplz_api_key', $this->lang->line('api_key'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('billplz_customer_service_email', $this->lang->line('customer_service_email'), 'trim|required|xss_clean');
+
+        if ($this->form_validation->run()) {
+
+            $data = array(
+                'api_secret_key' => $this->input->post('billplz_api_key'),
+                 'api_email' => $this->input->post('billplz_customer_service_email'),
+                'payment_type' => 'billplz',
+            );
+
+            $this->paymentsetting_model->add($data);
+            echo json_encode(array('st' => 0, 'msg' => $this->lang->line('update_message')));
+
+        } else {
+
+            $data = array(
+                'billplz_api_key' => form_error('billplz_api_key'),
+                'billplz_customer_service_email' => form_error('billplz_customer_service_email'),
+            );
+
+            echo json_encode(array('st' => 1, 'msg' => $data));
+        }
+    }
+
+    public function sslcommerz() {
+        
+      
+        $this->form_validation->set_error_delimiters('', '');
+        $this->form_validation->set_rules('sslcommerz_api_key', $this->lang->line('sslcommerz_api_key'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('sslcommerz_store_password', $this->lang->line('sslcommerz_store_password'), 'trim|required|xss_clean');
+
+        if ($this->form_validation->run()) {
+
+            $data = array(
+                'api_password' => $this->input->post('sslcommerz_store_password'),
+                 'api_publishable_key' => $this->input->post('sslcommerz_api_key'),
+                'payment_type' => 'sslcommerz',
+            );
+
+            $this->paymentsetting_model->add($data);
+            echo json_encode(array('st' => 0, 'msg' => $this->lang->line('update_message')));
+
+        } else {
+
+            $data = array(
+                'sslcommerz_store_password' => form_error('sslcommerz_store_password'),
+                'sslcommerz_api_key' => form_error('sslcommerz_api_key'),
+            );
+
+            echo json_encode(array('st' => 1, 'msg' => $data));
+        }
+    }
+    
+    public function setting() { 
 
         $this->form_validation->set_error_delimiters('', '');
 

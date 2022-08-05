@@ -12,6 +12,9 @@ class Updater extends Admin_Controller {
     }
 
     public function index($chk = null) {
+         if (!$this->rbac->hasPrivilege('superadmin', 'can_view')) {
+            access_denied();
+        }
         $data = array();
         $this->session->set_userdata('top_menu', 'System Settings');
         $this->session->set_userdata('sub_menu', 'System Settings/updater');

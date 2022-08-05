@@ -116,7 +116,6 @@ class Cms_menuitems_model extends MY_Model {
             $record_id = $insert_id;
             $this->log($message, $record_id, $action);
         }
-        //echo $this->db->last_query();die;
         //======================Code End==============================
 
         $this->db->trans_complete(); # Completing transaction
@@ -143,6 +142,9 @@ class Cms_menuitems_model extends MY_Model {
         $result = $query->result();
 
         foreach ($result as $r_key => $obj) {
+         if(substr($obj->ext_url_link, -16)== "online_admission"){
+         $obj->page_slug=substr($obj->ext_url_link, -16);
+         }
 
 
             if ($obj->parent_id == 0) {

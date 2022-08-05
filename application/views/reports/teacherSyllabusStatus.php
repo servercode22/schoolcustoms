@@ -1,57 +1,7 @@
-<style type="text/css">
-    .material-switch > input[type="checkbox"] {
-        display: none;   
-    }
-
-    .material-switch > label { 
-        cursor: pointer;
-        height: 0px;
-        position: relative; 
-        width: 40px;  
-    }
-
-    .material-switch > label::before {
-        background: rgb(0, 0, 0);
-        box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
-        border-radius: 8px;
-        content: '';
-        height: 16px;
-        margin-top: -8px;
-        position:absolute;
-        opacity: 0.3;
-        transition: all 0.4s ease-in-out;
-        width: 40px;
-    }
-    .material-switch > label::after {
-        background: rgb(255, 255, 255);
-        border-radius: 16px;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-        content: '';
-        height: 24px;
-        left: -4px;
-        margin-top: -8px;
-        position: absolute;
-        top: -4px;
-        transition: all 0.3s ease-in-out;
-        width: 24px;
-    }
-    .material-switch > input[type="checkbox"]:checked + label::before {
-        background: inherit;
-        opacity: 0.5;
-    }
-    .material-switch > input[type="checkbox"]:checked + label::after {
-        background: inherit;
-        left: 20px;
-    }
-    .table .pull-right {text-align: initial; width: auto}
-</style>
 <?php
 $language = $this->customlib->getLanguage();
 $language_name = $language["short_code"];
 ?>
-
-
-<!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
     <section class="content">
         <?php $this->load->view('reports/_lesson_plan'); ?>
@@ -128,16 +78,17 @@ $language_name = $language["short_code"];
             ?>
             <div class="box-header box-header ptbnull"></div>
             <div class="box-body" id="transfee">
-                <div class="hide" id="visible"><center><b><?php echo $this->lang->line('subject_lesson_plan_report'); ?></b></center></div>
-
-                <a class="btn btn-default btn-xs pull-right" id="print" onclick="printDiv()" ><i class="fa fa-print"></i></a> <a class="btn btn-default btn-xs pull-right" id="btnExport" onclick="fnExcelReport();"> <i class="fa fa-file-excel-o"></i> </a>
-
+                <div class="hide" id="visible"><b><?php echo $this->lang->line('subject_lesson_plan_report'); ?></b></div>
+                <div class="pull-right mb10">
+                    <a class="btn btn-default btn-xs displayinline" id="print" onclick="printDiv()" ><i class="fa fa-print"></i></a> 
+                    <a class="btn btn-default btn-xs displayinline" id="btnExport" onclick="fnExcelReport();"> <i class="fa fa-file-excel-o"></i> </a>
+                </div>    
                 <table class="table table-bordered syllbus" id="headerTable">
                     <tr class="hide" id="visible">
-                        <td colspan="2"><center><b><?php echo $this->lang->line('subject_lesson_plan_report'); ?></b></center></td>
+                        <td class="text-center"><b><?php echo $this->lang->line('subject_lesson_plan_report'); ?></b></td>
                     </tr>
 
-                    <tr> <td colspan="2"><h4><?php
+                    <tr> <td><h4 class="text-left"><?php
                                 echo $this->lang->line('subject_lesson_plan_report') . " " . $this->lang->line('for') . ": " . $subject_name;
                                 if ($subject_name != '') {
                                     echo " " . $this->lang->line('complete') . " " . $subject_complete . "%";
@@ -149,20 +100,17 @@ $language_name = $language["short_code"];
                         foreach ($subjects_data as $key => $value) {
                             ?>
                             <tr>
-
-
-
                                 <td>
                                     <table class="table table-bordered">
                                         <thead>
                                             <tr>  
-                                                <th><?php echo $this->lang->line('teacher'); ?></th>    
-                                                <th><?php echo $this->lang->line('lesson') . " " . $this->lang->line('name'); ?></th>       
-                                                <th><?php echo $this->lang->line('topic') . " " . $this->lang->line('name'); ?></th> 
-                                                <th><?php echo $this->lang->line('sub_topic'); ?></th>             
-                                                <th><?php echo $this->lang->line('date'); ?></th>
+                                                <th class="text-left"><?php echo $this->lang->line('teacher'); ?></th>    
+                                                <th class="text-left"><?php echo $this->lang->line('lesson') . " " . $this->lang->line('name'); ?></th>       
+                                                <th class="text-left"><?php echo $this->lang->line('topic') . " " . $this->lang->line('name'); ?></th> 
+                                                <th class="text-left"><?php echo $this->lang->line('sub_topic'); ?></th>             
+                                                <th class="text-left"><?php echo $this->lang->line('date'); ?></th>
                                                 <th><?php echo $this->lang->line('time') . " " . $this->lang->line('from'); ?></th>
-                                                <th><?php echo $this->lang->line('time') . " " . $this->lang->line('to'); ?></th>
+                                                <th class="text-left"><?php echo $this->lang->line('time') . " " . $this->lang->line('to'); ?></th>
                                                 <th class="pull-right"><?php echo $this->lang->line('action'); ?></th>                    
                                             </tr> 
                                         </thead>
@@ -172,14 +120,14 @@ $language_name = $language["short_code"];
                                                 foreach ($teachers_summaryvalue['summary_report'] as $summary_report_key => $summary_report_value) {
                                                     ?>
                                                     <tr>  
-                                                        <td><?php echo $teachers_summaryvalue['name']; ?></td>   
-                                                        <td><?php echo $summary_report_value['lesson_name'] ?></td>
-                                                        <td><?php echo $summary_report_value['topic_name'] ?></td>
-                                                        <td><?php echo $summary_report_value['sub_topic'] ?></td>                  
-                                                        <td><?php echo date($this->customlib->getSchoolDateFormat(), strtotime($summary_report_value['date'])); ?></td>
-                                                        <td><?php echo $summary_report_value['time_from']; ?></td>
-                                                        <td><?php echo $summary_report_value['time_to']; ?></td>
-                                                        <td class="pull-right"><a data-placement="left" class="btn btn-default btn-xs pull-left" id="subject_syllabusedit" data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('view') ?>" onclick="get_subject_syllabus('<?php echo $summary_report_value['id']; ?>', '<?php echo $summary_report_value['created_for']; ?>')"><i class="fa fa-reorder"></i></a><a data-placement="left" class="btn btn-default btn-xs pull-left" id="subject_syllabusedit" data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('delete') ?>" onclick="subject_syllabusdelete('<?php echo $summary_report_value['id']; ?>')"><i class="fa fa-remove"></i></a></td>
+                                                        <td class="text-left"><?php echo $teachers_summaryvalue['name']; ?></td>   
+                                                        <td class="text-left"><?php echo $summary_report_value['lesson_name'] ?></td>
+                                                        <td class="text-left"><?php echo $summary_report_value['topic_name'] ?></td>
+                                                        <td class="text-left"><?php echo $summary_report_value['sub_topic'] ?></td>                  
+                                                        <td class="text-left"><?php echo date($this->customlib->getSchoolDateFormat(), strtotime($summary_report_value['date'])); ?></td>
+                                                        <td class="text-left"><?php echo $summary_report_value['time_from']; ?></td>
+                                                        <td class="text-left"><?php echo $summary_report_value['time_to']; ?></td>
+                                                        <td class="pull-right"><a data-placement="left" class="btn btn-default btn-xs " id="subject_syllabusedit" data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('view') ?>" onclick="get_subject_syllabus('<?php echo $summary_report_value['id']; ?>', '<?php echo $summary_report_value['created_for']; ?>')"><i class="fa fa-reorder"></i></a><a data-placement="left" class="btn btn-default btn-xs" id="subject_syllabusedit" data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('delete') ?>" onclick="subject_syllabusdelete('<?php echo $summary_report_value['id']; ?>')"><i class="fa fa-remove"></i></a></td>
 
                                                     </tr>
             <?php }
@@ -474,7 +422,6 @@ $language_name = $language["short_code"];
 
     function printDiv() {
 
-        // document.getElementById("noprint").style.display = "none";
         $("#visible").removeClass("hide");
         $(".pull-right").addClass("hide");
 

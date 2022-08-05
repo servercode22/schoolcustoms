@@ -70,14 +70,15 @@
 
                                             </td>
                                             <td class="mailbox-date pull-right">
-
-                                                <a onclick="upload_docs('<?php echo $homework['id']; ?>', '<?php echo $upload_docsButton; ?>');" class="btn btn-default btn-xs"    data-toggle="tooltip"  data-original-title="<?php echo $this->lang->line('homework') . " " . $this->lang->line('assignments'); ?>">
+                                                <?php 
+                                              $submit_date_string=strtotime($homework['submit_date']);
+                                              $cur_date_string=strtotime(date('Y-m-d'));
+                                                if($h_status==0 && $submit_date_string >= $cur_date_string){ ?>
+                                                    <a onclick="upload_docs('<?php echo $homework['id']; ?>', '<?php echo $upload_docsButton; ?>');" class="btn btn-default btn-xs"    data-toggle="tooltip"  data-original-title="<?php echo $this->lang->line('homework') . " " . $this->lang->line('assignments'); ?>">
                                                     <i class="fa fa-upload"></i></a>
-
-
-
-
-                                                <a class="btn btn-default btn-xs" onclick="evaluation(<?php echo $homework['id']; ?>,<?php echo $h_status; ?>);" title="" data-target="#evaluation" data-toggle="modal"  data-original-title="Evaluation">
+                                                <?php }
+                                                 ?>
+<a class="btn btn-default btn-xs" onclick="evaluation(<?php echo $homework['id']; ?>,<?php echo $h_status; ?>);" title="" data-target="#evaluation" data-toggle="modal"  data-original-title="Evaluation">
                                                     <i class="fa fa-reorder"></i></a>
                                             </td>
                                         </tr>

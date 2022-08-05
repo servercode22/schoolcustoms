@@ -91,7 +91,7 @@
 </td>
 
                     <td>
-                        <input class="form-control credit_hours tddm150" name="credit_hours_<?php echo $count; ?>" type="text" value="<?php echo $exam_subject_value->credit_hours; ?>"/>
+                        <input class="form-control credit_hours tddm150" name="credit_hours<?php echo $count; ?>" type="text" value="<?php echo $exam_subject_value->credit_hours; ?>"/>
                     </td>
                          <td>
                         <input class="form-control room_no" name="room_no_<?php echo $count; ?>" type="text" value="<?php echo $exam_subject_value->room_no ?>"/>

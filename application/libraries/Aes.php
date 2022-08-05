@@ -4,7 +4,7 @@ if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
 class Aes {
-
+public $ENCRYPTION_ALGORITHM = 'AES-256-CBC';
     function __construct() {
         $this->CI = & get_instance();
     }
@@ -95,5 +95,23 @@ class Aes {
         }
         return $output;
     }
+
+      public function encode($string,$key)
+    {
+    
+        $EncryptionKey        = base64_decode($key);
+        $InitializationVector = openssl_random_pseudo_bytes(openssl_cipher_iv_length($this->ENCRYPTION_ALGORITHM));
+        $EncryptedText        = openssl_encrypt($string, $this->ENCRYPTION_ALGORITHM, $EncryptionKey, 0, $InitializationVector);
+        return base64_encode($EncryptedText . '::' . $InitializationVector);
+    }
+
+    public function decode($string,$key)
+    {
+     
+        $EncryptionKey                               = base64_decode($key);
+        list($Encrypted_Data, $InitializationVector) = array_pad(explode('::', base64_decode($string), 2), 2, null);
+        return openssl_decrypt($Encrypted_Data, $this->ENCRYPTION_ALGORITHM, $EncryptionKey, 0, $InitializationVector);
+    }
+
 
 }

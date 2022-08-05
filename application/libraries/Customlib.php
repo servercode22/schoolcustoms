@@ -61,10 +61,8 @@ class Customlib
     public function subjectType()
     {
         $subject_type = array();
-        // $subject_type['none']      = $this->CI->lang->line('none');
         $subject_type['theory']    = $this->CI->lang->line('theory');
         $subject_type['practical'] = $this->CI->lang->line('practical');
-        // $subject_type['both']      = $this->CI->lang->line('both');
         return $subject_type;
     }
 
@@ -310,7 +308,7 @@ class Customlib
         return $status;
     }
 
-    public function getDaysname()
+    public function getDayList()
     {
         $status              = array();
         $status['Monday']    = $this->CI->lang->line('monday');
@@ -320,6 +318,19 @@ class Customlib
         $status['Friday']    = $this->CI->lang->line('friday');
         $status['Saturday']  = $this->CI->lang->line('saturday');
         $status['Sunday']    = $this->CI->lang->line('sunday');
+        return $status;
+    }
+
+    public function getDaysname()
+    {
+        $status         = array();
+        $setting_result = $this->CI->setting_model->getSchoolDetail();
+        $start = strtotime('last week ' . $setting_result->start_week);
+        $end   = $start + (86400 * 7);
+        for ($i = $start; $i < $end; $i += 86400) {
+            $key          = date('l', $i);
+            $status[$key] = $this->CI->lang->line(strtolower($key));
+        }
         return $status;
     }
 
@@ -360,61 +371,46 @@ class Customlib
     {
 
         $setting_result     = $this->CI->setting_model->get();
-        return $date_format = $setting_result[0]['date_format'];
-        // $hi_format = ' h:i A';
-        // $Hi_format = ' H:i';
-
-        // $admin = $this->CI->session->userdata('admin');
-        // if ($admin) {
-        //     if ($date_only && !$time) {
-
-        //         return $admin['date_format'];
-        //     } elseif ($time_format == "24-hour") {
-
-        //         return $admin['date_format'] . $Hi_format;
-        //     } elseif ($time_format == "12-hour") {
-
-        //         return $admin['date_format'] . $hi_format;
-        //     }
-        // } else if ($this->CI->session->userdata('student')) {
-
-        //     $student = $this->CI->session->userdata('student');
-        //     if ($date_only && !$time) {
-
-        //         return $student['date_format'];
-        //     } elseif ($time_format == "24-hour") {
-
-        //         return $student['date_format'] . $Hi_format;
-        //     } elseif ($time_format == "12-hour") {
-
-        //         return $student['date_format'] . $hi_format;
-        //     }
-        // }
+        return $date_format = $setting_result[0]['date_format'];        
     }
 
     public function getTimeZone()
     {
         $setting_result = $this->CI->setting_model->getSchoolDetail();
-        return $setting_result->timezone;
-
-        // $admin = $this->CI->session->userdata('admin');
-        // if ($admin) {
-        //     return $admin['timezone'];
-        // } else if ($this->CI->session->userdata('student')) {
-        //     $student = $this->CI->session->userdata('student');
-        //     return $student['timezone'];
-        // }
+        return $setting_result->timezone;       
+    }
+        public function getStartWeek()
+    {      
+        $admin = $this->CI->session->userdata('admin');
+      
+        if ($admin) {
+            return $admin['start_week'];
+        } else if ($this->CI->session->userdata('student')) {
+            $student = $this->CI->session->userdata('student');
+            return $student['start_week'];
+        }
     }
 
     public function getSchoolCurrencyFormat()
     {
         $admin = $this->CI->session->userdata('admin');
         if ($admin) {
+           
             return $admin['currency_symbol'];
         } else if ($this->CI->session->userdata('student')) {
+            
             $student = $this->CI->session->userdata('student');
             return $student['currency_symbol'];
         }
+
+    }
+
+    public function getSchoolCurrencysymbolwithalignment()
+    {
+        $result=$this->CI->setting_model->get(1);
+        return $result['currency_symbol'] ;
+        
+
     }
 
     public function getSchoolCurrencyWithPlace($amount = 0)
@@ -509,27 +505,15 @@ class Customlib
         return (object) $session_Array;
     }
 
-    public function getParentSessionUserID()
-    {
-        $student_session = $this->CI->session->all_userdata();
-        $session_Array   = $this->CI->session->userdata('student');
-        $Parentid        = $session_Array['student_id'];
-        return $Parentid;
-    }
-
-    public function getTeacherSessionUserID()
-    {
-        $student_session = $this->CI->session->all_userdata();
-        $session_Array   = $this->CI->session->userdata('student');
-        $teacher_id      = $session_Array['teacher_id'];
-        return $teacher_id;
-    }
-
     public function getUsersID()
     {
         // users table id of users
         $session_Array = $this->CI->session->userdata('student');
-        $user_id       = $session_Array['id'];
+		if(!empty($session_Array)){
+			$user_id       = $session_Array['id'];
+		}else{
+			$user_id       = "";
+		}
         return $user_id;
     }
 
@@ -537,7 +521,11 @@ class Customlib
     {
         // users table id of users
         $session_Array = $this->CI->session->userdata('admin');
-        $staff_id      = $session_Array['id'];
+		if(!empty($session_Array)){
+			$staff_id      = $session_Array['id'];
+		}else{
+			$staff_id= "";
+		}
         return $staff_id;
     }
 
@@ -574,20 +562,7 @@ class Customlib
         } else {
             return false;
         }
-    }
-
-    // public function getParentunreadNotification()
-    // {
-    //     $parent    = $this->CI->session->userdata;
-    //     $parent_id = $parent['student']['id'];
-
-    //     $notifications = $this->CI->notification_model->countUnreadNotificationParent($parent_id);
-    //     if ($notifications > 0) {
-    //         return $notifications;
-    //     } else {
-    //         return false;
-    //     }
-    // }
+    } 
 
     public function getStudentSessionUserName()
     {
@@ -687,8 +662,8 @@ class Customlib
 
     public function getAppVersion()
     {
-        //Build: 201006
-        $appVersion = "6.1.0";
+        //Build: 210620
+        $appVersion = "6.3.0";
         return $appVersion;
     }
 
@@ -825,25 +800,6 @@ class Customlib
         return strtotime($date);
     }
 
-    public function dateFormatToYYYYMMDD($date = null)
-    {
-
-        if ($date == "") {
-            return "";
-        }
-        $format = $this->getSchoolDateFormat();
-
-        $date_formated = date_parse_from_format($format, $date);
-        $year          = $date_formated['year'];
-        $month         = str_pad($date_formated['month'], 2, "0", STR_PAD_LEFT);
-        $day           = str_pad($date_formated['day'], 2, "0", STR_PAD_LEFT);
-        $hour          = $date_formated['hour'];
-        $minute        = $date_formated['minute'];
-        $second        = $date_formated['second'];
-        $date          = $year . "-" . $month . "-" . $day;
-
-        return $date;
-    }
 
     public function dateYYYYMMDDtoStrtotime($date = null)
     {
@@ -860,6 +816,27 @@ class Customlib
         $date = $year . "-" . $month . "-" . $day;
 
         return strtotime($date);
+    }
+
+    
+    public function dateFormatToYYYYMMDD($date = null)
+    {
+
+          if ($date == "") {
+            return NULL;
+        }
+        $format = $this->getSchoolDateFormat();
+
+        $date_formated = date_parse_from_format($format, $date);
+        $year          = $date_formated['year'];
+        $month         = str_pad($date_formated['month'], 2, "0", STR_PAD_LEFT);
+        $day           = str_pad($date_formated['day'], 2, "0", STR_PAD_LEFT);
+        $hour          = $date_formated['hour'];
+        $minute        = $date_formated['minute'];
+        $second        = $date_formated['second'];
+        $date          = $year . "-" . $month . "-" . $day;
+
+        return $date;
     }
 
     public function dateformat($date = null)
@@ -912,7 +889,7 @@ class Customlib
         }
 
         return $format_date;
-    }
+    } 
 
     public function dateTimeformatTwentyfourhour($date, $twentyfour = false)
     {
@@ -950,7 +927,113 @@ class Customlib
         return strtotime($date);
     }
 
-    public function dateyyyymmddToDateTimeformat($date)
+    public function timeFormat($time, $twentyfour = false)
+    {
+        if ($twentyfour) {
+            // 12-hour time to 24-hour time
+            return $time_in_24_hour_format = date("H:i", strtotime($time));
+        } else {
+            // 24-hour time to 12-hour time
+            return $time_in_12_hour_format = date("g:i A", strtotime($time));
+
+        }
+
+    }
+
+    public function dateyyyymmddToDateTimeformat($date, $format_two_four = true)
+    {
+
+        if ($date == "") {
+            return "";
+        }
+        $format = $this->getSchoolDateFormat();
+
+        if ($format_two_four) {
+            $date_formated = date_parse_from_format('Y-m-d H:i:s', $date);
+        } else {
+            $date_formated = date_parse_from_format('Y-m-d h:i:s', date('Y-m-d h:i:s', strtotime($date)));
+        }
+
+        $year   = $date_formated['year'];
+        $month  = str_pad($date_formated['month'], 2, "0", STR_PAD_LEFT);
+        $day    = str_pad($date_formated['day'], 2, "0", STR_PAD_LEFT);
+        $hour   = str_pad($date_formated['hour'], 2, "0", STR_PAD_LEFT);
+        $minute = str_pad($date_formated['minute'], 2, "0", STR_PAD_LEFT);
+        $second = str_pad($date_formated['second'], 2, "0", STR_PAD_LEFT);
+        $second = str_pad($date_formated['second'], 2, "0", STR_PAD_LEFT);
+        $am_pm  = date('a', strtotime($date));
+
+        $format_date = "";
+        if ($format_two_four) {
+            if ($format == 'd-m-Y') {
+                $format_date = $day . "-" . $month . "-" . $year . " " . $hour . ":" . $minute . ":" . $second;
+            }
+
+            if ($format == 'd/m/Y') {
+                $format_date = $day . "/" . $month . "/" . $year . " " . $hour . ":" . $minute . ":" . $second;
+            }
+
+            if ($format == 'd-M-Y') {
+                $format_date = date('d-M-Y', strtotime($day . "-" . $month . "-" . $year)) . " " . $hour . ":" . $minute . ":" . $second;
+            }
+
+            if ($format == 'd.m.Y') {
+                $format_date = $day . "." . $month . "." . $year . " " . $hour . ":" . $minute . ":" . $second;
+            }
+
+            if ($format == 'm-d-Y') {
+                $format_date = $month . "-" . $day . "-" . $year . " " . $hour . ":" . $minute . ":" . $second;
+            }
+
+            if ($format == 'm/d/Y') {
+                $format_date = $month . "/" . $day . "/" . $year . " " . $hour . ":" . $minute . ":" . $second;
+            }
+
+            if ($format == 'm.d.Y') {
+                $format_date = $month . "." . $day . "." . $year . " " . $hour . ":" . $minute . ":" . $second;
+            }
+
+            if ($format == 'Y/m/d') {
+                $format_date = $year . "/" . $month . "/" . $day . " " . $hour . ":" . $minute . ":" . $second;
+            }
+
+        } else {
+            if ($format == 'd-m-Y') {
+                $format_date = $day . "-" . $month . "-" . $year . " " . $hour . ":" . $minute . " " . $am_pm;
+            }
+
+            if ($format == 'd/m/Y') {
+                $format_date = $day . "/" . $month . "/" . $year . " " . $hour . ":" . $minute . " " . $am_pm;
+            }
+
+            if ($format == 'd-M-Y') {
+                $format_date = date('d-M-Y', strtotime($day . "-" . $month . "-" . $year)) . " " . $hour . ":" . $minute . " " . $am_pm;
+            }
+
+            if ($format == 'd.m.Y') {
+                $format_date = $day . "." . $month . "." . $year . " " . $hour . ":" . $minute . " " . $am_pm;
+            }
+
+            if ($format == 'm-d-Y') {
+                $format_date = $month . "-" . $day . "-" . $year . " " . $hour . ":" . $minute . " " . $am_pm;
+            }
+
+            if ($format == 'm/d/Y') {
+                $format_date = $month . "/" . $day . "/" . $year . " " . $hour . ":" . $minute . " " . $am_pm;
+            }
+
+            if ($format == 'm.d.Y') {
+                $format_date = $month . "." . $day . "." . $year . " " . $hour . ":" . $minute . " " . $am_pm;
+            }
+
+            if ($format == 'Y/m/d') {
+                $format_date = $year . "/" . $month . "/" . $day . " " . $hour . ":" . $minute . " " . $am_pm;
+            }
+        }
+        return $format_date;
+    }
+
+    public function ___dateyyyymmddToDateTimeformat($date)
     {
         if ($date == "") {
             return "";
@@ -1063,7 +1146,7 @@ class Customlib
         if (!empty($notifications)) {
             foreach ($notifications as $note_key => $note_value) {
                 if ($note_value->type == $find) {
-                    return array('mail' => $note_value->is_mail, 'sms' => $note_value->is_sms, 'notification' => $note_value->is_notification, 'template' => $note_value->template);
+                    return array('mail' => $note_value->is_mail, 'sms' => $note_value->is_sms, 'notification' => $note_value->is_notification, 'template' => $note_value->template, 'template_id' => $note_value->template_id, 'subject' => $note_value->subject);
                 }
             }
         }
@@ -1166,10 +1249,7 @@ class Customlib
 
         $getUserassignclass = $this->CI->classteacher_model->getclassbyuser($id);
         $classteacherlist   = $getUserassignclass;
-        $class              = array();
-        echo "<pre>";
-        print_r($classteacherlist);
-        echo "<pre>";die;
+        $class              = array();        
         foreach ($classteacherlist as $key => $value) {
             $class[] = $value["id"];
         }
@@ -1177,9 +1257,7 @@ class Customlib
         if (!empty($class)) {
 
             $getSubjectassignclass = $this->CI->classteacher_model->classbysubjectteacher($id, $class);
-            echo "<pre>";
-            print_r($getSubjectassignclass);
-            echo "<pre>";die;
+            
             $subjectteacherlist = $getSubjectassignclass;
 
             $classlist = array_merge($classteacherlist, $subjectteacherlist);
@@ -1219,14 +1297,14 @@ class Customlib
         return $classteacherlist;
     }
 
-    public function get_betweendate($search_type)
+ public function get_betweendate($search_type)
     {
 
         if ($search_type == 'today') {
 
             $today      = strtotime('today 00:00:00');
-            $first_date = date('Y-m-d H:i:s', $today);
-            $last_date  = date('Y-m-d H:i:s', $today);
+            $first_date = date('Y-m-d', $today);
+            $last_date  = date('Y-m-d', $today);
 
         } else if ($search_type == 'this_week') {
             $first_date = date("Y-m-d", strtotime("monday"));
@@ -1240,8 +1318,8 @@ class Customlib
 
             $last_week_start = strtotime('-2 week monday 00:00:00');
             $last_week_end   = strtotime('-1 week sunday 23:59:59');
-            $first_date      = date('Y-m-d H:i:s', $last_week_start);
-            $last_date       = date('Y-m-d H:i:s', $last_week_end);
+            $first_date      = date('Y-m-d', $last_week_start);
+            $last_date       = date('Y-m-d', $last_week_end);
 
         } else if ($search_type == 'this_month') {
 
@@ -1255,12 +1333,14 @@ class Customlib
         } else if ($search_type == 'last_6_month') {
 
             $month      = date("m", strtotime("-5 month"));
-            $first_date = date('Y-' . $month . '-01');
+            $year      = date("Y", strtotime("-5 month"));
+           
+            $first_date = date($year.'-' . $month . '-01');
             $firstday   = date('Y-' . 'm' . '-01');
             $last_date  = date('Y-' . 'm' . '-' . date('t', strtotime($firstday)) . ' 23:59:59.993');
 
         } else if ($search_type == 'last_12_month') {
-
+            
             $first_date = date('Y-m' . '-01', strtotime("-11 month"));
             $firstday   = date('Y-' . 'm' . '-01');
             $last_date  = date('Y-' . 'm' . '-' . date('t', strtotime($firstday)) . ' 23:59:59.993');
@@ -1288,12 +1368,18 @@ class Customlib
             $first_date  = '01-01-' . $search_year;
             $last_date   = '31-12-' . $search_year;
         } else if ($search_type == 'period') {
-
-            $first_date = date('Y-m-d', $this->datetostrtotime($_POST['date_from']));
-            $last_date  = date('Y-m-d', $this->datetostrtotime($_POST['date_to']));
-
-            //$first_date=date('Y-m-d',$this->datetostrtotime($first_date1));
-            //$last_date=date('Y-m-d',$this->datetostrtotime($last_date1));
+			
+			if(!empty($_POST['date_from'])){
+				$first_date = date('Y-m-d', $this->datetostrtotime($_POST['date_from']));
+			}else{
+				$first_date = '';
+			}
+			
+			if(!empty($_POST['date_to'])){
+				$last_date  = date('Y-m-d', $this->datetostrtotime($_POST['date_to']));
+			}else{
+				$last_date  = '';
+			}
         }
 
         return $date = array('from_date' => $first_date, 'to_date' => $last_date);
@@ -1345,6 +1431,13 @@ class Customlib
     {
 
         $result = $this->CI->setting_model->getLanguage();
+        return $result;
+    }
+
+     public function getuserLanguage()
+    {
+
+        $result = $this->CI->setting_model->getuserLanguage();
         return $result;
     }
 
@@ -1427,19 +1520,19 @@ class Customlib
         }
 
         if (isset($_POST['gender']) && $_POST['gender'] != '') {
-            $filter_record['gender'] = $this->CI->lang->line('gender') . " : " . $_POST['gender'];
+            $filter_record['gender'] = $this->CI->lang->line('gender') . ": " . $_POST['gender'];
         }
 
         if (isset($_POST['rte']) && $_POST['rte'] != '') {
-            $filter_record['rte'] = $this->CI->lang->line('rte') . " : " . $_POST['rte'];
+            $filter_record['rte'] = $this->CI->lang->line('rte') . ": " . $_POST['rte'];
         }
 
         if (isset($_POST['month']) && $_POST['month'] != '') {
-            $filter_record['month'] = $this->CI->lang->line('month') . " : " . $_POST['month'];
+            $filter_record['month'] = $this->CI->lang->line('month') . ": " . $_POST['month'];
         }
 
         if (isset($_POST['year']) && $_POST['year'] != '') {
-            $filter_record['year'] = $this->CI->lang->line('year') . " : " . $_POST['year'];
+            $filter_record['year'] = $this->CI->lang->line('year') . ": " . $_POST['year'];
         }
 
         if (isset($_POST['subject_group_id']) && $_POST['subject_group_id'] != '') {
@@ -1460,7 +1553,7 @@ class Customlib
         }
 
         if (isset($_POST['group']) && $_POST['group'] != '') {
-            $filter_record['group'] = $this->CI->lang->line('group') . " " . $this->CI->lang->line('by') . " : " . $this->get_groupby($_POST['group']);
+            $filter_record['group'] = $this->CI->lang->line('group') . " " . $this->CI->lang->line('by') . ": " . $this->get_groupby($_POST['group']);
 
         }
 
@@ -1488,7 +1581,7 @@ class Customlib
             if ($this->CI->uri->segment(2) == "staff_report") {
                 $filter_record['role'] = $this->CI->messages_model->get_rolename($_POST['role']);
             } else {
-                $filter_record['role'] = $this->CI->lang->line('role') . " : " . $_POST['role'];
+                $filter_record['role'] = $this->CI->lang->line('role') . ": " . $_POST['role'];
             }
 
         }
@@ -1517,7 +1610,7 @@ class Customlib
 
         if ((isset($_POST['staff_status']) && $_POST['staff_status'] != '')) {
 
-            $filter_record['staff_status'] = $this->CI->lang->line('status') . " : " . $this->staff_statusmessage($_POST['staff_status']);
+            $filter_record['staff_status'] = $this->CI->lang->line('status') . ": " . $this->staff_statusmessage($_POST['staff_status']);
 
         }
 
@@ -1529,46 +1622,50 @@ class Customlib
 
         if ((isset($_POST['members_type']) && $_POST['members_type'] != '')) {
 
-            $filter_record['members_type'] = $this->CI->lang->line('members') . " " . $this->CI->lang->line('type') . " : " . $this->CI->lang->line($_POST['members_type']);
+            $filter_record['members_type'] = $this->CI->lang->line('members') . " " . $this->CI->lang->line('type') . ": " . $this->CI->lang->line($_POST['members_type']);
 
         }
 
         if ((isset($_POST['date_type']) && $_POST['date_type'] != '')) {
 
-            $filter_record['date_type'] = $this->CI->lang->line('date') . " " . $this->CI->lang->line('type') . " : " . $this->CI->lang->line($_POST['date_type']);
+            $filter_record['date_type'] = $this->CI->lang->line('date') . " " . $this->CI->lang->line('type') . ": " . $this->CI->lang->line($_POST['date_type']);
 
         }
 
         if ((isset($_POST['route_title']) && $_POST['route_title'] != '')) {
 
-            //$filter_record['route_title']=$this->CI->messages_model->get_route_title($_POST['route_title']);
-            $filter_record['route_title'] = $this->CI->lang->line('route_title') . " : " . $_POST['route_title'];
+        
+            $filter_record['route_title'] = $this->CI->lang->line('route_title') . ": " . $_POST['route_title'];
 
         }
 
         if ((isset($_POST['vehicle_no']) && $_POST['vehicle_no'] != '')) {
 
-            $filter_record['vehicle_no'] = $this->CI->lang->line('vehicle_no') . " : " . $_POST['vehicle_no'];
+            $filter_record['vehicle_no'] = $this->CI->lang->line('vehicle_no') . ": " . $_POST['vehicle_no'];
 
         } //hostel_name
         if ((isset($_POST['hostel_name']) && $_POST['hostel_name'] != '')) {
 
-            $filter_record['hostel_name'] = $this->CI->lang->line('hostel_name') . " : " . $_POST['hostel_name'];
+            $filter_record['hostel_name'] = $this->CI->lang->line('hostel_name') . ": " . $_POST['hostel_name'];
 
         }
-        if (isset($_POST['search_type']) && $_POST['search_type'] != '') {
+        
+         if (isset($_POST['search_type']) && $_POST['search_type'] != '') {
 
             if ($_POST['search_type'] == "period") {
-                $filter_record['search_type'] = $this->CI->lang->line('search') . " " . $this->CI->lang->line('type') . " : " . date($this->getSchoolDateFormat(), strtotime($_POST['date_from'])) . " " . $this->CI->lang->line('to') . " " . date($this->getSchoolDateFormat(), strtotime($_POST['date_to']));
+                
+                $filter_record['search_type'] = $this->CI->lang->line('search') . " " . $this->CI->lang->line('type') . ": " . $_POST['date_from'] . " " . $this->CI->lang->line('to') . " " . $_POST['date_to'];
             } else {
                 $between_date                 = $this->get_betweendate($_POST['search_type']);
-                $filter_record['search_type'] = $this->CI->lang->line('search') . " " . $this->CI->lang->line('type') . " : " . date($this->getSchoolDateFormat(), strtotime($between_date['from_date'])) . " " . $this->CI->lang->line('to') . " " . date($this->getSchoolDateFormat(), strtotime($between_date['to_date']));
+                $filter_record['search_type'] = $this->CI->lang->line('search') . " " . $this->CI->lang->line('type') . ": " . $between_date['from_date'] . " " . $this->CI->lang->line('to') . " " . $between_date['to_date'];
             }
 
         }
 
+
+
         foreach ($filter_record as $key => $value) {
-            echo $value . ", ";
+            echo " (".$value . ") ";
         }
 
     }
@@ -1597,11 +1694,82 @@ class Customlib
 
     public function get_rtl_languages($short_code)
     {
-        $short_codes = array('ar', 'he', 'yi', 'fa', 'ur');
+        $short_codes = array('ar', 'he', 'yi', 'fa', 'ur','ku');
         if (in_array($short_code, $short_codes)) {
             return true;
         } else {
             return false;
         }
+    }
+
+   
+
+    public function getFullName($firstname, $middlename, $lastname, $is_middlename,$is_lastname)
+    {
+        $name="";
+        if ($is_middlename) {
+            $name= ($middlename == "") ? $firstname : $firstname . " " . $middlename;
+        } else {
+            $name= $firstname;
+        }
+
+       if ($is_lastname) {
+            $name= ($lastname == "") ? $name : $name . " " . $lastname;
+        } 
+
+        return $name;
+    }
+	
+	public function bulkmailto()
+    {
+        $bulkmailto          		= array();
+        $bulkmailto['1']	 	= $this->CI->lang->line('student');
+        $bulkmailto['2'] 		= $this->CI->lang->line('parent');
+        $bulkmailto['3'] 		= $this->CI->lang->line('both');
+        return $bulkmailto;
+    }
+	
+	public function bulkmailnotificationtype()
+    {
+        $notificationtype          	= array();
+        $notificationtype['1']	 	= $this->CI->lang->line('student_admission');
+        $notificationtype['2'] 		= $this->CI->lang->line('login_credential');
+        $notificationtype['3'] 		= $this->CI->lang->line('both');
+        return $notificationtype;
+    }
+	
+	public function cookie_consent()
+    {
+        $result	=	 $this->CI->frontcms_setting_model->get();
+		return $result->cookie_consent;	
+    }
+
+    public function getfieldstatus($fieldname)
+    {
+       
+        $status = $this->CI->onlinestudent_model->getfieldstatus($fieldname);
+        return $status;
+        
+    }
+
+    public function checkfieldexist($fieldname)
+    {
+       
+        $status = $this->CI->onlinestudent_model->getfieldstatus($fieldname);
+        return $status;
+    }
+
+    public function gethousename($id){
+         $house_name = $this->CI->onlinestudent_model->gethousename($id);
+         return $house_name ;
+    }
+    public function gettransactionid($id){
+         $transaction_id = $this->CI->onlinestudent_model->gettransactionid($id);
+         return $transaction_id ;
+    }
+
+    public function checkisenroll($refno){
+         $status = $this->CI->onlinestudent_model->checkisenroll($refno);
+         return $status ;
     }
 }

@@ -89,11 +89,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
 
-                    <form  action="<?php echo site_url('report/admission_report') ?>" method="post" class="">
-                        <div class="box-body row">
-
-                            <?php //echo $this->customlib->getCSRF(); ?>
-
+                    <form  action="<?php echo site_url('report/searchreportvalidation') ?>" method="post" class="" id="reportform"  >
+                        <div class="box-body row">                           
                             <div class="col-sm-6 col-md-3" >
                                 <div class="form-group">
                                     <label><?php echo $this->lang->line('search') . " " . $this->lang->line('type'); ?></label>
@@ -109,7 +106,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             ?>><?php echo $search ?></option>
                                                 <?php } ?>
                                     </select>
-                                    <span class="text-danger"><?php echo form_error('search_type'); ?></span>
+                                    <span class="text-danger" id="error_search_type"></span>
                                 </div>
                             </div>
 
@@ -131,12 +128,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <h3 class="box-title titlefix"><i class="fa fa-money"></i> <?php echo $this->lang->line('admission') . " " . $this->lang->line('report') ?></h3>
                         </div>
                         <div class="box-body table-responsive">
-                            <div class="download_label"><?php
-                                echo $this->lang->line('admission') . " " . $this->lang->line('report') . "<br>";
-                                $this->customlib->get_postmessage();
-                                ;
-                                ?></div>
-                            <table class="table table-striped table-bordered table-hover example">
+                            
+                            <table class="table table-striped table-bordered table-hover record-list" data-export-title="<?php echo $this->lang->line('admission') . " " . $this->lang->line('report'); ?>">
                                 <thead>
                                     <tr>
 
@@ -160,53 +153,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    $count = 0;
-                                    if (empty($resultlist)) {
-                                        ?>
-
-                                        <?php
-                                    } else {
-                                        $count = 0;
-                                        foreach ($resultlist as $student) {
-                                            ?>
-                                            <tr>
-
-                                                <td><?php echo $student['admission_no']; ?></td>
-
-                                                <td>
-                                                    <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?>
-                                                    </a>
-                                                </td>
-                                                <td><?php echo $student['class'] . " (" . $student['section'] . ")" ?></td>
-                                                <?php if ($sch_setting->father_name) { ?>
-                                                    <td><?php echo $student['father_name']; ?></td>
-                                                    <?php } ?>
-                                                <td><?php
-                                                    if (!empty($student['dob'])) {
-                                                        echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob']));
-                                                    }
-                                                    ?></td>
-                                                    <?php if ($sch_setting->admission_date) { ?>
-                                                    <td><?php
-                                                        if (!empty($student['admission_date'])) {
-                                                            echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['admission_date']));
-                                                        }
-                                                        ?></td><?php } ?>
-                                                <td><?php echo $student['gender']; ?></td>
-                                                <?php if ($sch_setting->category) { ?>
-                                                    <td><?php echo $student['category']; ?></td>
-                                                <?php } if ($sch_setting->mobile_no) { ?>
-                                                    <td><?php echo $student['mobileno']; ?></td>
-                                            <?php } ?>
-
-                                            </tr>
-                                            <?php
-                                            $count++;
-                                        }
-                                    }
-                                    ?>
-                                    <tr><td></td><td></td><td></td><td></td><td>Total Admission in this duration :</td><td > <?php echo $filter_label; ?></td><td><?php echo $count; ?></td><td></td><td></td><td></td><td ></td></tr>
+                                    
                                 </tbody>
                             </table>
                         </div>
@@ -222,7 +169,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 <?php
 if ($search_type == 'period') {
     ?>
-
         $(document).ready(function () {
             showdate('period');
         });
@@ -231,4 +177,50 @@ if ($search_type == 'period') {
 }
 ?>
 
+</script>
+ <script>
+$(document).ready(function() {
+     emptyDatatable('record-list','data');
+});
+</script>  
+<script type="text/javascript">
+$(document).ready(function(){ 
+$(document).on('submit','#reportform',function(e){
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+    var $this = $(this).find("button[type=submit]:focus");  
+    var form = $(this);
+    var url = form.attr('action');
+    var form_data = form.serializeArray();
+    $.ajax({
+           url: url,
+           type: "POST",
+           dataType:'JSON',
+           data: form_data, // serializes the form's elements.
+              beforeSend: function () {
+                $('[id^=error]').html("");
+                $this.button('loading');
+               },
+              success: function(response) { // your success handler
+                
+                if(!response.status){
+                    $.each(response.error, function(key, value) {
+                    $('#error_' + key).html(value);
+                    });
+                }else{
+                 
+                   initDatatable('record-list','report/dtadmissionreport',response.params,[],100);
+                }
+              },
+             error: function() { // your error handler
+                 $this.button('reset');
+             },
+             complete: function() {
+               $this.button('reset');
+             }
+         });
+
+        });
+
+    });
+   
 </script>

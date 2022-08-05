@@ -90,7 +90,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
                     <div class="box-body">    
-                        <form role="form" action="<?php echo site_url('admin/users/logindetailreport') ?>" method="post" class="">
+                        <form role="form" action="<?php echo site_url('admin/users/searchloginvalidation') ?>" method="post" class="" id="reportform" >
                             <div class="row">
 
                                 <?php echo $this->customlib->getCSRF(); ?>
@@ -109,7 +109,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             }
                                             ?>
                                         </select>
-                                        <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+                                      <span class="text-danger" id="error_class_id"></span>
                                     </div>
                                 </div> 
                                 <div class="col-sm-6 col-md-6">
@@ -119,7 +119,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <option value=""><?php echo $this->lang->line('select'); ?></option>
 
                                         </select>
-                                        <span class="text-danger"><?php echo form_error('section_id'); ?></span>
+                                       <span class="text-danger" id="error_section_id"></span>
                                     </div>
                                 </div> 
 
@@ -142,79 +142,18 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <div class="download_label"><?php echo $this->lang->line('login_credential'); ?> <?php echo $this->lang->line('report') . "<br>";
                                             $this->customlib->get_postmessage();
                                             ?></div>
-                            <table class="table table-striped table-bordered table-hover example">
+                           <table class="table table-striped table-bordered table-hover student-list" data-export-title="<?php echo $this->lang->line('login_credential'); ?>">
                                 <thead>
                                     <tr>
-
                                         <th><?php echo $this->lang->line('admission_no'); ?></th>
-
                                         <th><?php echo $this->lang->line('student_name'); ?></th>
                                         <th><?php echo $this->lang->line('username'); ?></th>
                                         <th><?php echo $this->lang->line('password'); ?></th>
                                         <th><?php echo $this->lang->line('parent'); ?> <?php echo $this->lang->line('username'); ?></th>
                                         <th><?php echo $this->lang->line('parent'); ?> <?php echo $this->lang->line('password'); ?></th>
-
-
-
-
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    if (empty($resultlist)) {
-                                        ?>
-
-                                        <?php
-                                    } else {
-                                        $count = 1;
-                                        $i = 0;
-                                        foreach ($resultlist as $student) {
-                                            ?>
-                                            <tr <?php
-                                            if ($student["is_active"] == "no") {
-                                                echo "class='danger'";
-                                            }
-                                            ?>>
-
-                                                <td><?php echo $student['admission_no']; ?></td>
-
-                                                <td>
-                                                    <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?>
-                                                    </a>
-                                                </td>
-
-
-                                                <td><?php
-                                                    if (isset($student['student_username'])) {
-                                                        echo $student['student_username'];
-                                                    }
-                                                    ?></td>
-
-                                                <td><?php
-                                                    if (isset($student['student_password'])) {
-                                                        echo $student['student_password'];
-                                                    }
-                                                    ?></td>
-                                                <td><?php
-                                                    if (isset($student['parent_username'])) {
-                                                        echo $student['parent_username'];
-                                                    }
-                                                    ?></td>
-
-                                                <td><?php
-                                                    if (isset($student['parent_password'])) {
-                                                        echo $student['parent_password'];
-                                                    }
-                                                    ?></td>
-
-
-                                            </tr>
-                                            <?php
-                                            $i++;
-                                            $count++;
-                                        }
-                                    }
-                                    ?>
                                 </tbody>
                             </table>
                         </div>
@@ -277,4 +216,50 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             });
         });
     });
+</script>
+<script>
+$(document).ready(function() {
+     emptyDatatable('student-list','data');
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+$(document).on('submit','#reportform',function(e){
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+    var $this = $(this).find("button[type=submit]:focus");  
+    var form = $(this);
+    var url = form.attr('action');
+    var form_data = form.serializeArray();
+    $.ajax({
+           url: url,
+           type: "POST",
+           dataType:'JSON',
+           data: form_data, // serializes the form's elements.
+              beforeSend: function () {
+                $('[id^=error]').html("");
+                $this.button('loading');
+               },
+              success: function(response) { // your success handler
+                
+                if(!response.status){
+                    $.each(response.error, function(key, value) {
+                    $('#error_' + key).html(value);
+                    });
+                }else{
+                 
+                   initDatatable('student-list','admin/users/dtcredentialreportlist',response.params);
+                }
+              },
+             error: function() { // your error handler
+                 $this.button('reset');
+             },
+             complete: function() {
+             $this.button('reset');
+             }
+         });
+
+        });
+
+    });
+    
 </script>

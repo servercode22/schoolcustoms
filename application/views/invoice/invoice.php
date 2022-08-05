@@ -55,7 +55,6 @@
 			
 	<div class="container">
 		<?php
-		
 		foreach($data as $d){
 		?>
 		<div class="row mt-2 mb-2" style="page-break-after: always;">
@@ -106,7 +105,7 @@
 					<?php
 					if(isset($studentInfo->admission_no) && $studentInfo->admission_no=='checked'){
 					?>
-					<b>Admission No</b> <input type="text" class="" value="<?php echo $d['student']['admission_no']; ?>"> <br>
+					<b>ADM No</b> <input type="text" class="" value="<?php echo $d['student']['admission_no']; ?>"> <br>
 					<?php } ?>
 					<?php
 					if(isset($studentInfo->roll_no) && $studentInfo->roll_no=='checked'){
@@ -116,7 +115,7 @@
 					<?php
 					if(isset($studentInfo->name) && $studentInfo->name=='checked'){
 					?>
-					Student Name <input type="text" value="<?php print_r($d['student']['firstname']." ".$d['student']['lastname']);?>"><br>
+					Student  <input type="text" value="<?php print_r($d['student']['firstname']." ".$d['student']['lastname']);?>"><br>
 					<?php } ?>
 					<?php
 					if(isset($studentInfo->father_name) && $studentInfo->father_name=='checked'){
@@ -171,10 +170,29 @@
 						<?php 
 							}?>
 						</tbody>
-						<tfoot class="text-center bg-secondary">
-							<th colspan="4">Net Payable</th>
-							<th colspan="2"><?php echo $total;?></th>
-						</tfoot>
+						<?php 
+						foreach($item->fees as $get){
+							
+							
+							if($get->fine_amount !==0){
+								?>
+						<tr>
+						<td colspan="4">Fine</td>
+						<td colspan="2" class="text-center"><?php echo $get->fine_amount;?></td>
+						</tr>
+						<?php 
+							}
+							$total=$total+$get->fine_amount;
+						
+					
+
+						}
+						?>
+					<tfoot class = "text-center  bg-secondary">
+					<th colspan="4">Grand Total</th>
+					<th colspan="2"><?php echo $total;?></th>
+							
+					</tfoot>
 					</table>
 
 					<br>
@@ -189,6 +207,8 @@
 			<?php }  ?>
 			<div class="col-md-<?php echo $col ?>">
 				<?php echo $instructions->instruction ?>
+				<button class = "btn btn-success btn-sm float-right" id = "print" onclick="printpage()">Print</button>
+
 			</div>
 		</div>
 				<?php } ?>
@@ -197,3 +217,14 @@
 </body>
 
 </html>
+<script>
+	  function printpage() {
+        //Get the print button and put it into a variable
+        var printButton = document.getElementById("print");
+        //Set the print button visibility to 'hidden' 
+        printButton.style.visibility = 'hidden';
+        //Print the page content
+        window.print()
+        printButton.style.visibility = 'visible';
+    }
+</script>

@@ -4,13 +4,16 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-class Admitcard extends Admin_Controller {
+class Admitcard extends Admin_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
-    public function index() {
+    public function index()
+    {
         if (!$this->rbac->hasPrivilege('design_admit_card', 'can_view')) {
             access_denied();
         }
@@ -96,53 +99,53 @@ class Admitcard extends Admin_Controller {
             }
 
             $insert_data = array(
-                'template' => $this->input->post('template'),
-                'heading' => $this->input->post('heading'),
-                'title' => $this->input->post('title'),
-                'exam_name' => $this->input->post('exam_name'),
-                'school_name' => $this->input->post('school_name'),
-                'exam_center' => $this->input->post('exam_center'),
-                'is_name' => $is_name,
-                'is_father_name' => $is_father_name,
-                'is_mother_name' => $is_mother_name,
-                'is_dob' => $is_dob,
+                'template'        => $this->input->post('template'),
+                'heading'         => $this->input->post('heading'),
+                'title'           => $this->input->post('title'),
+                'exam_name'       => $this->input->post('exam_name'),
+                'school_name'     => $this->input->post('school_name'),
+                'exam_center'     => $this->input->post('exam_center'),
+                'is_name'         => $is_name,
+                'is_father_name'  => $is_father_name,
+                'is_mother_name'  => $is_mother_name,
+                'is_dob'          => $is_dob,
                 'is_admission_no' => $is_admission_no,
-                'is_roll_no' => $is_roll_no,
-                'is_address' => $is_address,
-                'is_gender' => $is_gender,
-                'is_photo' => $is_photo,
-                'is_class' => $is_class,
-                'is_section' => $is_section,
-                'content_footer' => nl2br($this->input->post('content_footer')),
-                'left_logo' => "",
-                'right_logo' => "",
-                'sign' => "",
-                'background_img' => "",
+                'is_roll_no'      => $is_roll_no,
+                'is_address'      => $is_address,
+                'is_gender'       => $is_gender,
+                'is_photo'        => $is_photo,
+                'is_class'        => $is_class,
+                'is_section'      => $is_section,
+                'content_footer'  => nl2br($this->input->post('content_footer')),
+                'left_logo'       => "",
+                'right_logo'      => "",
+                'sign'            => "",
+                'background_img'  => "",
             );
 
             if (isset($_FILES["left_logo"]) && !empty($_FILES["left_logo"]['name'])) {
-                $time = md5($_FILES["left_logo"]['name'] . microtime());
+                $time     = md5($_FILES["left_logo"]['name'] . microtime());
                 $fileInfo = pathinfo($_FILES["left_logo"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["left_logo"]["tmp_name"], "./uploads/admit_card/" . $img_name);
                 $insert_data['left_logo'] = $img_name;
             }
             if (isset($_FILES["right_logo"]) && !empty($_FILES["right_logo"]['name'])) {
-                $time = md5($_FILES["right_logo"]['name'] . microtime());
+                $time     = md5($_FILES["right_logo"]['name'] . microtime());
                 $fileInfo = pathinfo($_FILES["right_logo"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["right_logo"]["tmp_name"], "./uploads/admit_card/" . $img_name);
                 $insert_data['right_logo'] = $img_name;
             }
             if (isset($_FILES["sign"]) && !empty($_FILES["sign"]['name'])) {
-                $time = md5($_FILES["sign"]['name'] . microtime());
+                $time     = md5($_FILES["sign"]['name'] . microtime());
                 $fileInfo = pathinfo($_FILES["sign"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["sign"]["tmp_name"], "./uploads/admit_card/" . $img_name);
                 $insert_data['sign'] = $img_name;
             }
             if (isset($_FILES["background_img"]) && !empty($_FILES["background_img"]['name'])) {
-                $time = md5($_FILES["background_img"]['name'] . microtime());
+                $time     = md5($_FILES["background_img"]['name'] . microtime());
                 $fileInfo = pathinfo($_FILES["background_img"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["background_img"]["tmp_name"], "./uploads/admit_card/" . $img_name);
@@ -160,18 +163,21 @@ class Admitcard extends Admin_Controller {
         $this->load->view('layout/footer');
     }
 
-    public function handle_upload($str, $var) {
+    public function handle_upload($str, $var)
+    {
 
         $image_validate = $this->config->item('image_validate');
-
+        $result         = $this->filetype_model->get();
         if (isset($_FILES[$var]) && !empty($_FILES[$var]['name'])) {
 
             $file_type = $_FILES[$var]['type'];
             $file_size = $_FILES[$var]["size"];
             $file_name = $_FILES[$var]["name"];
-            $allowed_extension = $image_validate['allowed_extension'];
-            $ext = pathinfo($file_name, PATHINFO_EXTENSION);
-            $allowed_mime_type = $image_validate['allowed_mime_type'];
+
+            $allowed_extension = array_map('trim', array_map('strtolower', explode(',', $result->image_extension)));
+            $allowed_mime_type = array_map('trim', array_map('strtolower', explode(',', $result->image_mime)));
+            $ext               = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
             if ($files = @getimagesize($_FILES[$var]['tmp_name'])) {
 
                 if (!in_array($files['mime'], $allowed_mime_type)) {
@@ -183,7 +189,8 @@ class Admitcard extends Admin_Controller {
                     $this->form_validation->set_message('handle_upload', $this->lang->line('extension_not_allowed'));
                     return false;
                 }
-                if ($file_size > $image_validate['upload_size']) {
+
+                if ($file_size > $result->image_size) {
                     $this->form_validation->set_message('handle_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($image_validate['upload_size'] / 1048576, 2) . " MB");
                     return false;
                 }
@@ -197,8 +204,9 @@ class Admitcard extends Admin_Controller {
         return true;
     }
 
-    public function edit($id) {
-        //print_r($_POST);die;
+    public function edit($id)
+    {
+
         if (!$this->rbac->hasPrivilege('design_admit_card', 'can_view')) {
             access_denied();
         }
@@ -206,7 +214,7 @@ class Admitcard extends Admin_Controller {
         $this->session->set_userdata('top_menu', 'Examinations');
         $this->session->set_userdata('sub_menu', 'Examinations/admitcard');
         $this->data['admitcardList'] = $this->admitcard_model->get();
-        $this->data['admitcard'] = $this->admitcard_model->get($id);
+        $this->data['admitcard']     = $this->admitcard_model->get($id);
 
         $this->form_validation->set_rules('template', $this->lang->line('template'), 'trim|required|xss_clean');
 
@@ -283,31 +291,30 @@ class Admitcard extends Admin_Controller {
                 $is_section = 0;
             }
             $insert_data = array(
-                'id' => $this->input->post('id'),
-                'template' => $this->input->post('template'),
-                'heading' => $this->input->post('heading'),
-                'title' => $this->input->post('title'),
-                'exam_name' => $this->input->post('exam_name'),
-                'school_name' => $this->input->post('school_name'),
-                'exam_center' => $this->input->post('exam_center'),
-                'is_name' => $is_name,
-                'is_father_name' => $is_father_name,
-                'is_mother_name' => $is_mother_name,
-                'is_dob' => $is_dob,
+                'id'              => $this->input->post('id'),
+                'template'        => $this->input->post('template'),
+                'heading'         => $this->input->post('heading'),
+                'title'           => $this->input->post('title'),
+                'exam_name'       => $this->input->post('exam_name'),
+                'school_name'     => $this->input->post('school_name'),
+                'exam_center'     => $this->input->post('exam_center'),
+                'is_name'         => $is_name,
+                'is_father_name'  => $is_father_name,
+                'is_mother_name'  => $is_mother_name,
+                'is_dob'          => $is_dob,
                 'is_admission_no' => $is_admission_no,
-                'is_roll_no' => $is_roll_no,
-                'is_address' => $is_address,
-                'is_gender' => $is_gender,
-                'is_photo' => $is_photo,
-                'is_class' => $is_class,
-                'is_section' => $is_section,
-                'content_footer' => htmlentities($this->input->post('content_footer'))
+                'is_roll_no'      => $is_roll_no,
+                'is_address'      => $is_address,
+                'is_gender'       => $is_gender,
+                'is_photo'        => $is_photo,
+                'is_class'        => $is_class,
+                'is_section'      => $is_section,
+                'content_footer'  => htmlentities($this->input->post('content_footer')),
             );
-
 
             if (isset($_FILES["left_logo"]) && !empty($_FILES["left_logo"]['name']) && $_FILES['left_logo']['error'] == 0) {
 
-                $time = md5($_FILES["left_logo"]['name'] . microtime());
+                $time     = md5($_FILES["left_logo"]['name'] . microtime());
                 $fileInfo = pathinfo($_FILES["left_logo"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["left_logo"]["tmp_name"], "./uploads/admit_card/" . $img_name);
@@ -315,7 +322,7 @@ class Admitcard extends Admin_Controller {
             }
             if (isset($_FILES["right_logo"]) && !empty($_FILES["right_logo"]['name']) && $_FILES['right_logo']['error'] == 0) {
 
-                $time = md5($_FILES["right_logo"]['name'] . microtime());
+                $time     = md5($_FILES["right_logo"]['name'] . microtime());
                 $fileInfo = pathinfo($_FILES["right_logo"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["right_logo"]["tmp_name"], "./uploads/admit_card/" . $img_name);
@@ -323,7 +330,7 @@ class Admitcard extends Admin_Controller {
             }
             if (isset($_FILES["sign"]) && !empty($_FILES["sign"]['name']) && $_FILES['sign']['error'] == 0) {
 
-                $time = md5($_FILES["sign"]['name'] . microtime());
+                $time     = md5($_FILES["sign"]['name'] . microtime());
                 $fileInfo = pathinfo($_FILES["sign"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["sign"]["tmp_name"], "./uploads/admit_card/" . $img_name);
@@ -331,7 +338,7 @@ class Admitcard extends Admin_Controller {
             }
             if (isset($_FILES["background_img"]) && !empty($_FILES["background_img"]['name']) && $_FILES['background_img']['error'] == 0) {
 
-                $time = md5($_FILES["background_img"]['name'] . microtime());
+                $time     = md5($_FILES["background_img"]['name'] . microtime());
                 $fileInfo = pathinfo($_FILES["background_img"]["name"]);
                 $img_name = $time . '.' . $fileInfo['extension'];
                 move_uploaded_file($_FILES["background_img"]["tmp_name"], "./uploads/admit_card/" . $img_name);
@@ -349,7 +356,8 @@ class Admitcard extends Admin_Controller {
         $this->load->view('layout/footer');
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
 
         if (!$this->rbac->hasPrivilege('design_admit_card', 'can_delete')) {
             access_denied();
@@ -361,12 +369,13 @@ class Admitcard extends Admin_Controller {
         redirect('admin/admitcard/index');
     }
 
-    public function view() {
-        $id = $this->input->post('certificateid');
-        $output = '';
-        $data = array();
+    public function view()
+    {
+        $id                = $this->input->post('certificateid');
+        $output            = '';
+        $data              = array();
         $data['admitcard'] = $this->admitcard_model->get($id);
-        $page = $this->load->view('admin/admitcard/_view', $data, true);
+        $page              = $this->load->view('admin/admitcard/_view', $data, true);
         echo json_encode(array('status' => 1, 'page' => $page));
     }
 

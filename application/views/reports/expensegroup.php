@@ -89,7 +89,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
 
-                    <form role="form" action="<?php echo site_url('report/expensegroup') ?>" method="post" class="">
+                    <form role="form" action="<?php echo site_url('report/getgroupreportparam') ?>" method="post" class="" id="reportform" >
                         <div class="box-body row">
 
                             <?php echo $this->customlib->getCSRF(); ?>
@@ -151,78 +151,22 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         </div>
                         <div class="box-body table-responsive">
                             <div class="download_label"><?php
-                                echo $this->lang->line('expense') . " " . $this->lang->line('group') . " " . $this->lang->line('report') . "<br>";
+                                echo $this->lang->line('expense') . " " . $this->lang->line('group') . " " . $this->lang->line('report');
                                 $this->customlib->get_postmessage();
                                 ;
                                 ?></div>
-                            <table class="table table-striped table-bordered table-hover example">
+                            <table class="table table-striped table-bordered table-hover expense-list" data-export-title="<?php echo $this->lang->line('expense') . " " . $this->lang->line('group') . " " . $this->lang->line('report'); ?>">
                                 <thead>
                                     <tr>
                                         <th><?php echo $this->lang->line('expense_head'); ?></th>
                                         <th><?php echo $this->lang->line('expense_id'); ?></th>
                                         <th><?php echo $this->lang->line('name'); ?></th>
                                         <th><?php echo $this->lang->line('date'); ?></th>
-
-
                                         <th><?php echo $this->lang->line('invoice_no'); ?></th>
                                         <th class="text text-right"><?php echo $this->lang->line('amount'); ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    $grd_total = 0;
-                                    foreach ($expenselist as $key => $value) {
-                                        $expensedata = explode(',', $value['expense']);
-                                        $expense_id = "";
-                                        $expense_name = "";
-                                        $expense_date = "";
-                                        $invoice_no = "";
-                                        $expense_amount = "";
-                                        // print_r($expensedata);die;
-                                        foreach ($expensedata as $expensevalue) {
-                                            $expenseexpload = explode('@', $expensevalue);
-
-                                            $expense_id .= $expenseexpload[0];
-                                            $expense_id .= "<br>";
-                                            $expense_date .= date($this->customlib->getSchoolDateFormat(), strtotime($expenseexpload[1]));
-                                            $expense_date .= "<br>";
-                                            $expense_name .= $expenseexpload[2];
-                                            $expense_name .= "<br>";
-
-                                            $invoice_no .= $expenseexpload[3];
-                                            $invoice_no .= "<br>";
-                                            $expense_amount .= $expenseexpload[4];
-                                            $expense_amount .= "<br>";
-                                        }
-                                        $grd_total += $value['total_amount'];
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $value['exp_category'] ?></td>
-                                            <td><?php echo $expense_id; ?></td>
-                                            <td><?php echo $expense_name; ?></td>
-                                            <td><?php echo $expense_date; ?></td>
-                                            <td><?php echo $invoice_no; ?></td>
-                                            <td class="text text-right"><?php echo $expense_amount; ?></td>
-                                        </tr>
-                                        <tr>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td></td>
-                                            <td class="text text-right"><b><?php echo $value['total_amount']; ?></b></td>
-                                        </tr>
-                                        <?php
-                                    }
-                                    ?>
-                                    <tr>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td><b><?php echo $this->lang->line('total'); ?></b></td>
-                                        <td class="text text-right"><b><?php echo $currency_symbol . $grd_total; ?></b></td>
-                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -247,4 +191,57 @@ if ($search_type == 'period') {
 }
 ?>
 
+</script>
+<script>
+$(document).ready(function() {
+     emptyDatatable('income-list','data');
+});
+</script> 
+<script>
+$(document).ready(function() {
+    initDatatable('expense-list','report/dtexpensegroupreport');
+
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+$(document).on('submit','#reportform',function(e){
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+
+    var $this = $(this).find("button[type=submit]:focus");  
+    var form = $(this);
+    var url = form.attr('action');
+    var form_data = form.serializeArray();
+    $.ajax({
+           url: url,
+           type: "POST",
+           dataType:'JSON',
+           data: form_data, // serializes the form's elements.
+              beforeSend: function () {
+                $('[id^=error]').html("");
+                $this.button('loading');
+               // resetFields($this.attr('name'));
+               },
+              success: function(response) { // your success handler
+               
+                if(!response.status){
+                    $.each(response.error, function(key, value) {
+                    $('#error_' + key).html(value);
+                    });
+                }else{
+                   initDatatable('expense-list','report/dtexpensegroupreport',response.params);
+                }
+              },
+             error: function() { // your error handler
+                 $this.button('reset');
+             },
+             complete: function() {
+               $this.button('reset');
+             }
+         });
+
+        });
+
+    });
+     
 </script>

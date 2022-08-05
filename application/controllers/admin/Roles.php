@@ -45,6 +45,9 @@ class Roles extends Admin_Controller {
     }
 
     function permission($id) {
+           if (!$this->rbac->hasPrivilege('superadmin', 'can_view')) {
+            access_denied();
+        }
         $data['title'] = 'Add Role';
         $data['id'] = $id;
         $role = $this->role_model->get($id);
@@ -101,6 +104,9 @@ class Roles extends Admin_Controller {
     }
 
     function edit($id) {
+           if (!$this->rbac->hasPrivilege('superadmin', 'can_view')) {
+            access_denied();
+        }
         $data['title'] = 'Edit Role';
         $data['id'] = $id;
         $editrole = $this->role_model->get($id);

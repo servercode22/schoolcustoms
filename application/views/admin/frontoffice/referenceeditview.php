@@ -103,11 +103,11 @@
 
                                                 <td class="mailbox-date pull-right">
                                                     <?php if ($this->rbac->hasPrivilege('setup_font_office', 'can_edit')) { ?>
-                                                        <a data-placement="left" href="<?php echo base_url(); ?>admin/reference/edit/<?php echo $value['id']; ?>"  class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="Edit">
+                                                        <a data-placement="left" href="<?php echo base_url(); ?>admin/reference/edit/<?php echo $value['id']; ?>"  class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('edit')?>">
                                                             <i class="fa fa-pencil"></i>
                                                         </a>
                                                     <?php } if ($this->rbac->hasPrivilege('setup_font_office', 'can_delete')) { ?>
-                                                        <a data-placement="left" href="<?php echo base_url(); ?>admin/reference/delete/<?php echo $value['id']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');" data-original-title="Delete">
+                                                        <a data-placement="left" href="<?php echo base_url(); ?>admin/reference/delete/<?php echo $value['id']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');" data-original-title="<?php echo $this->lang->line('delete')?>">
                                                             <i class="fa fa-remove"></i>
                                                         </a>
                                                     <?php } ?>                                           

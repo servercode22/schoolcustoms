@@ -132,7 +132,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         </div>
                         <div class="box-body table-responsive">
                             <div class="download_label"><?php
-                                echo $this->lang->line('payroll') . " " . $this->lang->line('report') . "<br>";
+                                echo $this->lang->line('payroll') . " " . $this->lang->line('report');
                                 $this->customlib->get_postmessage();
                                 ;
                                 ?></div>
@@ -194,8 +194,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
 
                                                 <td style="text-transform: capitalize;">
-                                                    <span data-toggle="popover" class="detail_popover" data-original-title="" title=""><a href="<?php echo base_url() ?>admin/staff/profile/<?php echo $value['staff_id']; ?>"><?php echo $value['name'] . " " . $value['surname']; ?></a></span>
-                                                    <div class="fee_detail_popover" style="display: none"><?php echo $this->lang->line('staff_id'); ?><?php echo ": " . $value['employee_id']; ?></div>
+                                                    <span data-toggle="popover" class="detail_popover" data-original-title="" title=""><a href="<?php echo base_url() ?>admin/staff/profile/<?php echo $value['staff_id']; ?>"><?php echo $value['name'] . " " . $value['surname']." (".$value['employee_id'].")"; ?></a></span>
+                                                   
                                                 </td>
                                                 <td>
         <?php echo $value['user_type']; ?>
@@ -258,7 +258,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             $count++;
                                         }
                                         ?>
-                                        <tr class="box box-solid total-bg">
+                                        
+                                </tbody>
+                                <tr class="box box-solid total-bg">
 
                                             <td></td>
                                             <td></td>
@@ -273,11 +275,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <td class="text text-right"><?php echo ($currency_symbol . number_format($tax, 2, '.', '')); ?></td>
                                             <td class="text text-right"><?php echo ($currency_symbol . number_format($net - $tax, 2, '.', '')); ?></td>
 
-
-
                                         </tr>
-<?php } ?>
-                                </tbody>
+                                    <?php } ?>
                             </table>
                         </div>
                     </div>

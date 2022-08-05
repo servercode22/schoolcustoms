@@ -6,7 +6,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 </style>
 <link rel="stylesheet" href="<?php echo base_url(); ?>backend/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
 <script src="<?php echo base_url(); ?>backend/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
-<div class="content-wrapper" style="min-height: 946px;">  
+<div class="content-wrapper" style="min-height: 946px;">
     <section class="content-header">
         <h1>
             <i class="fa fa-user-plus"></i> <?php echo $this->lang->line('student_information'); ?> <small><?php echo $this->lang->line('student1'); ?></small></h1>
@@ -20,46 +20,51 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
                     <div class="box-body">
-
-                        <?php if ($this->session->flashdata('msg')) { ?> <div class="alert alert-success">  <?php echo $this->session->flashdata('msg') ?> </div> <?php } ?>
+                        <?php if ($this->session->flashdata('msg')) {?> <div class="alert alert-success">  <?php echo $this->session->flashdata('msg') ?> </div> <?php }?>
                         <div class="row">
-                            <div class="col-md-5">
+                            <div class="col-md-6">
                                 <div class="row">
                                     <form role="form" action="<?php echo site_url('admin/alumni/alumnilist') ?>" method="post" class="">
                                         <?php echo $this->customlib->getCSRF(); ?>
                                         <div class="col-sm-4">
-                                            <div class="form-group"> 
-                                                <label><?php echo $this->lang->line('pass_out_session'); ?></label> <small class="req"> *</small> 
+                                            <div class="form-group">
+                                                <label><?php echo $this->lang->line('pass_out_session'); ?></label> <small class="req"> *</small>
                                                 <select autofocus="" id="session_id" name="session_id" class="form-control" >
                                                     <option value=""><?php echo $this->lang->line('select'); ?></option>
                                                     <?php
-                                                    foreach ($sessionlist as $sessions) {
-                                                        ?>
-                                                        <option value="<?php echo $sessions['id'] ?>" <?php if (set_value('session_id') == $sessions['id']) echo "selected=selected" ?>><?php echo $sessions['session'] ?></option>
+foreach ($sessionlist as $sessions) {
+    ?>
+                                                        <option value="<?php echo $sessions['id'] ?>" <?php if (set_value('session_id') == $sessions['id']) {
+        echo "selected=selected";
+    }
+    ?>><?php echo $sessions['session'] ?></option>
                                                         <?php
-                                                        $count++;
-                                                    }
-                                                    ?>
+$count++;
+}
+?>
                                                 </select>
                                                 <span class="text-danger"><?php echo form_error('session_id'); ?></span>
-                                            </div>  
+                                            </div>
                                         </div>
                                         <div class="col-sm-4">
-                                            <div class="form-group"> 
-                                                <label><?php echo $this->lang->line('class'); ?></label> <small class="req"> *</small> 
+                                            <div class="form-group">
+                                                <label><?php echo $this->lang->line('class'); ?></label> <small class="req"> *</small>
                                                 <select autofocus="" id="class_id" name="class_id" class="form-control" >
                                                     <option value=""><?php echo $this->lang->line('select'); ?></option>
                                                     <?php
-                                                    foreach ($classlist as $class) {
-                                                        ?>
-                                                        <option value="<?php echo $class['id'] ?>" <?php if (set_value('class_id') == $class['id']) echo "selected=selected" ?>><?php echo $class['class'] ?></option>
+foreach ($classlist as $class) {
+    ?>
+                                                        <option value="<?php echo $class['id'] ?>" <?php if (set_value('class_id') == $class['id']) {
+        echo "selected=selected";
+    }
+    ?>><?php echo $class['class'] ?></option>
                                                         <?php
-                                                        $count++;
-                                                    }
-                                                    ?>
+$count++;
+}
+?>
                                                 </select>
                                                 <span class="text-danger"><?php echo form_error('class_id'); ?></span>
-                                            </div>  
+                                            </div>
                                         </div>
                                         <div class="col-sm-4">
                                             <div class="form-group">
@@ -68,23 +73,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <option value=""><?php echo $this->lang->line('select'); ?></option>
                                                 </select>
                                                 <span class="text-danger"><?php echo form_error('section_id'); ?></span>
-                                            </div>   
+                                            </div>
                                         </div>
-
                                         <div class="col-sm-12">
                                             <div class="form-group">
                                                 <button type="submit" name="search" value="search_filter" class="btn btn-primary btn-sm pull-right checkbox-toggle"><i class="fa fa-search"></i> <?php echo $this->lang->line('search'); ?></button>
                                             </div>
                                         </div>
-                                    </form>    
-                                </div>  
-
-                            </div><!--./col-md-6-->
-                            <div class="col-md-2">
-                                <div class="row">
+                                    </form>
                                 </div>
-                            </div>
-                            <div class="col-md-5">
+                            </div><!--./col-md-6-->
+                            <div class="col-md-6">
                                 <div class="row">
                                     <form role="form" action="<?php echo site_url('admin/alumni/alumnilist') ?>" method="post" class="">
                                         <?php echo $this->customlib->getCSRF(); ?>
@@ -104,12 +103,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             </div><!--./col-md-6-->
                         </div><!--./row-->
                     </div>
-
                     <?php
-                    if (isset($resultlist)) {
-                        ?>
+if (isset($resultlist)) {
+    ?>
                         <div class="nav-tabs-custom border0 navnoshadow">
-                            <div class="box-header ptbnull"></div>  
+                            <div class="box-header ptbnull"></div>
                             <ul class="nav nav-tabs">
                                 <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true"><i class="fa fa-list"></i> <?php echo $this->lang->line('list'); ?>  <?php echo $this->lang->line('view'); ?></a></li>
                                 <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false"><i class="fa fa-newspaper-o"></i> <?php echo $this->lang->line('details'); ?> <?php echo $this->lang->line('view'); ?></a></li>
@@ -131,90 +129,88 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         </thead>
                                         <tbody>
                                             <?php
-                                            if (empty($resultlist)) {
-                                                ?>
+if (empty($resultlist)) {
+        ?>
 
                                                 <?php
-                                            } else {
-                                                $count = 1;
-                                                foreach ($resultlist as $student) {
-                                                    ?>
+} else {
+        $count = 1;
+        foreach ($resultlist as $student) {
+            ?>
                                                     <tr>
-
                                                         <td><?php echo $student['admission_no']; ?></td>
-
                                                         <td>
-                                                            <?php echo $student['firstname'] . " " . $student['lastname']; ?>
-
+                                                            <?php echo $this->customlib->getFullName($student['firstname'], $student['middlename'], $student['lastname'], $sch_setting->middlename, $sch_setting->lastname); ?>
                                                         </td>
                                                         <td><?php echo $student['class']; ?></td>
-
                                                         <td><?php echo $student['gender']; ?></td>
                                                         <td><?php
-                                                            if (array_key_exists($student['id'], $alumni_studets)) {
-                                                                echo $alumni_studets[$student['id']]['current_email'];
-                                                            }
-                                                            ?></td>
+if (array_key_exists($student['id'], $alumni_studets)) {
+                echo $alumni_studets[$student['id']]['current_email'];
+            }
+            ?></td>
                                                         <td><?php
-                                                            if (array_key_exists($student['id'], $alumni_studets)) {
-                                                                echo $alumni_studets[$student['id']]['current_phone'];
-                                                            }
-                                                            ?></td>
-
+if (array_key_exists($student['id'], $alumni_studets)) {
+                echo $alumni_studets[$student['id']]['current_phone'];
+            }
+            ?></td>
                                                         <td class="pull-right">
-
                                                             <?php
-                                                            if (array_key_exists($student['id'], $alumni_studets)) {
-                                                                if ($this->rbac->hasPrivilege('manage_alumni', 'can_edit')) {
-                                                                    ?>
+if (array_key_exists($student['id'], $alumni_studets)) {
+                if ($this->rbac->hasPrivilege('manage_alumni', 'can_edit')) {
+                    ?>
 
                                                                     <a href="#" onclick="add('<?php echo $student['id']; ?>')" class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-placement="left" data-original-title="<?php echo $this->lang->line('edit') ?>"><i class="fa fa-pencil"></i></a>
                                                                     <?php
-                                                                }
-                                                                if ($this->rbac->hasPrivilege('manage_alumni', 'can_delete')) {
-                                                                    ?>
+}
+                if ($this->rbac->hasPrivilege('manage_alumni', 'can_delete')) {
+                    ?>
                                                                     <a href="#" onclick="deletestudent('<?php echo $student['id']; ?>')" data-placement="left" data-toggle="tooltip" class="btn btn-default btn-xs"  title="<?php echo $this->lang->line('delete') ?>"><i class="fa fa-remove"></i></a>
                                                                     <?php
-                                                                }
-                                                            } else {
-                                                                if ($this->rbac->hasPrivilege('manage_alumni', 'can_add')) {
-                                                                    ?>
+}
+            } else {
+                if ($this->rbac->hasPrivilege('manage_alumni', 'can_add')) {
+                    ?>
                                                                     <a href="#" onclick="add('<?php echo $student['id']; ?>')" class="btn btn-default btn-xs" data-placement="left" data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('add') ?>">
 
                                                                         <i class="fa fa-plus"></i>
                                                                     </a>
                                                                 <?php }
-                                                            }
-                                                            ?>
-
+            }
+            ?>
 
                                                         </td>
                                                     </tr>
                                                     <?php
-                                                    $count++;
-                                                }
-                                            }
-                                            ?>
+$count++;
+        }
+    }
+    ?>
                                         </tbody>
                                     </table>
-                                </div>                           
+                                </div>
                                 <div class="tab-pane" id="tab_2">
                                     <?php if (empty($resultlist)) {
-                                        ?>
+        ?>
                                         <div class="alert alert-info"><?php echo $this->lang->line('no_record_found'); ?></div>
                                         <?php
-                                    } else {
-                                        $count = 1;
-                                        foreach ($resultlist as $student) {
+} else {
+        $count = 1;
+        foreach ($resultlist as $student) {
 
-                                            if (empty($student["image"])) {
-                                                $image = "uploads/student_images/no_image.png";
-                                            } elseif (array_key_exists($student['id'], $alumni_studets)) {
-                                                $image = $alumni_studets[$student['id']]['photo'];
-                                            } else {
-                                                $image = $student['image'];
-                                            }
-                                            ?>
+            if (empty($student["image"])) {
+                if (array_key_exists($student['id'], $alumni_studets) && (!empty($alumni_studets[$student['id']]['photo']))) {
+                    $image = $alumni_studets[$student['id']]['photo'];
+                } else {
+                    $image = "uploads/student_images/no_image.png";
+                }
+
+            } elseif (array_key_exists($student['id'], $alumni_studets)) {
+                $image = $alumni_studets[$student['id']]['photo'];
+            } else {
+                $image = $student['image'];
+            }
+            ?>
                                             <div class="carousel-row">
                                                 <div class="slide-row">
                                                     <div id="carousel-2" class="carousel slide slide-carousel" data-ride="carousel">
@@ -225,7 +221,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         </div>
                                                     </div>
                                                     <div class="slide-content">
-                                                        <h4><a href="<?php echo base_url(); ?>student/view/<?php echo $student['id'] ?>"> <?php echo $student['firstname'] . " " . $student['lastname'] ?></a></h4>
+                                                        <h4><a href="<?php echo base_url(); ?>student/view/<?php echo $student['id'] ?>">  <?php echo $this->customlib->getFullName($student['firstname'], $student['middlename'], $student['lastname'], $sch_setting->middlename, $sch_setting->lastname); ?></a></h4>
                                                         <div class="row">
                                                             <div class="col-xs-6 col-md-6">
                                                                 <address>
@@ -238,32 +234,30 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                         </address>
                                                                         </div>
                                                                         <div class="col-xs-6 col-md-6">
-
-
                                                                             <b><?php echo $this->lang->line('current_phone'); ?>: </b> <abbr title="Phone"><i class="fa fa-phone-square"></i>&nbsp;</abbr> <?php
-                                                                            if (array_key_exists($student['id'], $alumni_studets)) {
-                                                                                echo $alumni_studets[$student['id']]['current_phone'];
-                                                                            }
-                                                                            ?><br>
+if (array_key_exists($student['id'], $alumni_studets)) {
+                echo $alumni_studets[$student['id']]['current_phone'];
+            }
+            ?><br>
                                                                             <b>
                                                                                 <b><?php echo $this->lang->line('current_email'); ?>: </b> <abbr title="Phone">&nbsp;</abbr> <?php
-                                                                                if (array_key_exists($student['id'], $alumni_studets)) {
-                                                                                    echo $alumni_studets[$student['id']]['current_email'];
-                                                                                }
-                                                                                ?><br>
+if (array_key_exists($student['id'], $alumni_studets)) {
+                echo $alumni_studets[$student['id']]['current_email'];
+            }
+            ?><br>
                                                                                 <b><?php echo $this->lang->line('current_address'); ?>:&nbsp;</b><?php
-                                                                                if (array_key_exists($student['id'], $alumni_studets)) {
-                                                                                    echo $alumni_studets[$student['id']]['address'];
-                                                                                } else {
+if (array_key_exists($student['id'], $alumni_studets)) {
+                echo $alumni_studets[$student['id']]['address'];
+            } else {
 
-                                                                                    echo $student['current_address'];
-                                                                                }
-                                                                                ?> <?php echo $student['city'] ?><br>
+                echo $student['current_address'];
+            }
+            ?> <?php echo $student['city'] ?><br>
                                                                                 <?php if (array_key_exists($student['id'], $alumni_studets)) {
-                                                                                    ?><b><?php echo $this->lang->line('occupation'); ?>:&nbsp;</b><?php
-                                                                                    echo $alumni_studets[$student['id']]['occupation'];
-                                                                                }
-                                                                                ?> <br>
+                ?><b><?php echo $this->lang->line('occupation'); ?>:&nbsp;</b><?php
+echo $alumni_studets[$student['id']]['occupation'];
+            }
+            ?> <br>
                                                                                 </div>
                                                                                 </div>
                                                                                 </div>
@@ -275,43 +269,43 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
 
                                                                                         <?php
-                                                                                        if (array_key_exists($student['id'], $alumni_studets)) {
-                                                                                            if ($this->rbac->hasPrivilege('manage_alumni', 'can_edit')) {
-                                                                                                ?>
+if (array_key_exists($student['id'], $alumni_studets)) {
+                if ($this->rbac->hasPrivilege('manage_alumni', 'can_edit')) {
+                    ?>
 
                                                                                                 <a href="#" onclick="add('<?php echo $student['id']; ?>')" class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('edit') ?>"><i class="fa fa-pencil"></i></a>
                                                                                                 <a href="#" onclick="deletestudent('<?php echo $student['id']; ?>')" data-toggle="tooltip" class="btn btn-default btn-xs"  title="<?php echo $this->lang->line('delete') ?>"><i class="fa fa-remove"></i></a>
                                                                                                 <?php
-                                                                                            }
-                                                                                        } else {
-                                                                                            if ($this->rbac->hasPrivilege('manage_alumni', 'can_add')) {
-                                                                                                ?>
+}
+            } else {
+                if ($this->rbac->hasPrivilege('manage_alumni', 'can_add')) {
+                    ?>
                                                                                                 <a href="#" onclick="add('<?php echo $student['id']; ?>')" class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('add') ?>">
 
                                                                                                     <i class="fa fa-plus"></i>
                                                                                                 </a>
                                                                                             <?php }
-                                                                                        }
-                                                                                        ?>
+            }
+            ?>
 
                                                                                     </span>
                                                                                 </div>
                                                                         </div>
                                                                         </div>
                                                                         <?php
-                                                                    }
-                                                                    $count++;
-                                                                }
-                                                                ?>
-                                                                </div>                                                          
-                                                                </div>                                                         
+}
+        $count++;
+    }
+    ?>
                                                                 </div>
-                                                                </div><!--./box box-primary -->   
+                                                                </div>
+                                                                </div>
+                                                                </div><!--./box box-primary -->
                                                                 <?php
-                                                            }
-                                                            ?>
-                                                            </div>  
-                                                            </div> 
+}
+?>
+                                                            </div>
+                                                            </div>
                                                             </section>
                                                             </div>
                                                             <div class="modal fade" id="add_alumni" tabindex="-1" role="dialog" aria-labelledby="evaluation" style="padding-left: 0 !important">
@@ -334,7 +328,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                                                     <label for="pwd"><?php echo $this->lang->line('current_phone'); ?></label><small class="req"> *</small>
                                                                                                     <input type="text" id="current_phone" name="current_phone" class="form-control">
                                                                                                 </div>
-                                                                                            </div> 
+                                                                                            </div>
                                                                                             <div class="col-sm-6">
                                                                                                 <div class="form-group">
                                                                                                     <label for="pwd"><?php echo $this->lang->line('current_email'); ?></label>
@@ -362,7 +356,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                                             </div>
                                                                                             <div class="col-sm-12">
                                                                                                 <div class="form-group">
-                                                                                                    <label for="pwd"><?php echo $this->lang->line('photo'); ?></label>
+                                                                                                    <label for="pwd"><?php echo $this->lang->line('current') . ' ' . $this->lang->line('photo'); ?></label>
                                                                                                     <input type="file" id="file"  name="file" class="form-control filestyle">
                                                                                                 </div>
                                                                                             </div>
@@ -384,7 +378,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                            </div> 
+                                                            </div>
                                                             <script type="application/javascript">
 
 
@@ -394,10 +388,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                 if(result){
                                                                 $.ajax({
                                                                 url: "<?php echo base_url(); ?>admin/alumni/deletestudent/"+id,
-                                                                type: "POST",         
+                                                                type: "POST",
 
                                                                 success: function (res)
-                                                                { 
+                                                                {
                                                                 successMsg('<?php echo $this->lang->line("delete_message"); ?>');
 
                                                                 window.location.reload(true);

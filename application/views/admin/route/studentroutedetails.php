@@ -161,7 +161,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <h3 class="box-title titlefix"><i class="fa fa-users"></i> <?php echo form_error('student'); ?> <?php echo $this->lang->line('student_transport_report'); ?></h3>
                         </div>
                         <div class="box-body table-responsive">
-                            <div class="download_label"><?php echo $this->lang->line('student_transport_report') . "<br>";
+                            <div class="download_label"><?php echo $this->lang->line('student_transport_report') . " ";
                                         $this->customlib->get_postmessage();
                                         ?></div>
                             <table class="table table-striped table-bordered table-hover example">
@@ -198,7 +198,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <td><?php echo $student['class'] . " - " . $student["section"]; ?></td>
                                                 <td><?php echo $student['admission_no']; ?></td>
                                                 <td>
-                                                    <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?>
+                                                    <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname);  ?>
                                                     </a>
                                                 </td>
                                                 <td><?php echo $student['mobileno']; ?></td>

@@ -8,7 +8,8 @@ class Member extends Admin_Controller {
 
     public function __construct() {
         parent::__construct();
-    }
+        $this->sch_setting_detail = $this->setting_model->getSetting();
+    } 
 
     public function index() {
         if (!$this->rbac->hasPrivilege('issue_return', 'can_view')) {
@@ -20,8 +21,8 @@ class Member extends Admin_Controller {
         $data['title'] = 'Member';
         $data['title_list'] = 'Members';
         $memberList = $this->librarymember_model->get();
-        //echo $this->db->last_query();die;   
         $data['memberList'] = $memberList;
+        $data['sch_setting'] = $this->sch_setting_detail;
         $this->load->view('layout/header');
         $this->load->view('admin/librarian/index', $data);
         $this->load->view('layout/footer');
@@ -42,7 +43,6 @@ class Member extends Admin_Controller {
         $data['issued_books'] = $issued_books;
         $bookList = $this->book_model->get();
         $data['bookList'] = $bookList;
-
         $this->form_validation->set_rules('return_date', $this->lang->line('return_date'), 'trim|required|xss_clean');
         $this->form_validation->set_rules(
                 'book_id', $this->lang->line('book'), array(
@@ -51,7 +51,7 @@ class Member extends Admin_Controller {
                 )
         );
         if ($this->form_validation->run() == false) {
-            
+             
         } else {
             $member_id = $this->input->post('member_id');
             $data = array(
@@ -64,7 +64,7 @@ class Member extends Admin_Controller {
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
             redirect('admin/member/issue/' . $member_id);
         }
-
+        $data['sch_setting'] = $this->sch_setting_detail;
         $this->load->view('layout/header');
         $this->load->view('admin/librarian/issue', $data);
         $this->load->view('layout/footer');
@@ -141,7 +141,8 @@ class Member extends Admin_Controller {
                     $resultlist = $this->student_model->searchFullText($search_text);
                     $data['resultlist'] = $resultlist;
                 }
-            }
+            } 
+            $data['sch_setting'] = $this->sch_setting_detail;
             $this->load->view('layout/header', $data);
             $this->load->view('admin/member/studentSearch', $data);
             $this->load->view('layout/footer', $data);

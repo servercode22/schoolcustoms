@@ -129,7 +129,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         <td><?php echo $student['admission_no']; ?></td>
 
                                                         <td>
-                                                            <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?>
+                                                            <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname); ?>
                                                             </a>
                                                         </td>
                                                         <td><?php echo $student['class'] . "(" . $student['section'] . ")" ?></td>
@@ -194,7 +194,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         </div>
                                                     </div>
                                                     <div class="slide-content">
-                                                        <h4><a href="<?php echo base_url(); ?>student/view/<?php echo $student['id'] ?>"> <?php echo $student['firstname'] . " " . $student['lastname'] ?></a></h4>
+                                                        <h4><a href="<?php echo base_url(); ?>student/view/<?php echo $student['id'] ?>"> <?php echo $this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname); ?></a></h4>
                                                         <div class="row">
                                                             <div class="col-xs-6 col-md-6">
                                                                 <address>
@@ -213,10 +213,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                         <div class="col-xs-6 col-md-6">
             <?php if ($sch_setting->local_identification_no) { ?>
                                                                                 <b><?php echo $this->lang->line('local_identification_no'); ?>:&nbsp;</b><?php echo $student['samagra_id'] ?><br>
-                                                                            <?php } ?>
-                                                                            <b><?php echo $this->lang->line('guardian_name'); ?>:&nbsp;</b><?php echo $student['guardian_name'] ?><br>
+                                                                            <?php } if($sch_setting->guardian_name){ ?>
+                                                                            <b><?php echo $this->lang->line('guardian_name'); ?>:&nbsp;</b><?php echo $student['guardian_name'] ?><br><?php } if($sch_setting->guardian_phone){?>
                                                                             <b><?php echo $this->lang->line('guardian_phone'); ?>: </b> <abbr title="Phone"><i class="fa fa-phone-square"></i>&nbsp;</abbr> <?php echo $student['guardian_phone'] ?><br>
-            <?php if ($sch_setting->current_address) { ?>
+            <?php } if ($sch_setting->current_address) { ?>
                                                                                 <b><?php echo $this->lang->line('current_address'); ?>:&nbsp;</b><?php echo $student['current_address'] ?> <?php echo $student['city'] ?><br>
             <?php } ?>
                                                                         </div>

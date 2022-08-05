@@ -128,7 +128,7 @@
 
  
         var base_url = '<?php echo base_url() ?>';
-
+ 
         $.ajax({
             type: "POST",
             url: base_url + "admin/language/unselect_language/"+rowid,
@@ -167,6 +167,11 @@ function load(){
           
         }
         });
+    }
+
+    function delete_language(id){
+        alert(id);
+
     }
 
 </script>

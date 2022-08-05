@@ -30,7 +30,6 @@ class Homework_model extends MY_model {
             $record_id = $insert_id;
             $this->log($message, $record_id, $action);
         }
-        //echo $this->db->last_query();die;
         //======================Code End==============================
 
         $this->db->trans_complete(); # Completing transaction
@@ -95,10 +94,22 @@ class Homework_model extends MY_model {
     }
 
     public function get_homeworkDocById($homework_id) {
-        $query = $this->db->select('students.*,submit_assignment.docs,submit_assignment.message')->from('submit_assignment')->join('students', 'students.id=submit_assignment.student_id', 'inner')->where('submit_assignment.homework_id', $homework_id)->get();
+
+          $this->datatables
+                ->select('students.*,submit_assignment.docs,submit_assignment.message,submit_assignment.student_id')
+                ->join('students','students.id=submit_assignment.student_id', 'inner')
+                ->searchable('students.firstname')
+                ->from('submit_assignment')
+                ->where(array('submit_assignment.homework_id'=> $homework_id));
+        return $this->datatables->generate('json');
+      
+    }
+    
+    public function get_homeworkDocByIdStdid($homework_id,$student_id) {
+        $query = $this->db->select('students.*,submit_assignment.docs,submit_assignment.message')->from('submit_assignment')->join('students', 'students.id=submit_assignment.student_id', 'inner')->where(array('submit_assignment.homework_id'=> $homework_id,'submit_assignment.student_id'=>$student_id))->get();
         return $query->result_array();
     }
-
+    
     public function search_homework($class_id, $section_id, $subject_group_id, $subject_id) {
         if ((!empty($class_id)) && (!empty($section_id)) && (!empty($subject_id)) && (!empty($subject_group_id))) {
 
@@ -126,6 +137,37 @@ class Homework_model extends MY_model {
         return $query->result_array();
     }
 
+        public function search_dthomework($class_id, $section_id, $subject_group_id, $subject_id) {
+        if ((!empty($class_id)) && (!empty($section_id)) && (!empty($subject_id)) && (!empty($subject_group_id))) {
+
+            $this->datatables->where(array('homework.class_id' => $class_id, 'homework.section_id' => $section_id, 'subject_groups.id' => $subject_group_id, 'subject_group_subjects.id' => $subject_id));
+        } else if ((!empty($class_id)) && (!empty($section_id)) && (!empty($subject_group_id))) {
+
+            $this->datatables->where(array('homework.class_id' => $class_id, 'homework.section_id' => $section_id, 'subject_groups.id' => $subject_group_id));
+        } else if ((!empty($class_id)) && (empty($section_id)) && (empty($subject_id))) {
+
+            $this->datatables->where(array('homework.class_id' => $class_id));
+        } else if ((!empty($class_id)) && (!empty($section_id)) && (empty($subject_id))) {
+
+            $this->datatables->where(array('homework.class_id' => $class_id, 'homework.section_id' => $section_id));
+        }
+
+        $this->datatables->select('`homework`.*,classes.class,sections.section,subject_group_subjects.subject_id,subject_group_subjects.id as `subject_group_subject_id`,subjects.name as subject_name,subject_groups.id as subject_groups_id,subject_groups.name,(select count(*) as total from submit_assignment where submit_assignment.homework_id=homework.id) as assignments,staff.name as staff_name,staff.surname as staff_surname')
+        ->searchable('classes.class,sections.section,subject_groups.name,subjects.name,homework_date,submit_date,evaluation_date,staff.name')
+        ->join("classes", "classes.id = homework.class_id")
+        ->join("sections", "sections.id = homework.section_id")
+        ->join("subject_group_subjects", "subject_group_subjects.id = homework.subject_group_subject_id")
+        ->join("subjects", "subjects.id = subject_group_subjects.subject_id")
+        ->join("subject_groups", "subject_group_subjects.subject_group_id=subject_groups.id")
+        ->join("staff","homework.created_by=staff.id")
+        ->orderable('classes.class,sections.section,subject_groups.name,subjects.name,homework_date,submit_date,evaluation_date,staff.name')
+        ->where('subject_groups.session_id', $this->current_session)           
+        ->sort('homework.homework_date', 'DESC')
+        ->from('homework');
+        return $this->datatables->generate('json');
+
+    }
+
     public function getRecord($id = null) {
 
         $query = $this->db->select("homework.*,classes.class,sections.section,subjects.name,subject_groups.name as subject_group")->join("classes", "classes.id = homework.class_id")->join("sections", "sections.id = homework.section_id")->join('subject_group_subjects', 'homework.subject_group_subject_id=subject_group_subjects.id')->join("subjects", "subjects.id = subject_group_subjects.subject_id", "left")->join('subject_groups', 'subject_group_subjects.subject_group_id=subject_groups.id')->where("homework.id", $id)->get("homework");
@@ -134,7 +176,7 @@ class Homework_model extends MY_model {
     }
 
     public function getStudents($id) {
-        $sql = "SELECT IFNULL(homework_evaluation.id,0) as homework_evaluation_id,student_session.*,students.firstname,students.lastname,students.admission_no from student_session inner JOIN (SELECT homework.id as homework_id,homework.class_id,homework.section_id,homework.session_id FROM `homework` WHERE id= " . $this->db->escape($id) . " ) as home_work on home_work.class_id=student_session.class_id and home_work.section_id=student_session.section_id and home_work.session_id=student_session.session_id inner join students on students.id=student_session.student_id and students.is_active='yes' left join homework_evaluation on homework_evaluation.student_session_id=student_session.id  and students.is_active='yes' and homework_evaluation.homework_id=" . $this->db->escape($id) . "   order by students.id desc";
+        $sql = "SELECT IFNULL(homework_evaluation.id,0) as homework_evaluation_id,student_session.*,students.firstname,students.middlename,students.lastname,students.admission_no from student_session inner JOIN (SELECT homework.id as homework_id,homework.class_id,homework.section_id,homework.session_id FROM `homework` WHERE id= " . $this->db->escape($id) . " ) as home_work on home_work.class_id=student_session.class_id and home_work.section_id=student_session.section_id and home_work.session_id=student_session.session_id inner join students on students.id=student_session.student_id and students.is_active='yes' left join homework_evaluation on homework_evaluation.student_session_id=student_session.id  and students.is_active='yes' and homework_evaluation.homework_id=" . $this->db->escape($id) . "   order by students.id desc";
 
         // $sql = "select students.id,students.firstname,students.lastname,students.admission_no from students where students.id in (select student_session.student_id from student_session where student_session.class_id = " . $this->db->escape($class_id) . " and student_session.section_id = " . $this->db->escape($section_id) . " GROUP by student_session.student_id and student_session.session_id=$this->current_session) and students.is_active = 'yes'";
         $query = $this->db->query($sql);

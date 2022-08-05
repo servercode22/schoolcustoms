@@ -61,7 +61,7 @@
                                                     ?>
                                                     <td><span data-toggle="popover" class="detail_popover" data-original-title="" title=""><small <?php echo $label ?>><?php echo $status[$value["status"]]; ?></small></span>
 
-                                                        <div class="fee_detail_popover" style="display: none"><?php echo "Submitted By: " . $value['applied_by']; ?></div></td>
+                                                        <div class="fee_detail_popover" style="display: none"><?php echo $this->lang->line('submitted_by').": " . $value['applied_by']; ?></div></td>
                                                     <td class="pull-right no-print"><a data-placement="left" href="#leavedetails" onclick="getRecord('<?php echo $value["id"] ?>')" role="button" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('view'); ?>" ><i class="fa fa-reorder"></i></a>  
                                                         <?php if ($can_delete == 1) { ?>
                                                             <a onclick="getDelete('<?php echo $value["id"] ?>')"  class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" ><i class="fa fa-remove"> </i></a>
@@ -178,15 +178,18 @@
                             </div>
                             <span class="text-danger"><?php echo form_error('leave_type'); ?></span>
                         </div>
-                        <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <label><?php echo $this->lang->line('leave'); ?> <?php echo $this->lang->line('date'); ?></label><small class="req"> *</small>
+                        <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                            <label><?php echo $this->lang->line('leave'); ?> <?php echo $this->lang->line('from'); ?> <?php echo $this->lang->line('date'); ?></label><small class="req"> *</small>
 
-                            <div class="input-group">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
-                                </div>
-                                <input type="text" readonly name="leavedates" class="form-control pull-right" id="reservation">
-                            </div>
+                                <input type="text" readonly id="leave_from_date" name="leave_from_date" class="form-control date" >
+                           
+                            <!-- /.input group -->
+                        </div>
+                         <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                            <label><?php echo $this->lang->line('leave'); ?> <?php echo $this->lang->line('to'); ?> <?php echo $this->lang->line('date'); ?></label><small class="req"> *</small>
+
+                                <input type="text" readonly id="leave_to_date" name="leave_to_date" class="form-control date" >
+                           
                             <!-- /.input group -->
                         </div>
                         <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
@@ -326,9 +329,10 @@
                 $('#applied_date').html(result.date);
                 $('#appliedby').html(result.applied_by);
                 $("#detailremark").text(result.admin_remark);
+                console.log(result.document_file);
                 if (result.document_file != "") {
                     var cl = "<i class='fa fa-download'></i>";
-                    $("#download_file").html('<a href=' + base_url + 'admin/staff/download/' + result.staff_id + '/' + result.document_file + ' class=btn btn-default btn-xs  data-toggle=tooltip >' + cl + '</a>');
+                    $("#download_file").html('<a href=' + base_url + 'admin/staff/download/' + result.staff_id + '/' + encodeURIComponent(result.document_file) + ' class=btn btn-default btn-xs  data-toggle=tooltip >' + cl + '</a>');
                 }
 
 
@@ -389,7 +393,7 @@
             $("#reason").show();
         }
 
-    }
+    } 
 
 
     $(document).ready(function (e) {
@@ -525,8 +529,9 @@
                 $('input[name="applieddate"]').val(new Date(result.date).toString("MM/dd/yyyy"));
                 $('input[name="leavefrom"]').val(new Date(result.leave_from).toString("MM/dd/yyyy"));
                 $('input[name="filename"]').val(result.document_file);
-                $('input[name="leavedates"]').val(result.leavefrom + '-' + result.leaveto);
-
+              
+                $('#leave_from_date').val(result.leavefrom);
+                $('#leave_to_date').val(result.leaveto);
                 $('input[name="leaverequestid"]').val(id);
                 $('textarea[name="reason"]').text(result.employee_remark);
                 $('textarea[name="remark"]').text(result.admin_remark);

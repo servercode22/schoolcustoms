@@ -7,6 +7,7 @@ class approve_leave extends Admin_Controller {
 
     function __construct() {
         parent::__construct();
+        $this->sch_setting_detail = $this->setting_model->getSetting();
     }
 
     function unauthorized() {
@@ -15,7 +16,7 @@ class approve_leave extends Admin_Controller {
         $this->load->view('unauthorized', $data);
         $this->load->view('layout/footer', $data);
     }
-
+ 
     function index() {
 
         if (!$this->rbac->hasPrivilege('approve_leave', 'can_view')) {
@@ -27,6 +28,7 @@ class approve_leave extends Admin_Controller {
         $data['classlist'] = $class;
         $data['class_id'] = $class_id = '';
         $data['section_id'] = $section_id = '';
+        $data['sch_setting']     = $this->setting_model->getSetting();
         $data['results'] = array();
         $listaudit = $this->apply_leave_model->get(null, null, null);
         if (isset($_POST['class_id']) && $_POST['class_id'] != '') {
@@ -45,7 +47,7 @@ class approve_leave extends Admin_Controller {
         }
 
         $data['results'] = $listaudit;
-
+       
         $this->load->view('layout/header');
         $this->load->view('admin/approve_leave/index', $data);
         $this->load->view('layout/footer');
@@ -77,17 +79,25 @@ class approve_leave extends Admin_Controller {
     public function add() {
 
         $student_id = '';
+        $this->form_validation->set_rules('class', $this->lang->line('class'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('section', $this->lang->line('section'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('apply_date', $this->lang->line('apply') . " " . $this->lang->line('date'), 'trim|required|xss_clean');
+		
         $this->form_validation->set_rules('from_date', $this->lang->line('from') . " " . $this->lang->line('date'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('to_date', $this->lang->line('to') . " " . $this->lang->line('date'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('student', $this->lang->line('student'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('userfile', $this->lang->line('file'), 'callback_handle_upload[userfile]');
         if ($this->form_validation->run() == FALSE) {
 
             $msg = array(
+				'class' => form_error('class'),
+				'section' => form_error('section'),
                 'apply_date' => form_error('apply_date'),
                 'from_date' => form_error('from_date'),
                 'to_date' => form_error('to_date'),
                 'student' => form_error('student'),
+                'userfile' => form_error('userfile')
+                
             );
 
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
@@ -96,9 +106,9 @@ class approve_leave extends Admin_Controller {
             $student_session_id = $this->apply_leave_model->get_studentsessionId($_POST['class'], $_POST['section'], $_POST['student']);
 
             $data = array(
-                'apply_date' => date('Y-m-d', strtotime($this->input->post('apply_date'))),
-                'from_date' => date('Y-m-d', strtotime($this->input->post('from_date'))),
-                'to_date' => date('Y-m-d', strtotime($this->input->post('to_date'))),
+    'apply_date' =>  date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('apply_date'))),
+    'from_date' =>  date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('from_date'))),
+    'to_date' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('to_date'))),
                 'student_session_id' => $student_session_id['id'],
                 'reason' => $this->input->post('message'),
                 'request_type' => '1'
@@ -134,6 +144,7 @@ class approve_leave extends Admin_Controller {
 
         $data['resultlist'] = $resultlist;
         $data['select_id'] = $student_id;
+        $data['sch_setting'] = $this->sch_setting_detail;
 
         $this->load->view('admin/approve_leave/_student_list', $data);
     }
@@ -195,6 +206,49 @@ class approve_leave extends Admin_Controller {
         $name = $doc;
 
         force_download($name, $data);
+    }
+
+    public function handle_upload($str,$var)
+    {
+
+        $image_validate = $this->config->item('file_validate');
+        $result = $this->filetype_model->get();
+        if (isset($_FILES[$var]) && !empty($_FILES[$var]['name'])) {
+
+            $file_type         = $_FILES[$var]['type'];
+            $file_size         = $_FILES[$var]["size"];
+            $file_name         = $_FILES[$var]["name"];
+
+            $allowed_extension = array_map('trim', array_map('strtolower', explode(',', $result->file_extension)));
+            $allowed_mime_type = array_map('trim', array_map('strtolower', explode(',', $result->file_mime)));
+            $ext               = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
+            if ($files = filesize($_FILES[$var]['tmp_name'])) {
+
+                if (!in_array($file_type, $allowed_mime_type)) {
+                    $this->form_validation->set_message('handle_upload', 'File Type Not Allowed');
+                    return false;
+                }
+
+                if (!in_array($ext, $allowed_extension) || !in_array($file_type, $allowed_mime_type)) {
+                    $this->form_validation->set_message('handle_upload', 'Extension Not Allowed');
+                    return false;
+                }
+                
+                if ($file_size > $result->file_size) {
+                    $this->form_validation->set_message('handle_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($image_validate['upload_size'] / 1048576, 2) . " MB");
+                    return false;
+                }
+
+            } else {
+                $this->form_validation->set_message('handle_upload', "File Type / Extension Error Uploading ");
+                return false;
+            }
+
+            return true;
+        }
+        return true;
+
     }
 
 }

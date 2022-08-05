@@ -120,8 +120,9 @@
                                 <?php
                                 if (!empty($resultlist)) {
                                     ?>
+									<div class="download_label"><?php echo $this->lang->line('student'); ?> <?php echo $this->lang->line('list'); ?></div>
                                     <div class="table-responsive">
-                                        <table class="table table-hover table stripped attendance_table">
+                                        <table class="table table-hover table stripped attendance_table example" >
                                             <thead>
                                                 <tr>
                                                     <th>Student</th>
@@ -144,14 +145,15 @@
                                                     foreach ($resultlist['class_students'] as $student_key => $student_value) {
                                                         ?>
                                                         <tr>
-                                                            <td><?php echo $student_value['firstname'] . " " . $student_value['lastname'] ?></td>
+                                                            <td>
+                    <?php echo $this->customlib->getFullName($student_value['firstname'],$student_value['middlename'],$student_value['lastname'],$sch_setting->middlename,$sch_setting->lastname);  ?></td>
                                                             <?php
                                                             for ($i = 1; $i <= $no_of_days; $i++) {
                                                                 ?>
                                                                 <td class="text text-center">
                                                                     <?php
                                                                     if (!empty($resultlist['students_attendances'][$i]['subjects'])) {
-                                                                        $students_attendance_list = getAttendance($resultlist['students_attendances'][$i]['students'], $student_value['id']);
+                        $students_attendance_list = getAttendance($resultlist['students_attendances'][$i]['students'], $student_value['id']);
 
                                                                         $count = 1;
                                                                         foreach ($resultlist['students_attendances'][$i]['subjects'] as $subject_loop_key => $subject_loop_value) {

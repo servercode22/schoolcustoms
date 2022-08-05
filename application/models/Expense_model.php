@@ -1,11 +1,14 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
-class Expense_model extends MY_Model {
+class Expense_model extends MY_Model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->current_session = $this->setting_model->getCurrentSession();
     }
@@ -16,25 +19,36 @@ class Expense_model extends MY_Model {
      * @param int $id
      * @return mixed
      */
-    public function search($text = null, $start_date = null, $end_date = null) {
+    public function search($text = null, $start_date = null, $end_date = null)
+    
+    {
         if (!empty($text)) {
-            $this->db->select('expenses.id,expenses.date,expenses.invoice_no,expenses.name,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')->from('expenses');
-            $this->db->join('expense_head', 'expenses.exp_head_id = expense_head.id');
-
-            $this->db->like('expenses.name', $text);
-            $query = $this->db->get();
-            return $query->result_array();
+           
+             $this->datatables
+            ->select('expenses.id,expenses.date,expenses.invoice_no,expenses.name,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')
+             ->searchable('expenses.name,expenses.invoice_no,exp_category,date,expenses.amount')
+            ->orderable('expenses.name,expenses.invoice_no,exp_category,date,expenses.amount')
+            ->join('expense_head', 'expenses.exp_head_id = expense_head.id')
+            ->like('expenses.name', $text)
+            ->from('expenses');
+            
         } else {
-            $this->db->select('expenses.id,expenses.date,expenses.name,expenses.invoice_no,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')->from('expenses');
-            $this->db->join('expense_head', 'expenses.exp_head_id = expense_head.id');
-            $this->db->where('expenses.date >=', $start_date);
-            $this->db->where('expenses.date <=', $end_date);
-            $query = $this->db->get();
-            return $query->result_array();
+            
+            $this->datatables
+            ->select('expenses.id,expenses.date,expenses.invoice_no,expenses.name,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')
+            ->searchable('expenses.name,expenses.invoice_no,exp_category,date,expenses.amount')
+            ->orderable('expenses.name,expenses.invoice_no,exp_category,date,expenses.amount')
+            ->join('expense_head', 'expenses.exp_head_id = expense_head.id')
+            ->where('expenses.date <=', $end_date)
+            ->where('expenses.date >=', $start_date)
+            ->from('expenses');
         }
+         return $this->datatables->generate('json');
+         
     }
 
-    public function get($id = null) {
+    public function get($id = null)
+    {
         $this->db->select('expenses.id,expenses.date,expenses.name,expenses.invoice_no,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')->from('expenses');
         $this->db->join('expense_head', 'expenses.exp_head_id = expense_head.id');
         if ($id != null) {
@@ -51,24 +65,36 @@ class Expense_model extends MY_Model {
         }
     }
 
+    public function getexpenselist($id = null)
+    {
+         $this->datatables
+            ->select('expenses.id,expenses.date,expenses.name,expenses.invoice_no,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')
+            ->searchable('expenses.id,expenses.date,expenses.name,expenses.invoice_no,expenses.amount,expenses.documents,expenses.note,expense_head.exp_category,expenses.exp_head_id')
+            ->orderable('expenses.name,expenses.note,expenses.invoice_no,expenses.date,expense_head.exp_category,expenses.amount')
+            ->join("expense_head", "expenses.exp_head_id = expense_head.id")
+            ->sort('expenses.id', 'desc')
+            ->from('expenses');
+        return $this->datatables->generate('json');
+    }
+
     /**
      * This function will delete the record based on the id
      * @param $id
      */
-    public function remove($id) {
+    public function remove($id)
+    {
 
         $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
         $this->db->where('id', $id);
         $this->db->delete('expenses');
-
-        //$return_value = $this->db->insert_id();
-        $message = DELETE_RECORD_CONSTANT . " On  expenses   id " . $id;
-        $action = "Delete";
+       
+        $message   = DELETE_RECORD_CONSTANT . " On  expenses   id " . $id;
+        $action    = "Delete";
         $record_id = $id;
         $this->log($message, $record_id, $action);
-//echo $this->db->last_query();die;
+
         //======================Code End==============================
 
         $this->db->trans_complete(); # Completing transaction
@@ -79,7 +105,6 @@ class Expense_model extends MY_Model {
             $this->db->trans_rollback();
             return false;
         } else {
-
 
             return $return_value;
         }
@@ -91,27 +116,27 @@ class Expense_model extends MY_Model {
      * else an insert. One function doing both add and edit.
      * @param $data
      */
-    public function add($data) {
+    public function add($data)
+    {
 
         $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
-
 
         if (isset($data['id']) && $data['id'] != '') {
 
             $this->db->where('id', $data['id']);
             $this->db->update('expenses', $data);
 
-            $message = UPDATE_RECORD_CONSTANT . " On  expenses   id " . $data['id'];
-            $action = "Update";
+            $message   = UPDATE_RECORD_CONSTANT . " On  expenses   id " . $data['id'];
+            $action    = "Update";
             $record_id = $data['id'];
         } else {
             $this->db->insert('expenses', $data);
 
             $record_id = $this->db->insert_id();
-            $message = INSERT_RECORD_CONSTANT . " On  expenses   id " . $record_id;
-            $action = "Insert";
+            $message   = INSERT_RECORD_CONSTANT . " On  expenses   id " . $record_id;
+            $action    = "Insert";
         }
 
         $this->log($message, $record_id, $action);
@@ -127,12 +152,12 @@ class Expense_model extends MY_Model {
             return false;
         } else {
 
-
             return $record_id;
         }
     }
 
-    public function check_Exits_group($data) {
+    public function check_Exits_group($data)
+    {
         $this->db->select('*');
         $this->db->from('expenses');
         $this->db->where('session_id', $this->current_session);
@@ -147,7 +172,8 @@ class Expense_model extends MY_Model {
         }
     }
 
-    public function getTypeByFeecategory($type, $class_id) {
+    public function getTypeByFeecategory($type, $class_id)
+    {
         $this->db->select('expenses.id,expenses.session_id,expenses.invoice_no,expenses.amount,expenses.documents,expenses.note,expense_head.class,feetype.type')->from('expenses');
         $this->db->join('expense_head', 'expenses.class_id = expense_head.id');
         $this->db->join('feetype', 'expenses.feetype_id = feetype.id');
@@ -159,27 +185,29 @@ class Expense_model extends MY_Model {
         return $query->row_array();
     }
 
-    public function getTotalExpenseBydate($date) {
+    public function getTotalExpenseBydate($date)
+    {
         $query = 'SELECT sum(amount) as `amount` FROM `expenses` where date=' . $this->db->escape($date);
         $query = $this->db->query($query);
         return $query->row();
     }
 
-    public function getTotalExpenseBwdate($date_from, $date_to) {
+    public function getTotalExpenseBwdate($date_from, $date_to)
+    {
         $query = 'SELECT sum(amount) as `amount` FROM `expenses` where date between ' . $this->db->escape($date_from) . ' and ' . $this->db->escape($date_to);
 
         $query = $this->db->query($query);
         return $query->row();
     }
 
-    public function getExpenseHeadData($start_date, $end_date) {
+    public function getExpenseHeadData($start_date, $end_date)
+    {
         $condition = "date_format(date,'%Y-%m-%d') between '" . $start_date . "' and '" . $end_date . "'";
 
         $recorddata = $this->db->select('sum(amount) as total,exp_category')->from('expenses');
         $this->db->join('expense_head', 'expenses.exp_head_id = expense_head.id');
         $this->db->where($condition)->group_by('expense_head.id');
         $r = $this->db->get()->result_array();
-        //print_r($recorddata);die;
         return $r;
     }
 

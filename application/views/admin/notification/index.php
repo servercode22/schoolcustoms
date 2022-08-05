@@ -135,23 +135,17 @@
                             <?php
                             if (empty($notifications)) {
                                 ?>
-                          <!-- <tr>
-                            <td colspan="12" class="text-danger text-center"><?php //echo $this->lang->line('no_record_found');    ?></td>
-                          </tr> -->
                                 <?php
                             } else {
                                 $count = 1;
                                 $color = "";
                                 foreach ($notifications as $result) {
-
-                                    //    print_r($pharmacy);
+                                  
                                     ?>
                                     <tr class="<?php echo $color ?>">
-
                                         <td>
                                             <div class="bellcircle"><i class="fa fa-bell-o"></i></div>
                                         </td>
-
                                         <td>
                                             <p class="accordion" id="<?php echo $result["id"] ?>"><b><?php echo $result['notification_title']; ?></b></p>
 
@@ -166,10 +160,7 @@
                                 }
                             }
                             ?>
-
-
-
-                        </table>  
+                        </table> 
 
                         <ul class="pagination">
                             <li class="disabled"><span><i class="fa fa-angle-left"></i></span></li>
@@ -181,18 +172,11 @@
                             <?php echo $this->pagination->create_links(); ?>
 
                         </div>
-                    </div>        
-
-
-
+                    </div> 
                 </div>
-
-
             </div><!--./row-->
-
     </section>
 </div>
-
 
 <script src="<?php echo base_url() ?>backend/js/Chart.bundle.js"></script>
 <script src="<?php echo base_url() ?>backend/js/utils.js"></script>

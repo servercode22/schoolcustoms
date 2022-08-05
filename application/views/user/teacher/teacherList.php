@@ -66,7 +66,7 @@
 
                                             $class_teacher = '';
                                             if ($teacher[0]->class_teacher == $teacher[0]->staff_id) {
-                                                $class_teacher = '<span class="label label-success">' . $this->lang->line('class') . ' ' . $this->lang->line('teacher') . '</span>';
+                                                $class_teacher = '<span class="label label-success bolds">' . $this->lang->line('class') . ' ' . $this->lang->line('teacher') . '</span>';
                                             }
                                             ?>
                                             <tr>
@@ -130,7 +130,7 @@
 
                                                 if ($reted == '0') {
                                                     ?>
-                                                    <a class="btn btn-default btn-xs" onclick="rating('<?php echo $teacher[0]->staff_id ?>')" data-placement="left" data-toggle="tooltip" title=""  data-original-title="Add" ><i class="fa fa-plus"></i></a><?php } ?></td>
+                                                    <a class="btn btn-default btn-xs" onclick="rating('<?php echo $teacher[0]->staff_id ?>')" data-placement="left" data-toggle="tooltip" title=""  data-original-title="<?php echo $this->lang->line('add'); ?>" ><i class="fa fa-plus"></i></a><?php } ?></td>
 
                                             <?php
                                         } elseif ($role == 'parent') {
@@ -194,9 +194,7 @@
                     <div class="row">
                         <div class="col-lg-12">
                             <div class="form-group">
-
-                                <label for="pwd"><?php echo $this->lang->line('rating') ?><small class="req pull-right"> *</small></label>
-                                <span> </span>
+                                <label for="pwd"><?php echo $this->lang->line('rating') ?><small class="req"> *</small></label>
                                 <span onclick="rate('1')" id='rate1' class="fa fa-star"></span>
                                 <span onclick="rate('2')" id='rate2' class="fa fa-star"></span>
                                 <span onclick="rate('3')" id='rate3' class="fa fa-star"></span>
@@ -261,18 +259,7 @@
             }
     );
 
-    $(document).ready(function () {
-        $('#dob,#admission_date').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true
-        });
-        $("#btnreset").click(function () {
-            $("#form1")[0].reset();
-        });
-    });
-
-
-    function rating(id) {
+     function rating(id) {
         for (i = 1; i <= 5; i++) {
             $("#rate" + i).attr("style", "color:none;");
         }

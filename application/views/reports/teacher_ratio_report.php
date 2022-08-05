@@ -125,9 +125,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         $all_teacher += $value['total_teacher'];
                                     }
                                     ?>
-                                    <tr><td> </td><td><b><?php echo $total_students; ?></b></td><td><b><?php echo $all_teacher; ?></b></td><td><?php echo $all_student_teacher_ratio; ?></td></tr>
-
                                 </tbody>
+                                <tr><td> </td><td><b><?php echo $total_students; ?></b></td><td><b><?php echo $all_teacher; ?></b></td><td><?php echo $all_student_teacher_ratio; ?></td></tr>
+
                             </table>
                         </div>
                     </div>

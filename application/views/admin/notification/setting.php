@@ -29,6 +29,7 @@
                                     <thead>
                                     <th><?php echo $this->lang->line('event'); ?></th>
                                     <th><?php echo $this->lang->line('option'); ?></th>
+                                      <th><?php echo $this->lang->line('template_id'); ?></th>
                                     <th><?php echo $this->lang->line('sample_message'); ?></th>
                                     </thead>
                                     <tbody>
@@ -38,12 +39,12 @@
                                         $last_key = count($notificationlist);
                                         foreach ($notificationlist as $note_key => $note_value) {
                                             $hr = "";
-
+ 
                                             if ($i != $last_key) {
                                                 $hr = "<hr>";
                                             }
                                             ?>
-
+ 
                                             <tr>
                                                 <td width="15%">
                                                     <input type="hidden" name="ids[]" value="<?php echo $note_value->id; ?>">
@@ -73,7 +74,13 @@
                                                         <?php
                                                     }
                                                     ?>
-                                                </td>
+                                                </td> 
+                                                <td> <?php
+                                                    if (!empty($note_value)) {
+                                                        echo $note_value->template_id;
+                                                    }
+                                                    ?></td>
+                                               
                                                 <td width="60%">
                                                     <?php
                                                     if (!empty($note_value)) {

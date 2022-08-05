@@ -169,4 +169,14 @@ if ($page_form) {
             }
         });
     }
+       function refreshCaptcha(){
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('site/refreshCaptcha'); ?>",
+            data: {},
+            success: function(captcha){
+                $("#captcha_image").html(captcha);
+            }
+        });
+    } 
 </script>

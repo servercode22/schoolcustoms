@@ -3,6 +3,7 @@ $response_json = isJSON($userList);
 if ($response_json) {
 
     $userList = (json_decode($userList));
+    
     if (!empty($userList)) {
         foreach ($userList->chat_users as $user_key => $user_value) {
             if (!empty($user_value->messages)) {
@@ -21,8 +22,9 @@ if ($response_json) {
                         <div class="meta">
                             <p class="name">
                                 <?php
-                                echo $user_value->user_details->name;
+                                $staff_name= ($user_value->user_details->surname == "")? $user_value->user_details->name : $user_value->user_details->name." ".$user_value->user_details->surname; 
 
+                            echo ($user_value->user_details->user_type == "staff") ? " " . $staff_name . " ": " " . $this->customlib->getFullName($user_value->user_details->firstname,$user_value->user_details->middlename,$user_value->user_details->lastname,$sch_setting->middlename,$sch_setting->lastname);
                                 echo ($user_value->user_details->user_type == "staff") ? " (" . $this->lang->line('staff') . ")" : " (" . $this->lang->line('student') . ")";
                                 ?></p>
 

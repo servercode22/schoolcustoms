@@ -16,7 +16,16 @@ if (!empty($chat_user)) {
                 <img src="<?php echo $img; ?>" alt="Glenda Patterson" class="img-responsive">
             </div>
             <div class="col-xs-10 col-sm-9">
-                <span class="name"><?php echo $user_value->name; ?></span>
+                <span class="name"> <?php
+              
+                    if ($user_value->student_id != "") {
+                        echo $this->customlib->getFullName($user_value->first_name,$user_value->middle_name,$user_value->last_name,$sch_setting->middlename,$sch_setting->lastname);
+                    } else {
+                       echo ($user_value->surname == "")? $user_value->name : $user_value->name." ".$user_value->surname; 
+                    }
+                    ?>
+                        
+                    </span>
                 <br>
 
                 <span>

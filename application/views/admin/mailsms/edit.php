@@ -139,14 +139,3 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         </div>  
     </section>
 </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#postdate').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true
-        });
-        $("#btnreset").click(function () {
-            $("#form1")[0].reset();
-        });
-    });
-</script>

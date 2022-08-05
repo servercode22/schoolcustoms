@@ -90,7 +90,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
                     <div class="box-body">   
-                        <form role="form" action="<?php echo site_url('admin/users/admissionreport') ?>" method="post" class="">
+                        <form role="form" action="<?php echo site_url('admin/users/searchvalidation') ?>" method="post" class="" id="reportform">
                             <div class="row">
 
                                 <?php echo $this->customlib->getCSRF(); ?>
@@ -109,7 +109,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             }
                                             ?>
                                         </select>
-                                        <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+                                         <span class="text-danger" id="error_class_id"></span>
                                     </div>
                                 </div> 
 
@@ -152,79 +152,28 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <h3 class="box-title titlefix"><i class="fa fa-users"></i> <?php echo form_error('student'); ?> <?php echo $this->lang->line('student_history'); ?></h3>
                         </div>
                         <div class="box-body table-responsive">
-                            <div class="download_label"><?php
-                                echo $this->lang->line('student_history');
-                                $this->customlib->get_postmessage();
-                                ?></div>
-                            <table class="table table-striped table-bordered table-hover example">
+                            <div class="download_label"></div>
+                                <table class="table table-striped table-bordered table-hover student-list" data-export-title="<?php echo $this->lang->line('student_history') ; ?>">
                                 <thead>
                                     <tr>
-
                                         <th><?php echo $this->lang->line('admission_no'); ?></th>
-
                                         <th><?php echo $this->lang->line('student_name'); ?></th>
                                         <?php if ($sch_setting->admission_date) { ?>
                                             <th><?php echo $this->lang->line('admission_date'); ?></th>
-<?php } ?>
+                                        <?php } ?>
                                         <th><?php echo $this->lang->line('class') . " (" . $this->lang->line('start') . " - " . $this->lang->line('end') . ")"; ?></th>
                                         <th><?php echo $this->lang->line('session') ?> (<?php echo $this->lang->line('start') ?> - <?php echo $this->lang->line('end') ?>)</th>
                                         <th><?php echo $this->lang->line('years'); ?></th>
                                         <?php if ($sch_setting->mobile_no) { ?>
                                             <th><?php echo $this->lang->line('mobile_no'); ?></th>
-<?php } ?>
+                                        <?php }  if ($sch_setting->guardian_name) { ?>
                                         <th><?php echo $this->lang->line('guardian_name'); ?></th>
+                                        <?php }  if ($sch_setting->guardian_phone) { ?>
                                         <th><?php echo $this->lang->line('guardian_phone'); ?></th>
+                                    <?php } ?>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    if (empty($resultlist)) {
-                                        ?>
-
-                                        <?php
-                                    } else {
-                                        $count = 1;
-                                        $i = 0;
-                                        foreach ($resultlist as $student) {
-
-                                            $startsession = $sessionlist[$i]['start'];
-                                            $findstartyear = explode("-", $startsession);
-                                            $startyear = $findstartyear[0];
-
-                                            $endsession = $sessionlist[$i]['end'];
-                                            $findendyear = explode("-", $endsession);
-                                            $endyear = $findendyear[0];
-                                            ?>
-                                            <tr <?php
-                                            if ($student["is_active"] == "no") {
-                                                echo "class='danger'";
-                                            }
-                                            ?>>
-
-                                                <td><?php echo $student['admission_no']; ?></td>
-
-                                                <td>
-                                                    <a href="#"><?php echo $student['firstname'] . " " . $student['lastname']; ?>
-                                                    </a>
-                                                </td> 
-                                                <?php if ($sch_setting->admission_date) { ?>
-                                                    <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformatFront($student["admission_date"])) ?></td>
-        <?php } ?>
-                                                <td><?php echo $sessionlist[$i]['startclass'] . "  -  " . $sessionlist[$i]['endclass']; ?></td>
-                                                <td><?php echo $sessionlist[$i]['start'] . "  -  " . $sessionlist[$i]['end']; ?></td>
-                                                <td><?php echo ($endyear - $startyear) + 1; ?></td>
-                                                <?php if ($sch_setting->mobile_no) { ?>
-                                                    <td><?php echo $student['mobileno']; ?></td>
-        <?php } ?>
-                                                <td><?php echo $student['guardian_name']; ?></td>
-                                                <td><?php echo $student['guardian_phone']; ?></td>
-                                            </tr>
-                                            <?php
-                                            $i++;
-                                            $count++;
-                                        }
-                                    }
-                                    ?>
                                 </tbody>
                             </table>
                         </div>
@@ -286,4 +235,51 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             });
         });
     });
+</script>
+ <script>
+$(document).ready(function() {
+     emptyDatatable('student-list','data');
+});
+</script>     
+<script type="text/javascript">
+$(document).ready(function(){ 
+$(document).on('submit','#reportform',function(e){
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+    var $this = $(this).find("button[type=submit]:focus");  
+    var form = $(this);
+    var url = form.attr('action');
+    var form_data = form.serializeArray();
+  
+    $.ajax({
+           url: url,
+           type: "POST",
+           dataType:'JSON',
+           data: form_data, // serializes the form's elements.
+              beforeSend: function () {
+                $('[id^=error]').html("");
+                $this.button('loading');
+               },
+              success: function(response) { // your success handler
+                
+                if(!response.status){
+                    $.each(response.error, function(key, value) {
+                    $('#error_' + key).html(value);
+                    });
+                }else{
+                 
+                   initDatatable('student-list','admin/users/dtadmissionreportlist',response.params);
+                }
+              },
+             error: function() { // your error handler
+                 $this.button('reset');
+             },
+             complete: function() {
+             $this.button('reset');
+             }
+         });
+
+        });
+
+    });
+    
 </script>

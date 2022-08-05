@@ -32,10 +32,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <?php foreach ($role as $key => $role_value) {
                                                         ?>
                                                         <option <?php
-                                                        if ($search_role == $role_value['type']) {
+                                                        if ($search_role == $role_value['id']) {
                                                             echo "selected";
                                                         }
-                                                        ?> value="<?php echo $role_value['type'] ?>"><?php echo $role_value['type'] ?></option>
+                                                        ?> value="<?php echo $role_value['id'] ?>"><?php echo $role_value['type'] ?></option>
 <?php }
 ?>
                                                 </select>
@@ -103,7 +103,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         if (empty($resultlist)) {
                                             ?>
                                             <tr>
-                                                <td colspan="12" class="text-danger text-center"><?php echo $this->lang->line('no_record_found'); ?></td>
+                                                <td colspan="4" class="text-danger text text-center"><?php echo $this->lang->line('no_record_found'); ?></td>
                                             </tr> 
                                             <?php
                                         } else {
@@ -123,12 +123,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <td><?php echo $staff['contact_no']; ?></td>
 
                                                     <td class="pull-right">
+                                                        <?php  
+             $userdata = $this->customlib->getUserData();
+             if (($this->rbac->hasPrivilege('can_see_other_users_profile', 'can_view')) || ($userdata["id"] == $staff["id"])) { ?>
                                                         <a data-placement="left" href="<?php echo base_url(); ?>admin/staff/profile/<?php echo $staff['id'] ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('show'); ?>" >
                                                             <i class="fa fa-reorder"></i>
                                                         </a>
-                                                        <!-- <a href="<?php echo base_url(); ?>admin/staff/edit/<?php echo $staff['id'] ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
-                                                            <i class="fa fa-pencil"></i>
-                                                        </a> -->
+                                                        <?php } ?>
                                                     </td>
                                                 </tr>
                                                 <?php
@@ -181,11 +182,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         </div>
                                                         <div class="overlay3">
                                                             <div class="stafficons">
-
+                                                                <?php  
+             $userdata = $this->customlib->getUserData();
+             if (($this->rbac->hasPrivilege('can_see_other_users_profile', 'can_view')) || ($userdata["id"] == $staff["id"])) { ?>
                                                                 <a title="<?php echo $this->lang->line('show'); ?>" href="<?php echo base_url() . "admin/staff/profile/" . $staff["id"] ?>"><i class="fa fa-navicon"></i></a>
-                                                                    <?php if ($this->rbac->hasPrivilege('staff', 'can_edit')) { ?>
-                                                                    <a title="<?php echo $this->lang->line('edit'); ?>" href="<?php echo base_url() . "admin/staff/edit/" . $staff["id"] ?>"><i class=" fa fa-pencil"></i></a> 
-            <?php } ?>
+                                                                   <?php }?> 
                                                             </div>
                                                         </div>
                                                     </div>

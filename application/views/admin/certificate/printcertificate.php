@@ -27,16 +27,13 @@
 </style>
 
 <?php
-$certificate[0]->certificate_text = str_replace('[name]', '[firstname] [lastname]', $certificate[0]->certificate_text);
-// $certificate[0]->certificate_text = str_replace('[cast]', '[category]', $certificate[0]->certificate_text);
-// $certificate[0]->certificate_text = str_replace('[cast]', '[category]', $certificate[0]->certificate_text);
+$certificate[0]->certificate_text = str_replace('[name]', '[name]', $certificate[0]->certificate_text);
 $certificate[0]->certificate_text = str_replace('[present_address]', '[current_address]', $certificate[0]->certificate_text);
 $certificate[0]->certificate_text = str_replace('[guardian]', '[guardian_name]', $certificate[0]->certificate_text);
 $certificate[0]->certificate_text = str_replace('[phone]', '[mobileno]', $certificate[0]->certificate_text);
 
 
 foreach ($students as $student) {
-    // print_r($student); die;
     $certificate_body = "";
     $certificate_body = $certificate[0]->certificate_text;
 
@@ -44,19 +41,19 @@ foreach ($students as $student) {
 
         if ($std_key == "dob") {
 
-            if ($std_value != "0000-00-00") {
+            if ($std_value != "0000-00-00" && $std_value != "") {
                 $std_value = date($this->customlib->getSchoolDateFormat(), $this->customlib->dateYYYYMMDDtoStrtotime($std_value));
             }
         }
         if ($std_key == "admission_date") {
 
-            if ($std_value != "0000-00-00") {
+            if ($std_value != "0000-00-00" && $std_value != "") {
                 $std_value = date($this->customlib->getSchoolDateFormat(), $this->customlib->dateYYYYMMDDtoStrtotime($std_value));
             }
         }
         if ($std_key == "created_at") {
 
-            if ($std_value != "0000-00-00") {
+            if ($std_value != "0000-00-00" && $std_value != "") {
                 $std_value = date($this->customlib->getSchoolDateFormat(), $this->customlib->dateYYYYMMDDtoStrtotime($std_value));
             }
         }

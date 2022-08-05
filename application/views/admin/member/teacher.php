@@ -1,10 +1,8 @@
 <style type="text/css">
-    @media print
-    {
-        .no-print, .no-print *
-        {
-            display: none !important;
-        }
+    @media print {
+       .noprint {
+          visibility: hidden !important ;
+       }
     }
 </style>
 
@@ -39,7 +37,7 @@
                                         <th><?php echo $this->lang->line('email'); ?></th>
                                         <th><?php echo $this->lang->line('date_of_birth'); ?></th>
                                         <th><?php echo $this->lang->line('phone'); ?></th>
-                                        <th class="text text-right"><?php echo $this->lang->line('action'); ?>
+                                        <th class="text text-right noExport" ><?php echo $this->lang->line('action'); ?>
                                         </th>
                                     </tr>
                                 </thead>
@@ -79,7 +77,7 @@
                                                         <?php
                                                     } else {
                                                         ?>
-                                                        <button type="button" class="btn btn-default btn-xs surrender-teacher" data-placement="left" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Please Wait.." data-toggle="tooltip" data-memberid="<?php echo $member_id; ?>" title="<?php echo $this->lang->line('surrender_membership'); ?>"><i class="fa fa-mail-reply"></i></button>
+                                                        <button type="button" class="btn btn-default btn-xs surrender-teacher" data-placement="left" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Please Wait.."  data-toggle="tooltip" data-memberid="<?php echo $member_id; ?>" title="<?php echo $this->lang->line('surrender_membership'); ?>"><i class="fa fa-mail-reply"></i></button>
 
                                                         <?php
                                                     }
@@ -222,3 +220,10 @@
     });
 </script>
 
+<script>
+$(document).ready(function(){
+  $(".buttons-print").click(function(){
+     alert("hlo");;
+  });
+});
+</script>

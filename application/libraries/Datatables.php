@@ -4,7 +4,8 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-class Datatables {
+class Datatables
+{
 
     /**
      * Global container variables for chained argument results
@@ -13,36 +14,46 @@ class Datatables {
     private $ci;
     private $table;
     private $distinct;
-    private $group_by = array();
-    private $select = array();
-    private $joins = array();
-    private $columns = array();
-    private $where = array();
-    private $or_where = array();
-    private $where_in = array();
-    private $like = array();
-    private $or_like = array();
-    private $filter = array();
-    private $add_columns = array();
-    private $edit_columns = array();
-    private $unset_columns = array();
-    private $search = array();
-    private $sortable = array();
-    private $orderable = array();
+    private $searchable         = "";
+    private $group_by           = array();
+    private $select             = array();
+    private $joins              = array();
+    private $columns            = array();
+    private $where              = array();
+    private $or_where           = array();
+    private $where_in           = array();
+    private $like               = array();
+    private $or_like            = array();
+    private $filter             = array();
+    private $add_columns        = array();
+    private $edit_columns       = array();
+    private $unset_columns      = array();
+    private $search             = array();
+    private $sortable           = array();
+    private $orderable          = array();
+    private $or_like_array      = array();
+    private $query              = "";
+    private $dt_by_query        = false;
+    private $query_where_enable = false;
 
     /**
      * Copies an instance of CI
      */
-    public function __construct() {
+    public function __construct()
+    {
         $this->ci = &get_instance();
+
+    }
+    public function query($query)
+    {
+        $this->query       = $query;
+        $this->dt_by_query = true;
+        return $this;
     }
 
-    /**
-     * If you establish multiple databases in config/database.php this will allow you to
-     * set the database (other than $active_group) - more info: http://ellislab.com/forums/viewthread/145901/#712942
-     */
-    public function set_database($db_name) {
-        $db_data = $this->ci->load->database($db_name, true);
+    public function set_database($db_name)
+    {
+        $db_data      = $this->ci->load->database($db_name, true);
         $this->ci->db = $db_data;
     }
 
@@ -53,19 +64,22 @@ class Datatables {
      * @param bool $backtick_protect
      * @return mixed
      */
-    public function select($columns, $backtick_protect = true) {
+    public function select($columns, $backtick_protect = true)
+    {
         foreach ($this->explode(',', $columns) as $val) {
-            $column = trim(preg_replace('/(.*)\s+as\s+(\w*)/i', '$2', $val));
-            $column = preg_replace('/.*\.(.*)/i', '$1', $column); // get name after `.`
-            $this->columns[] = $column;
-            $this->select[$column] = trim(preg_replace('/(.*)\s+as\s+(\w*)/i', '$1', $val));
-        }
 
+            $column   = trim(strtolower($val));
+            $variable = strstr($column, ' as ', true) ?: $column;
+            // $column = preg_replace('/.*\.(.*)/i', '$1', $column); // get name after `.`
+            $this->columns[]         = $variable;
+            $this->select[$variable] = trim($variable);
+        }
         $this->ci->db->select($columns, $backtick_protect);
         return $this;
     }
 
-    public function searchable($data) {
+    public function searchable($data)
+    {
         $this->searchable = $data;
         return $this;
     }
@@ -76,7 +90,8 @@ class Datatables {
      * @param string $column
      * @return mixed
      */
-    public function distinct($column) {
+    public function distinct($column)
+    {
         $this->distinct = $column;
         $this->ci->db->distinct($column);
         return $this;
@@ -88,9 +103,13 @@ class Datatables {
      * @param string $val
      * @return mixed
      */
-    public function group_by($val) {
+    public function group_by($val, $sql = false)
+    {
         $this->group_by[] = $val;
-        $this->ci->db->group_by($val);
+        if (!$sql) {
+            $this->ci->db->group_by($val);
+
+        }
         return $this;
     }
 
@@ -100,7 +119,9 @@ class Datatables {
      * @param string $table
      * @return mixed
      */
-    public function from($table) {
+    public function from($table)
+    {
+        $this->ci->db->from($table);
         $this->table = $table;
         return $this;
     }
@@ -113,37 +134,32 @@ class Datatables {
      * @param string $type
      * @return mixed
      */
-    public function join($table, $fk, $type = null) {
+    public function join($table, $fk, $type = null)
+    {
         $this->joins[] = array($table, $fk, $type);
         $this->ci->db->join($table, $fk, $type);
         return $this;
     }
 
-    public function orderable($columns, $backtick_protect = true) {
+    public function orderable($columns, $backtick_protect = true)
+    {
+
         foreach ($this->explode(',', $columns) as $val) {
-            $column = trim(preg_replace('/(.*)\s+as\s+(\w*)/i', '$2', $val));
-            $column = preg_replace('/.*\.(.*)/i', '$1', $column); // get name after `.`
+            $column            = trim(preg_replace('/(.*)\s+as\s+(\w*)/i', '$2', $val));
             $this->orderable[] = $column;
         }
         return $this;
     }
 
-    public function sort($column, $order = 'asc') {
+    public function sort($column, $order = 'asc')
+    {
         $this->sortable[] = array($column, $order);
         return $this;
     }
 
-    /**
-     * Generates the WHERE portion of the query
-     *
-     * @param mixed $key_condition
-     * @param string $val
-     * @param bool $backtick_protect
-     * @return mixed
-     */
-    public function where($key_condition, $val = null, $backtick_protect = true) {
-        $this->where[] = array($key_condition, $val, $backtick_protect);
-        $this->ci->db->where($key_condition, $val, $backtick_protect);
+    public function query_where_enable($status = false)
+    {
+        $this->query_where_enable = $status;
         return $this;
     }
 
@@ -155,9 +171,29 @@ class Datatables {
      * @param bool $backtick_protect
      * @return mixed
      */
-    public function or_where($key_condition, $val = null, $backtick_protect = true) {
+    public function where($key_condition, $val = null, $sql = false, $backtick_protect = true)
+    {
+        $this->where[] = array($key_condition, $val, $backtick_protect);
+        if (!$sql) {
+            $this->ci->db->where($key_condition, $val, $backtick_protect);
+        }
+        return $this;
+    }
+
+    /**
+     * Generates the WHERE portion of the query
+     *
+     * @param mixed $key_condition
+     * @param string $val
+     * @param bool $backtick_protect
+     * @return mixed
+     */
+    public function or_where($key_condition, $val = null, $sql = false, $backtick_protect = true)
+    {
         $this->or_where[] = array($key_condition, $val, $backtick_protect);
-        $this->ci->db->or_where($key_condition, $val, $backtick_protect);
+        if (!$sql) {
+            $this->ci->db->or_where($key_condition, $val, $backtick_protect);
+        }
         return $this;
     }
 
@@ -169,7 +205,8 @@ class Datatables {
      * @param bool $backtick_protect
      * @return mixed
      */
-    public function where_in($key_condition, $val = null) {
+    public function where_in($key_condition, $val = null)
+    {
         $this->where_in[] = array($key_condition, $val);
         $this->ci->db->where_in($key_condition, $val);
         return $this;
@@ -183,7 +220,8 @@ class Datatables {
      * @param bool $backtick_protect
      * @return mixed
      */
-    public function filter($key_condition, $val = null, $backtick_protect = true) {
+    public function filter($key_condition, $val = null, $backtick_protect = true)
+    {
         $this->filter[] = array($key_condition, $val, $backtick_protect);
         return $this;
     }
@@ -196,12 +234,12 @@ class Datatables {
      * @param bool $backtick_protect
      * @return mixed
      */
-    public function like($key_condition, $val = null, $side = 'both') {
+    public function like($key_condition, $val = null, $side = 'both')
+    {
         $this->like[] = array($key_condition, $val, $side);
         $this->ci->db->like($key_condition, $val, $side);
         return $this;
     }
-
     /**
      * Generates the OR %LIKE% portion of the query
      *
@@ -210,9 +248,33 @@ class Datatables {
      * @param bool $backtick_protect
      * @return mixed
      */
-    public function or_like($key_condition, $val = null, $side = 'both') {
+    public function or_like($key_condition, $val = null, $side = 'both')
+    {
         $this->or_like[] = array($key_condition, $val, $side);
         $this->ci->db->or_like($key_condition, $val, $side);
+        return $this;
+    }
+
+    public function or_like_string($array_string, $match)
+    {
+        $array_like = explode(',', $array_string);
+        foreach ($array_like as $key => $string_value) {
+            if ($key == 0) {
+                $this->ci->db->like($string_value, $match);
+            } else {
+                $this->ci->db->or_like($string_value, $match);
+            }
+        }
+    }
+
+    public function group_start()
+    {
+        $this->ci->db->group_start();
+        return $this;
+    }
+    public function group_end()
+    {
+        $this->ci->db->group_end();
         return $this;
     }
 
@@ -224,7 +286,8 @@ class Datatables {
      * @param string $match_replacement
      * @return mixed
      */
-    public function add_column($column, $content, $match_replacement = null) {
+    public function add_column($column, $content, $match_replacement = null)
+    {
         $this->add_columns[$column] = array('content' => $content, 'replacement' => $this->explode(',', $match_replacement));
         return $this;
     }
@@ -237,7 +300,8 @@ class Datatables {
      * @param string $match_replacement
      * @return mixed
      */
-    public function edit_column($column, $content, $match_replacement) {
+    public function edit_column($column, $content, $match_replacement)
+    {
         $this->edit_columns[$column][] = array('content' => $content, 'replacement' => $this->explode(',', $match_replacement));
         return $this;
     }
@@ -248,8 +312,9 @@ class Datatables {
      * @param string $column
      * @return mixed
      */
-    public function unset_column($column) {
-        $column = explode(',', $column);
+    public function unset_column($column)
+    {
+        $column              = explode(',', $column);
         $this->unset_columns = array_merge($this->unset_columns, $column);
         return $this;
     }
@@ -261,14 +326,133 @@ class Datatables {
      * @param string $charset
      * @return string
      */
-    public function generate($output = 'json', $charset = 'UTF-8') {
-        if (strtolower($output) == 'json') {
+    public function generate($output = 'json', $charset = 'UTF-8')
+    {
+        if (!$this->dt_by_query) {
+
+            $this->get_ordering();
+            $this->get_filtering();
+
+            $total = $this->ci->db->count_all_results('', false);
+
+            $sOutput['query_count'] = $this->ci->db->last_query();
+            $iTotal                 = $iFilteredTotal                 = $total;
+            //========================
+            $aaData = array();
             $this->get_paging();
+            $rResult = $this->ci->db->get();
+            $sOutput = array
+                (
+                'draw'            => intval($this->ci->input->post('draw')),
+                'recordsTotal'    => $iTotal,
+                'recordsFiltered' => $iFilteredTotal,
+                'data'            => $rResult->result_array(),
+            );
+
+            return json_encode($sOutput);
+
+        } else {
+
+            //=========start Search by Query ==========
+            $where_condition = $sqlTot = $sqlRec = "";
+            $sql_query       = $this->query . " WHERE ";
+            //========Search input========
+            $sWhere = "";
+            //========group by =====
+
+            if (!empty($this->where)) {
+                foreach ($this->where as $val) {
+                   
+                    $sWhere .= "`{$val[0]}` = '{$val[1]}' AND ";
+                }
+                $sWhere = substr($sWhere, 0, -(strlen('AND') + 2));
+            } else {
+                $sql_query = substr($sql_query, 0, -6);
+            }
+
+           if (!empty($this->or_where)) {
+
+                foreach ($this->or_where as $val) {
+                   
+                    $sWhere .= " OR `{$val[0]}` = '{$val[1]}'";
+                }
+                
+            } 
+
+
+
+            $sqlRec .= $sql_query;
+
+            $search           = $this->ci->input->post('search');
+            $search           = $this->ci->db->escape_like_str(trim($search['value']));
+            $column           = explode(',', $this->searchable);
+            $this->searchable = array();
+            if (isset($search) && $search != "") {
+                $sWhere .= (!$this->query_where_enable ? " WHERE" : " AND") . " (";
+                foreach ($column as $key => $col) {
+                    $col                = strtolower($col);
+                    $col                = strstr($col, ' as ', true) ?: $col;
+                    $this->searchable[] = $col;
+                }
+                for ($i = 0; $i < count($this->searchable); $i++) {
+
+                    $sWhere .= $this->searchable[$i] . " LIKE '%" . ($search) . "%' OR ";
+                }
+                $sWhere = substr_replace($sWhere, "", -3);
+                $sWhere .= ')';
+            }
+
+            //========Search input========
+            $sqlRec .= $sWhere;
+
+            //========group by =====
+
+            foreach ($this->group_by as $val) {
+                $sqlRec .= " GROUP BY " . $val;
+            }
+
+            //========order by======
+            if ($this->ci->input->post('order')) {
+
+                foreach ($this->ci->input->post('order') as $key) {
+                    $sqlRec .= " ORDER BY " . $this->orderable[$key['column']] . "   " . $key['dir'];
+                }
+            } else {
+                foreach ($this->sortable as $val) {
+                    $sqlRec .= " ORDER BY " . $val[0] . "   " . $val[1];
+                }
+            }
+
+            $sqlTot = $sqlRec;
+            //=============
+            $iStart  = $this->ci->input->post('start');
+            $iLength = $this->ci->input->post('length');
+            if ($iLength != '' && $iLength != '-1') {
+                $sqlRec .= "  LIMIT " . $iStart . " ," . $iLength . "   ";
+            }
+
+            $query_total = $this->ci->db->query($sqlTot);
+            $total       = $query_total->num_rows();
+
+            $iTotal = $iFilteredTotal = $total;
+            //=========end Search by Query ==========
+
+            $rResult = $this->ci->db->query($sqlRec);
+
+            $sOutput = array
+                (
+                'draw'            => intval($this->ci->input->post('draw')),
+                'recordsTotal'    => $iTotal,
+                'recordsFiltered' => $iFilteredTotal,
+                'data'            => $rResult->result_array(),
+            );
+
+            return json_encode($sOutput);
+
         }
 
-        $this->get_ordering();
-        $this->get_filtering();
-        return $this->produce_output(strtolower($output), strtolower($charset));
+        //========================
+        // return $this->produce_output(strtolower($output), strtolower($charset));
     }
 
     /**
@@ -276,8 +460,9 @@ class Datatables {
      *
      * @return mixed
      */
-    private function get_paging() {
-        $iStart = $this->ci->input->post('start');
+    private function get_paging()
+    {
+        $iStart  = $this->ci->input->post('start');
         $iLength = $this->ci->input->post('length');
         if ($iLength != '' && $iLength != '-1') {
             $this->ci->db->limit($iLength, ($iStart) ? $iStart : 0);
@@ -289,9 +474,11 @@ class Datatables {
      *
      * @return mixed
      */
-    private function get_ordering() {
+    private function get_ordering()
+    {
         $Data = $this->ci->input->post('columns');
         if ($this->ci->input->post('order')) {
+
             foreach ($this->ci->input->post('order') as $key) {
 
                 $this->ci->db->order_by($this->orderable[$key['column']], $key['dir']);
@@ -308,34 +495,42 @@ class Datatables {
      *
      * @return mixed
      */
-    private function get_filtering() {
-        $sss = array();
+    private function get_filtering()
+    {
+        $sss       = array();
         $mColArray = $this->ci->input->post('columns');
-        $sWhere = '';
-        $search = $this->ci->input->post('search');
-        $sSearch = $this->ci->db->escape_like_str(trim($search['value']));
-        $columns = array_values(array_diff($this->columns, $this->unset_columns));
+        $sWhere    = '';
+        $search    = $this->ci->input->post('search');
+        $sSearch   = $this->ci->db->escape_like_str(trim($search['value']));
+        $columns   = array_values(array_diff($this->columns, $this->unset_columns));
 
         if ($sSearch != '' && $this->searchable != '') {
             if ($this->searchable == '*') {
-                $field = $this->ci->db->list_fields($this->table);
+                $field            = $this->ci->db->list_fields($this->table);
                 $this->searchable = implode(',', $field);
             }
 
             $column = explode(',', $this->searchable);
             foreach ($column as $key => $col) {
-                $col = strtolower($col);
-                $col = strstr($col, ' as ', true) ?: $col;
+                $col         = strtolower($col);
+                $col         = strstr($col, ' as ', true) ?: $col;
                 $this->sss[] = $col;
             }
 
             if ($sSearch != "") {
                 for ($i = 0; $i < count($this->sss); $i++) {
                     if ($i == 0) {
+                        $this->ci->db->group_start();
                         $this->ci->db->like($this->sss[$i], $sSearch);
                     } else {
                         $this->ci->db->or_like($this->sss[$i], $sSearch);
                     }
+
+                    if (count($this->sss) - 1 == $i) //last loop
+                    {
+                        $this->ci->db->group_end();
+                    }
+                    //close bracket
                 }
             }
         } else {
@@ -366,8 +561,9 @@ class Datatables {
      *
      * @return mixed
      */
-    private function get_display_result() {
-        return $this->ci->db->get($this->table);
+    private function get_display_result()
+    {
+        return $this->ci->db->get();
     }
 
     /**
@@ -377,86 +573,87 @@ class Datatables {
      * @param string $charset
      * @return mixed
      */
-    private function produce_output($output, $charset) {
-        $aaData = array();
-        $rResult = $this->get_display_result();
+    // private function produce_output($output, $charset) {
+    //     $aaData = array();
+    //     $rResult = $this->get_display_result();
 
-        if ($output == 'json') {
-            $iTotal = $this->get_total_results();
-            $iFilteredTotal = $this->get_total_results(true);
-        }
+    //     if ($output == 'json') {
+    //         $iTotal = $this->get_total_results();
+    //         $iFilteredTotal = $this->get_total_results(true);
+    //     }
 
-        $sOutput = array
-            (
-            'draw' => intval($this->ci->input->post('draw')),
-            'recordsTotal' => $iTotal,
-            'recordsFiltered' => $iFilteredTotal,
-            'data' => $rResult->result_array(),
-        );
+    //     $sOutput = array
+    //         (
+    //         'draw' => intval($this->ci->input->post('draw')),
+    //         'recordsTotal' => $iTotal,
+    //         'recordsFiltered' => $iFilteredTotal,
+    //         'data' => $rResult->result_array(),
+    //     );
 
-        if ($charset == 'utf-8') {
-            return json_encode($sOutput);
-        }
-    }
+    //     if ($charset == 'utf-8') {
+    //         return json_encode($sOutput);
+    //     }
+    // }
 
-    private function produce_output1($output, $charset) {
-        $aaData = array();
-        $rResult = $this->get_display_result();
+    // private function produce_output1($output, $charset) {
+    //     $aaData = array();
+    //     $rResult = $this->get_display_result();
 
-        if ($output == 'json') {
-            $iTotal = $this->get_total_results();
-            $iFilteredTotal = $this->get_total_results(true);
-        }
+    //     if ($output == 'json') {
+    //         $iTotal = $this->get_total_results();
+    //         $iFilteredTotal = $this->get_total_results(true);
+    //     }
 
-        foreach ($rResult->result_array() as $row_key => $row_val) {
-            $aaData[$row_key] = ($this->check_cType()) ? $row_val : array_values($row_val);
+    //     foreach ($rResult->result_array() as $row_key => $row_val) {
+    //         $aaData[$row_key] = ($this->check_cType()) ? $row_val : array_values($row_val);
 
-            foreach ($this->add_columns as $field => $val) {
-                if ($this->check_cType()) {
-                    $aaData[$row_key][$field] = $this->exec_replace($val, $aaData[$row_key]);
-                } else {
-                    $aaData[$row_key][] = $this->exec_replace($val, $aaData[$row_key]);
-                }
-            }
+    //         foreach ($this->add_columns as $field => $val) {
+    //             if ($this->check_cType()) {
+    //                 $aaData[$row_key][$field] = $this->exec_replace($val, $aaData[$row_key]);
+    //             } else {
+    //                 $aaData[$row_key][] = $this->exec_replace($val, $aaData[$row_key]);
+    //             }
+    //         }
 
-            foreach ($this->edit_columns as $modkey => $modval) {
-                foreach ($modval as $val) {
-                    $aaData[$row_key][($this->check_cType()) ? $modkey : array_search($modkey, $this->columns)] = $this->exec_replace($val, $aaData[$row_key]);
-                }
-            }
+    //         foreach ($this->edit_columns as $modkey => $modval) {
+    //             foreach ($modval as $val) {
+    //                 $aaData[$row_key][($this->check_cType()) ? $modkey : array_search($modkey, $this->columns)] = $this->exec_replace($val, $aaData[$row_key]);
+    //             }
+    //         }
 
-            $aaData[$row_key] = array_diff_key($aaData[$row_key], ($this->check_cType()) ? $this->unset_columns : array_intersect($this->columns, $this->unset_columns));
+    //         $aaData[$row_key] = array_diff_key($aaData[$row_key], ($this->check_cType()) ? $this->unset_columns : array_intersect($this->columns, $this->unset_columns));
 
-            if (!$this->check_cType()) {
-                $aaData[$row_key] = array_values($aaData[$row_key]);
-            }
-        }
+    //         if (!$this->check_cType()) {
+    //             $aaData[$row_key] = array_values($aaData[$row_key]);
+    //         }
+    //     }
 
-        if ($output == 'json') {
-            $sOutput = array
-                (
-                'draw' => intval($this->ci->input->post('draw')),
-                'recordsTotal' => $iTotal,
-                'recordsFiltered' => $iFilteredTotal,
-                'data' => $aaData,
-            );
+    //     if ($output == 'json') {
+    //         $sOutput = array
+    //             (
+    //             'draw' => intval($this->ci->input->post('draw')),
+    //             'recordsTotal' => $iTotal,
+    //             'recordsFiltered' => $iFilteredTotal,
+    //             'data' => $aaData,
+    //         );
 
-            if ($charset == 'utf-8') {
-                return json_encode($sOutput);
-            } else {
-                return $this->jsonify($sOutput);
-            }
-        } else {
-            return array('aaData' => $aaData);
-        }
-    }
+    //         if ($charset == 'utf-8') {
+    //             return json_encode($sOutput);
+    //         } else {
+    //             return $this->jsonify($sOutput);
+    //         }
+    //     } else {
+    //         return array('aaData' => $aaData);
+    //     }
+    // }
 
     /**
      * Get result count
      *
      * @return integer
      */
-    private function get_total_results($filtering = false) {
+    private function get_total_results($filtering = false)
+    {
         if ($filtering) {
             $this->get_filtering();
         }
@@ -504,7 +701,8 @@ class Datatables {
      * @param mixed $row_data
      * @return string $custom_val['content']
      */
-    private function exec_replace($custom_val, $row_data) {
+    private function exec_replace($custom_val, $row_data)
+    {
         $replace_string = '';
 
         // Go through our array backwards, else $1 (foo) will replace $11, $12 etc with foo1, foo2 etc
@@ -521,7 +719,7 @@ class Datatables {
                     $args = preg_split("/[\s,]*\\\"([^\\\"]+)\\\"[\s,]*|" . "[\s,]*'([^']+)'[\s,]*|" . "[,]+/", $matches[2], 0, PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE);
 
                     foreach ($args as $args_key => $args_val) {
-                        $args_val = preg_replace("/(?<!\w)([\'\"])(.*)\\1(?!\w)/i", '$2', trim($args_val));
+                        $args_val        = preg_replace("/(?<!\w)([\'\"])(.*)\\1(?!\w)/i", '$2', trim($args_val));
                         $args[$args_key] = (in_array($args_val, $this->columns)) ? ($row_data[($this->check_cType()) ? $args_val : array_search($args_val, $this->columns)]) : $args_val;
                     }
 
@@ -544,7 +742,8 @@ class Datatables {
      *
      * @return bool
      */
-    private function check_cType() {
+    private function check_cType()
+    {
         $column = $this->ci->input->post('columns');
         if (is_numeric($column[0]['data'])) {
             return false;
@@ -561,10 +760,11 @@ class Datatables {
      * @param string $close
      * @return string $retval
      */
-    private function balanceChars($str, $open, $close) {
-        $openCount = substr_count($str, $open);
+    private function balanceChars($str, $open, $close)
+    {
+        $openCount  = substr_count($str, $open);
         $closeCount = substr_count($str, $close);
-        $retval = $openCount - $closeCount;
+        $retval     = $openCount - $closeCount;
         return $retval;
     }
 
@@ -577,11 +777,12 @@ class Datatables {
      * @param string $close
      * @return mixed $retval
      */
-    private function explode($delimiter, $str, $open = '(', $close = ')') {
-        $retval = array();
-        $hold = array();
+    private function explode($delimiter, $str, $open = '(', $close = ')')
+    {
+        $retval  = array();
+        $hold    = array();
         $balance = 0;
-        $parts = explode($delimiter, $str);
+        $parts   = explode($delimiter, $str);
 
         foreach ($parts as $part) {
             $hold[] = $part;
@@ -589,8 +790,8 @@ class Datatables {
 
             if ($balance < 1) {
                 $retval[] = implode($delimiter, $hold);
-                $hold = array();
-                $balance = 0;
+                $hold     = array();
+                $balance  = 0;
             }
         }
 
@@ -607,7 +808,8 @@ class Datatables {
      * @param mixed $result
      * @return string
      */
-    private function jsonify($result = false) {
+    private function jsonify($result = false)
+    {
         if (is_null($result)) {
             return 'null';
         }
@@ -663,7 +865,8 @@ class Datatables {
      * returns the sql statement of the last query run
      * @return type
      */
-    public function last_query() {
+    public function last_query()
+    {
         return $this->ci->db->last_query();
     }
 

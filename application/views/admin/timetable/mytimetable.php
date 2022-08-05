@@ -2,7 +2,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            <i class="fa fa-mortar-board"></i> Timetable --r</h1>
+            <i class="fa fa-mortar-board"></i><?php echo $this->lang->line('timetable'); ?> </h1>
     </section>
     <!-- Main content -->
     <section class="content">
@@ -10,7 +10,7 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="box-header with-border">
-                        <h3 class="box-title"><i class="fa fa-search"></i> Teacher Time Table</h3>
+                        <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('teacher_time_table'); ?></h3>
                         <div class="box-tools pull-right"></div>
                     </div>
 
@@ -24,7 +24,7 @@
                                         <?php
                                         foreach ($timetable as $tm_key => $tm_value) {
                                             ?>
-                                            <th class="text text-center"><?php echo $this->lang->line(strtolower($tm_key)); ?></th>
+                                            <th class="text text-center"><?php echo $tm_key; ?></th>
                                             <?php
                                         }
                                         ?>

@@ -15,9 +15,6 @@
                         <li class="col-lg-4 col-md-4 col-sm-6 <?php echo set_SubSubmenu('Reports/attendance/attendance_report'); ?>">
                             <a href="<?php echo base_url(); ?>admin/payroll/payrollreport"><i class="fa fa-file-text-o"></i> <?php echo $this->lang->line('payroll') . " " . $this->lang->line('report'); ?></a>
                         </li>
-						<li class="col-lg-4 col-md-4 col-sm-6 <?php echo set_SubSubmenu('Reports/human_resource/deduction_report'); ?>">
-                            <a href="<?php echo base_url(); ?>report/deduction_report"><i class="fa fa-file-text-o"></i> <?php echo $this->lang->line('deduction') . " " . $this->lang->line('report'); ?></a>
-                        </li>
                     <?php } ?>
                 </ul>
             </div>

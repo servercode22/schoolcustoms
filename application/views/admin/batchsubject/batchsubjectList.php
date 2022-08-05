@@ -199,9 +199,6 @@
 
                                 </tbody>
                             </table><!-- /.table -->
-
-
-
                         </div><!-- /.mail-box-messages -->
                     </div><!-- /.box-body -->
                 </div>

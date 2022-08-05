@@ -23,6 +23,12 @@
                             <li class="col-lg-4 col-md-4 col-sm-6 <?php echo set_SubSubmenu('Reports/attendence/attendancereport'); ?>"><a href="<?php echo base_url() ?>report/attendancereport"><i class="fa fa-file-text-o"></i> <?php echo $this->lang->line('student') . " " . $this->lang->line('attendance') . " " . $this->lang->line('type') . " " . $this->lang->line('report'); ?></a></li>
                             <?php
                         }
+                        if ($this->rbac->hasPrivilege('daily_attendance_report', 'can_view')) {
+                        ?>
+
+                        <li class="col-lg-4 col-md-4 col-sm-6 <?php echo set_SubSubmenu('Reports/attendance/daily_attendance_report'); ?>"><a href="<?php echo site_url('report/daily_attendance_report'); ?>"><i class="fa fa-file-text-o"></i> <?php echo $this->lang->line('daily_attendance_report'); ?></a></li>
+
+                    <?php } 
                     }
                     if ($this->rbac->hasPrivilege('staff_attendance_report', 'can_view')) {
                         ?>
@@ -38,6 +44,7 @@
                             <li class="col-lg-4 col-md-4 col-sm-6 <?php echo set_subSubmenu('Reports/attendence/reportbymonthstudent'); ?>"><a href="<?php echo site_url('admin/subjectattendence/reportbymonthstudent'); ?>"><i class="fa fa-file-text-o"></i> <?php echo $this->lang->line('student') . " " . $this->lang->line('period') . " " . $this->lang->line('attendance'); ?></a></li>
                             <?php
                         }
+
                     }
                     if ($this->customlib->is_biometricAttendence()) {
                         if ($this->rbac->hasPrivilege('biometric_attendance_log', 'can_view')) {
@@ -45,12 +52,7 @@
                             <li class="col-lg-4 col-md-4 col-sm-6 <?php echo set_SubSubmenu('Reports/attendence/biometric_attlog'); ?>"><a href="<?php echo site_url('report/biometric_attlog'); ?>"><i class="fa fa-file-text-o"></i> <?php echo $this->lang->line('biometric') . " " . $this->lang->line('attendance') . " " . $this->lang->line('log'); ?></a></li>
                             <?php
                         }
-                    } if ($this->rbac->hasPrivilege('daily_attendance_report', 'can_view')) {
-                        ?>
-
-                        <li class="col-lg-4 col-md-4 col-sm-6 <?php echo set_SubSubmenu('Reports/attendance/daily_attendance_report'); ?>"><a href="<?php echo site_url('report/daily_attendance_report'); ?>"><i class="fa fa-file-text-o"></i> <?php echo $this->lang->line('daily_attendance_report'); ?></a></li>
-
-                    <?php } ?>
+                    } ?>
 
                 </ul>
             </div>

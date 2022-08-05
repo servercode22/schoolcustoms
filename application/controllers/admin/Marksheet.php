@@ -26,9 +26,9 @@ class Marksheet extends Admin_Controller {
         $this->form_validation->set_rules('left_logo', $this->lang->line('left') . " " . $this->lang->line('logo'), 'callback_handle_upload[left_logo]');
         $this->form_validation->set_rules('right_logo', $this->lang->line('right') . " " . $this->lang->line('logo'), 'callback_handle_upload[right_logo]');
         $this->form_validation->set_rules('background_img', $this->lang->line('background') . " " . $this->lang->line('image'), 'callback_handle_upload[background_img]');
-        $this->form_validation->set_rules('left_sign', $this->lang->line('sign'), 'callback_handle_upload[sign]');
-        $this->form_validation->set_rules('middle_sign', $this->lang->line('sign'), 'callback_handle_upload[sign]');
-        $this->form_validation->set_rules('right_sign', $this->lang->line('sign'), 'callback_handle_upload[sign]');
+        $this->form_validation->set_rules('left_sign', $this->lang->line('sign'), 'callback_handle_upload[left_sign]');
+        $this->form_validation->set_rules('middle_sign', $this->lang->line('sign'), 'callback_handle_upload[middle_sign]');
+        $this->form_validation->set_rules('right_sign', $this->lang->line('sign'), 'callback_handle_upload[right_sign]');
 
         if ($this->form_validation->run() == true) {
 
@@ -96,7 +96,16 @@ class Marksheet extends Admin_Controller {
             } else {
                 $is_section = 0;
             }
-
+            if (isset($_POST['is_dob'])) {
+                $is_dob = 1;
+            } else {
+                $is_dob = 0;
+            }
+            if (isset($_POST['is_teacher_remark'])) {
+                $is_teacher_remark = 1;
+            } else {
+                $is_teacher_remark = 0;
+            }
             $insert_data = array(
                 'template' => $this->input->post('template'),
                 'heading' => $this->input->post('heading'),
@@ -112,8 +121,10 @@ class Marksheet extends Admin_Controller {
                 'is_roll_no' => $is_roll_no,
                 'is_photo' => $is_photo,
                 'is_class' => $is_class,
-                'is_section' => $is_section,
                 'is_division' => $is_division,
+                'is_section' => $is_section,
+                'is_dob' => $is_dob,
+                'is_teacher_remark' => $is_teacher_remark,
                 'content' => $this->input->post('content'),
                 'content_footer' => $this->input->post('content_footer'),
                 'exam_session' => $exam_session,
@@ -165,7 +176,7 @@ class Marksheet extends Admin_Controller {
                 move_uploaded_file($_FILES["background_img"]["tmp_name"], "./uploads/marksheet/" . $img_name);
                 $insert_data['background_img'] = $img_name;
             }
-
+            
             $this->marksheet_model->add($insert_data);
 
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
@@ -180,15 +191,18 @@ class Marksheet extends Admin_Controller {
     public function handle_upload($str, $var) {
 
         $image_validate = $this->config->item('image_validate');
-
+        $result = $this->filetype_model->get();
         if (isset($_FILES[$var]) && !empty($_FILES[$var]['name'])) {
 
             $file_type = $_FILES[$var]['type'];
             $file_size = $_FILES[$var]["size"];
             $file_name = $_FILES[$var]["name"];
-            $allowed_extension = $image_validate['allowed_extension'];
-            $ext = pathinfo($file_name, PATHINFO_EXTENSION);
-            $allowed_mime_type = $image_validate['allowed_mime_type'];
+
+            $allowed_extension = array_map('trim', array_map('strtolower', explode(',', $result->image_extension)));
+            $allowed_mime_type = array_map('trim', array_map('strtolower', explode(',', $result->image_mime)));
+            $ext               = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+            
+
             if ($files = @getimagesize($_FILES[$var]['tmp_name'])) {
 
                 if (!in_array($files['mime'], $allowed_mime_type)) {
@@ -200,7 +214,7 @@ class Marksheet extends Admin_Controller {
                     $this->form_validation->set_message('handle_upload', $this->lang->line('extension_not_allowed'));
                     return false;
                 }
-                if ($file_size > $image_validate['upload_size']) {
+                if ($file_size > $result->image_size) {
                     $this->form_validation->set_message('handle_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($image_validate['upload_size'] / 1048576, 2) . " MB");
                     return false;
                 }
@@ -234,9 +248,9 @@ class Marksheet extends Admin_Controller {
         $this->form_validation->set_rules('left_logo', 'left_logo', 'callback_handle_upload[left_logo]');
         $this->form_validation->set_rules('right_logo', 'right_logo', 'callback_handle_upload[right_logo]');
         $this->form_validation->set_rules('background_img', 'background_img', 'callback_handle_upload[background_img]');
-        $this->form_validation->set_rules('left_sign', $this->lang->line('sign'), 'callback_handle_upload[sign]');
-        $this->form_validation->set_rules('middle_sign', $this->lang->line('sign'), 'callback_handle_upload[sign]');
-        $this->form_validation->set_rules('right_sign', $this->lang->line('sign'), 'callback_handle_upload[sign]');
+        $this->form_validation->set_rules('left_sign', $this->lang->line('sign'), 'callback_handle_upload[left_sign]');
+        $this->form_validation->set_rules('middle_sign', $this->lang->line('sign'), 'callback_handle_upload[middle_sign]');
+        $this->form_validation->set_rules('right_sign', $this->lang->line('sign'), 'callback_handle_upload[right_sign]');
 
         if ($this->form_validation->run() == true) {
 
@@ -306,6 +320,17 @@ class Marksheet extends Admin_Controller {
                 $is_section = 0;
             }
 
+            if (isset($_POST['is_dob'])) {
+                $is_dob = 1;
+            } else {
+                $is_dob = 0;
+            }
+            if (isset($_POST['is_teacher_remark'])) {
+                $is_teacher_remark = 1;
+            } else {
+                $is_teacher_remark = 0;
+            }
+
             $insert_data = array(
                 'id' => $this->input->post('id'),
                 'template' => $this->input->post('template'),
@@ -317,6 +342,8 @@ class Marksheet extends Admin_Controller {
                 'content' => $this->input->post('content'),
                 'content_footer' => $this->input->post('content_footer'),
                 'date' => $this->input->post('date'),
+                'is_dob' => $is_dob,
+                'is_teacher_remark' => $is_teacher_remark,
                 'is_name' => $is_name,
                 'is_father_name' => $is_father_name,
                 'is_mother_name' => $is_mother_name,
@@ -370,6 +397,7 @@ class Marksheet extends Admin_Controller {
                 $insert_data['background_img'] = $img_name;
             }
 
+            
             $this->marksheet_model->add($insert_data);
 
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('update_message') . '</div>');

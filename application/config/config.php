@@ -24,7 +24,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
   | a PHP script and you can easily do that on your own.
   |
  */
-$config['base_url'] = 'http://localhost/zain-ul-hassan/smart-school';
+$config['base_url'] = 'http://localhost/smartschool/';
 
 
 /*
@@ -513,6 +513,6 @@ $config['rewrite_short_tags'] = FALSE;
   | Array:		array('10.0.1.200', '192.168.5.0/24')
  */
 $config['routine_session'] = 16;
-$config['routine_update'] = 1612569600;
+$config['routine_update'] = 1663286400;
 $config['proxy_ips'] = '';
 $config['installed'] = true;

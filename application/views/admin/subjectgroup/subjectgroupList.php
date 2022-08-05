@@ -1,9 +1,6 @@
 <?php $currency_symbol = $this->customlib->getSchoolCurrencyFormat(); ?>
 <!-- Content Wrapper. Contains page content -->
 <div class="content-wrapper">
-
-
-
     <!-- Main content -->
     <section class="content">
         <div class="row">
@@ -116,7 +113,6 @@
                         </div><!-- /.box-tools -->
                     </div><!-- /.box-header -->
                     <div class="box-body">
-
                         <div class="table-responsive mailbox-messages" id="subject_list">
                             <div class="download_label"><?php echo $this->lang->line('subject') . " " . $this->lang->line('group') . " " . $this->lang->line('list'); ?></div>
 
@@ -183,14 +179,14 @@
                                                 <?php
                                                 if ($this->rbac->hasPrivilege('subject_group', 'can_edit')) {
                                                     ?>
-                                                    <a  href="<?php echo base_url(); ?>admin/subjectgroup/edit/<?php echo $subjectgroup->id; ?>" class="btn btn-default btn-xs no_print"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
+                                                    <a href="<?php echo base_url(); ?>admin/subjectgroup/edit/<?php echo $subjectgroup->id; ?>" class="btn btn-default btn-xs no_print displayinline" data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
                                                         <i class="fa fa-pencil"></i>
                                                     </a>
                                                 <?php } ?>
                                                 <?php
                                                 if ($this->rbac->hasPrivilege('subject_group', 'can_delete')) {
                                                     ?>
-                                                    <a  href="<?php echo base_url(); ?>admin/subjectgroup/delete/<?php echo $subjectgroup->id; ?>"class="btn btn-default btn-xs no_print"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
+                                                    <a  href="<?php echo base_url(); ?>admin/subjectgroup/delete/<?php echo $subjectgroup->id; ?>"class="btn btn-default btn-xs no_print displayinline" data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
                                                         <i  class="fa fa-remove"></i>
                                                     </a>
                                                 <?php } ?>

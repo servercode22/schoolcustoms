@@ -62,14 +62,14 @@
                                          <label class="col-sm-4"><?php echo $this->lang->line('allow')." ".$this->lang->line('editable')." ".$this->lang->line('form')." ".$this->lang->line('fields'); ?></label>
                                             <div class="col-sm-8">
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="student_profile_edit" value="0" <?php
+                                                    <input type="radio" name="student_profile_edit" value="0" id="profile_no" class="enableprofile" <?php
                                                     if ($result->student_profile_edit == 0) {
                                                         echo "checked";
                                                     }
                                                     ?> ><?php echo $this->lang->line('disabled'); ?>
                                                 </label>
                                                 <label class="radio-inline">
-                                                    <input type="radio" name="student_profile_edit" value="1" <?php
+                                                    <input type="radio" name="student_profile_edit" value="1" id="profile_yes" class="enableprofile" <?php
                                                     if ($result->student_profile_edit == 1) {
                                                         echo "checked";
                                                     }
@@ -78,14 +78,19 @@
                                             </div>
                                          </div>
                               
-  <div class="form-group row">
+  <div class="form-group row"> 
     <div class="col-sm-10"> 
       <button type="submit" class="btn btn-primary"> <?php echo $this->lang->line('save'); ?></button>
     </div>
   </div>
 </form>
-		<div class="box-header">		
-		<h3 class="box-title"><?php echo $this->lang->line('allowed_edit_form_fields_on_student_profile'); ?></h3></div>                                   
+		
+    <div id="tblclm">
+        <div class="form-group row"> 
+                            <div class="col-sm-10"> 
+                              <h4 class="box-title"><?php echo $this->lang->line('allowed_edit_form_fields_on_student_profile'); ?></h4>      
+                            </div>
+                        </div>                                      
                                     <div class="download_label"><?php echo $this->lang->line('allowed_edit_form_fields_on_student_profile'); ?></div>
                              <table class="table table-striped table-bordered table-hover example" cellspacing="0" width="100%">
                                 
@@ -96,30 +101,58 @@
 										
                                     </tr>
                                 </thead>
-                                <tbody>
-                                <?php 
+                                <tbody> 
+                                <?php  
+                                $sch_setting_array = json_decode(json_encode($sch_setting_detail), true);
+                                                            if (!empty($fields)) {
+                                                                $hide=0;
+                                foreach ($fields as $fields_key => $fields_value) {
+                                    if (array_key_exists($fields_key,$sch_setting_array))
+                              {
+                              
 
-                                if (!empty($fields)) {
-    foreach ($fields as $fields_key => $fields_value) {
-        ?>
- <tr>
-                                        <td><?php echo $fields_value; ?></td>
-                                        <td  class="text-right">
-                                            <div class="material-switch pull-right">
-                            <input id="field_<?php echo $fields_key?>" name="<?php echo $fields_key; ?>" type="checkbox" data-role="field_<?php $fields_key?>" class="chk"  value="" <?php echo set_checkbox($fields_key, $fields_key, findSelected($inserted_fields,$fields_key)); ?>/>
-                                                <label for="field_<?php echo $fields_key?>" class="label-success"></label>
-                                            </div>
-                                        </td>
-										
-                                    </tr>
-  <?php
-}
-}
+                                            if (($sch_setting_detail->$fields_key)) {
+                                                    ?>
+                                                <tr>
+                                                    <td><?php echo $fields_value; ?></td>
+                                                    <td  class="text-right">
+                                                        <div class="material-switch pull-right">
+                                                    <input id="field_<?php echo $fields_key?>" name="<?php echo $fields_key; ?>" type="checkbox" data-role="field_<?php $fields_key?>" class="chk"  value="" <?php echo set_checkbox($fields_key, $fields_key, findSelected($inserted_fields,$fields_key)); ?>/>
+                                                            <label for="field_<?php echo $fields_key?>" class="label-success"></label>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                              <?php
+                                            }
+                                        }else{
+                                            $hide=0;
+                                            if($fields_key=='if_guardian_is'){
+                                                if($sch_setting_detail->guardian_name==0){
+                                                   $hide=1;  
+                                                }
+                                            }
+                                            if($hide==0){
+                                            ?>
+                                                <tr>
+                                                    <td><?php echo $fields_value; ?></td>
+                                                    <td  class="text-right">
+                                                    <div class="material-switch pull-right">
+                                                    <input id="field_<?php echo $fields_key?>" name="<?php echo $fields_key; ?>" type="checkbox" data-role="field_<?php $fields_key?>" class="chk"  value="" <?php echo set_checkbox($fields_key, $fields_key, findSelected($inserted_fields,$fields_key)); ?>/>
+                                                    <label for="field_<?php echo $fields_key?>" class="label-success"></label>
+                                                    </div>
+                                                    </td>
+                                                </tr>
+                                <?php
+                            }
+                                        }
+                                        }
+                                        }
 
-?>
+                                        ?>
 
                                 </tbody>
                             </table>
+                            </div>
                             </div>
                     </div>
                 </div>
@@ -179,4 +212,33 @@ function findSelected($inserted_fields,$find){
     }
 
 
+</script>
+
+<script>
+    $(function(){
+        if ( $('#profile_yes').prop('checked')==true){
+         
+           $("#tblclm").css('display','block');
+         
+
+          }else{
+            
+            $("#tblclm").css('display','none');
+           
+          
+          }
+       
+    });
+ </script>
+ <script>
+    $(".enableprofile").click(function () {
+        var status=$(this). val();
+       if(status==1){
+       
+           $("#tblclm").css('display','block');
+          
+       }else{
+           $("#tblclm").css('display','none');
+       }
+    });
 </script>

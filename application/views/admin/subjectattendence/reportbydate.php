@@ -1,4 +1,4 @@
-<div class="content-wrapper" style="min-height: 946px;">
+<div class="content-wrapper">
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
@@ -86,6 +86,7 @@
                                 </div>
                             </div>
                             <div class="box-body">
+                              <div class="table-responsive">   
                                 <?php
                                 if (!empty($resultlist)) {
 
@@ -118,7 +119,7 @@
                                             foreach ($student_result->student_record as $students_key => $students_value) {
                                                 ?>
                                                 <tr>
-                                                    <td><?php echo $students_value->firstname . " " . $students_value->lastname . " (" . $students_value->admission_no . ")"; ?></td>
+                                                    <td><?php echo $this->customlib->getFullName($students_value->firstname,$students_value->middlename,$students_value->lastname,$sch_setting->middlename,$sch_setting->lastname) . " (" . $students_value->admission_no . ")"; ?></td>
                                                     <?php
                                                     for ($i = 1; $i <= count($student_result->subjects); $i++) {
                                                         ?>
@@ -148,6 +149,7 @@
                                 }
                                 ?>
                             </div>
+                         </div>    
                         </div>
                     </div>  
                     <?php

@@ -21,7 +21,7 @@
                                 </div>
                                 <h4 class="pagetitleh2"><?php echo $this->lang->line('basic_information'); ?> </h4>
 
-                                <?php echo validation_errors(); ?>
+                               
 
                                 <div class="around10">
 

@@ -163,31 +163,30 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     }
                                                     ?>
                                                     <td class="pull-right">
-            <?php if ($this->rbac->hasPrivilege('can_see_other_users_profile', 'can_view')) { ?>
+            <?php  
+             $userdata = $this->customlib->getUserData();
+             if (($this->rbac->hasPrivilege('can_see_other_users_profile', 'can_view')) || ($userdata["id"] == $staff["id"])) { ?>
                                                             <a data-placement="left" href="<?php echo base_url(); ?>admin/staff/profile/<?php echo $staff['id'] ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('show'); ?>" >
                                                                 <i class="fa fa-reorder"></i>
                                                             </a>
-            <?php } if ($this->rbac->hasPrivilege('can_see_other_users_profile', 'can_view')) {
+            <?php }  
 
                   $a = 0 ;
           $sessionData = $this->session->userdata('admin');
-            $userdata = $this->customlib->getUserData();
         
          $staff["user_type"];
-          if(($staff["user_type"] == "Super Admin") && $userdata["email"] == $staff["email"]){
+          if(($staff["user_type"] == "Super Admin") && $userdata["id"] == $staff["id"]){
             $a = 1 ;  
-            }elseif(($staff["user_type"] != "Super Admin")){
-                $a = 1 ;
-            }else{
-                $a = 0;
+            }elseif(($this->rbac->hasPrivilege('staff', 'can_edit')) && ($this->rbac->hasPrivilege('can_see_other_users_profile', 'can_view'))){
+                $a = 1;
             }
             if($a == 1){
-               if ($this->rbac->hasPrivilege('staff', 'can_edit')) {
+             
              ?>
                                                             <a data-placement="left" href="<?php echo base_url(); ?>admin/staff/edit/<?php echo $staff['id'] ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
                                                                 <i class="fa fa-pencil"></i>
                                                             </a>
-                                                <?php } } }?>
+                                                <?php  } ?>
                                                     </td>
                                                 </tr>
                                                 <?php
@@ -241,27 +240,25 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         <div class="overlay3">
                                                             <div class="stafficons">
            
-            <?php if ($this->rbac->hasPrivilege('can_see_other_users_profile', 'can_view')) { ?>
+             <?php 
+             $userdata = $this->customlib->getUserData();
+             if (($this->rbac->hasPrivilege('can_see_other_users_profile', 'can_view')) || ($userdata["id"] == $staff["id"])) { ?>
                                                                     <a title="<?php echo $this->lang->line('show'); ?>"  href="<?php echo base_url() . "admin/staff/profile/" . $staff["id"] ?>"><i class="fa fa-navicon"></i></a>
-            <?php } ?>
-                                                <?php if ($this->rbac->hasPrivilege('can_see_other_users_profile', 'can_view')) {
-            $a = 0 ;
-            $sessionData = $this->session->userdata('admin');
-            $userdata = $this->customlib->getUserData();
+            <?php } 
+                                                 $a = 0 ;
+          $sessionData = $this->session->userdata('admin');
         
          $staff["user_type"];
-          if(($staff["user_type"] == "Super Admin") && $userdata["email"] == $staff["email"]){
+          if(($staff["user_type"] == "Super Admin") && $userdata["id"] == $staff["id"]){
             $a = 1 ;  
-            }elseif(($staff["user_type"] != "Super Admin")){
-                $a = 1 ;
-            }else{
-                $a = 0;
+            }elseif(($this->rbac->hasPrivilege('staff', 'can_edit')) && ($this->rbac->hasPrivilege('can_see_other_users_profile', 'can_view'))){
+                $a = 1;
             }
-                            if($a == 1){                                
-                if ($this->rbac->hasPrivilege('staff', 'can_edit')) {
-                                                 ?>
+            if($a == 1){
+             
+             ?>
                                                        <a title="<?php echo $this->lang->line('edit'); ?>"  href="<?php echo base_url() . "admin/staff/edit/" . $staff["id"] ?>"><i class=" fa fa-pencil"></i></a>
-                                                <?php } } }?>
+                                                <?php } ?>
                                                             </div>
                                                         </div>
                                                     </div>

@@ -45,7 +45,7 @@ class Calendar extends Student_Controller
         $config['num_tag_open']    = '<li>';
         $config['num_tag_close']   = '</li>';
         $this->pagination->initialize($config);
-        $tasklist         = $this->calendar_model->getTask(10, $this->uri->segment(4), $userdata["id"], 0);
+        $tasklist         = $this->calendar_model->getTask($userdata["id"], 0, 10, $this->uri->segment(4));
         $data["tasklist"] = $tasklist;
         $data["title"]    = "Event Calendar";
         $this->load->view("layout/student/header.php");
@@ -99,9 +99,9 @@ class Calendar extends Student_Controller
     public function addtodo()
     {
 
-        $this->form_validation->set_rules('task_title', 'Task Title', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('task_title', $this->lang->line('task')." ".$this->lang->line('title'), 'trim|required|xss_clean');
 
-        $this->form_validation->set_rules('task_date', 'Date', 'trim|required|xss_clean');
+        $this->form_validation->set_rules('task_date', $this->lang->line('date'), 'trim|required|xss_clean');
 
         if ($this->form_validation->run() == false) {
 
@@ -131,7 +131,7 @@ class Calendar extends Student_Controller
                     'event_for'                      => $userdata["id"],
                     'id'                             => $eventid,
                 );
-                $msg = "Task Updated Successfully";
+                $msg = $this->lang->line('update_message');
             } else {
                 $eventdata = array('event_title' => $event_title,
                     'event_description'              => $event_description,
@@ -142,7 +142,7 @@ class Calendar extends Student_Controller
                     'is_active'                      => "no",
                     'event_for'                      => $userdata["id"],
                 );
-                $msg = "Task Created Successfully";
+                 $msg = $this->lang->line('success_message');
             }
             $this->calendar_model->saveEvent($eventdata);
             $array = array('status' => 'success', 'error' => '', 'message' => $msg);
@@ -168,10 +168,10 @@ class Calendar extends Student_Controller
         if (!empty($id)) {
 
             $this->calendar_model->saveEvent($eventdata);
-            $array = array('status' => 'success', 'error' => '', 'message' => "Mark Completed Successfully.");
+            $array = array('status' => 'success', 'error' => '', 'message' => $this->lang->line('mark_completed_successfully'));
         } else {
 
-            $array = array('status' => 'fail', 'error' => '', 'message' => "Cannot Mark Complete this event.");
+            $array = array('status' => 'fail', 'error' => '', 'message' => $this->lang->line('cannot_mark_complete_this_event'));
         }
         echo json_encode($array);
     }
@@ -182,10 +182,10 @@ class Calendar extends Student_Controller
         if (!empty($id)) {
 
             $result = $this->calendar_model->deleteEvent($id);
-            $array  = array('status' => 'success', 'error' => '', 'message' => "Event Deleted Successfully.");
+            $array  = array('status' => 'success', 'error' => '', 'message' => $this->lang->line('delete_message'));
         } else {
 
-            $array = array('status' => 'fail', 'error' => '', 'message' => "Cannot Delete this event.");
+            $array = array('status' => 'fail', 'error' => '', 'message' => $this->lang->line('cannot_delete_this_event'));
         }
         echo json_encode($array);
     }

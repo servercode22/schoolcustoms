@@ -22,8 +22,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     <div class="box-body">      
                         <?php if ($this->session->flashdata('msg')) { ?> <div>  <?php echo $this->session->flashdata('msg') ?> </div> <?php } ?>
                         <br/>           
-                        1. Your CSV data should be in the format below. The first line of your CSV file should be the column headers as in the table example. Also make sure that your file is UTF-8 to avoid unnecessary encoding problems.<br/>
-                        2. If the column you are trying to import is date make sure that is formatted in format Y-m-d (2018-06-06).<br/>
+                        1. <?php echo $this->lang->line('import_staff_step1'); ?><br/>
+                        2. <?php echo $this->lang->line('import_staff_step2'); ?><br/>
 
                         <hr/></div>
                     <div class="box-body table-responsive" style="overflow-x:auto;">

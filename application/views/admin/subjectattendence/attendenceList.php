@@ -234,6 +234,9 @@ $language_name1 = $language1["short_code"];
                                         <input type="hidden" name="subject_timetable_id" value="<?php echo $subject_timetable_id; ?>">
                                         <input type="hidden" name="date" value="<?php echo $date; ?>">
                                         <div class="table-responsive ptt10">
+                                            <div class="download_label">
+                                          <?php echo $this->lang->line('student_attendance'); ?>                               
+                                            </div>
                                             <table class="table table-hover table-striped example"> 
                                                 <thead>
                                                     <tr>
@@ -264,7 +267,10 @@ $language_name1 = $language1["short_code"];
                                                             </td>
 
                                                             <td>
-            <?php echo $value['firstname'] . " " . $value['lastname']; ?>
+
+           <?php 
+echo $this->customlib->getFullName($value['firstname'],$value['middlename'],$value['lastname'],$sch_setting->middlename,$sch_setting->lastname);
+           ?>
                                                             </td>
                                                             <td>
                                                                 <?php
@@ -415,12 +421,14 @@ $language_name1 = $language1["short_code"];
                     });
 
                     $('.date').datepicker({
-
                         format: date_format,
+                        weekStart : start_week,
+                        todayHighlight: true,
+                         endDate: '+0d',
                         autoclose: true,
                         language: '<?php echo $language_name1; ?>'
                     }).on('changeDate', function (ev) {
-                        console.log("dsfsf");
+                       
                         var class_id = $('#class_id').val();
                         var section_id = $('#section_id').val();
                         var date = $(this).val();

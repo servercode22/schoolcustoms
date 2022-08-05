@@ -116,8 +116,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <h3 class="box-title titlefix"><i class="fa fa-money"></i> <?php echo $this->lang->line('staff') . " " . $this->lang->line('report'); ?></h3>
                         </div>
                         <div class="box-body table-responsive">
-                            <div class="download_label"><?php echo $this->lang->line('staff') . " " . $this->lang->line('report') . "<br>";
-                                                $this->customlib->get_postmessage();
+                            <div class="download_label"><?php echo $this->lang->line('staff') . " " . $this->lang->line('report') . "(".$this->customlib->get_postmessage();
                                                 ?></div>
                             <table class="table table-striped table-bordered table-hover example ">
                                 <thead>

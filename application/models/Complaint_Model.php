@@ -22,7 +22,6 @@ class complaint_Model extends MY_Model {
         $action = "Insert";
         $record_id = $query;
         $this->log($message, $record_id, $action);
-        //echo $this->db->last_query();die;
         //======================Code End==============================
 
         $this->db->trans_complete(); # Completing transaction

@@ -32,15 +32,15 @@
                         </div>
                         <div class="table-responsive mailbox-messages">
                             <div class="download_label"><?php echo $this->lang->line('book') . " " . $this->lang->line('issue_return') . " " . $this->lang->line('report'); ?></div>
-                            <table class="table table-striped table-bordered table-hover example">
+                            
+                              <table class="table table-striped table-bordered table-hover record-list" data-export-title="<?php echo $this->lang->line('book') . " " . $this->lang->line('issue_return') . " " . $this->lang->line('report'); ?>">
+                               
                                 <thead>
                                     <tr>
-
                                         <th><?php echo $this->lang->line('book_title'); ?></th>
                                         <th><?php echo $this->lang->line('book_no'); ?></th>
                                         <th><?php echo $this->lang->line('issue_date'); ?></th>
                                         <th><?php echo $this->lang->line('return_date'); ?></th>
-
                                         <th><?php echo $this->lang->line('member_id'); ?></th>
                                         <th><?php echo $this->lang->line('library_card_no'); ?></th>
                                         <th><?php echo $this->lang->line('admission_no'); ?></th>
@@ -49,51 +49,6 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    if (empty($issued_books)) {
-                                        ?>
-                                        <?php
-                                    } else {
-                                        $count = 1;
-                                        foreach ($issued_books as $book) {
-                                            ?>
-                                            <tr >
-                                                <td class="mailbox-name">
-                                                    <?php echo $book['book_title'] ?>
-                                                </td>
-                                                <td class="mailbox-name">
-                                                    <?php echo $book['book_no'] ?>
-                                                </td>
-                                                <td class="mailbox-name">
-                                                    <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($book['issue_date'])) ?></td>
-                                                <?php ?>
-                                                <td class="mailbox-name">
-                                                    <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($book['return_date'])) ?></td>
-                                                <td >
-
-                                                    <?php echo $book['members_id']; ?>
-                                                </td>
-                                                <td><?php echo $book['library_card_no']; ?></td>
-                                                <td><?php
-                                                    if ($book['admission'] != 0) {
-                                                        echo $book['admission'];
-                                                    }
-                                                    ?></td>
-                                                <td >
-        <?php echo ucwords($book['fname']) . " " . ucwords($book['lname']); ?>
-
-                                                </td>
-                                                <td >
-        <?php echo ucwords($book['member_type']); ?>
-
-                                                </td>
-                                            </tr>
-                                            <?php
-                                            $count++;
-                                        }
-                                    }
-                                    ?>
-
                                 </tbody>
                             </table><!-- /.table -->
                         </div>
@@ -103,6 +58,17 @@
         </div>
     </section>
 </div>
-
-
+<script>
+$(document).ready(function() {
+     emptyDatatable('record-list','data');
+});
+</script>  
+<script>
+    ( function ( $ ) {
+    'use strict';
+    $(document).ready(function () {
+        initDatatable('record-list','admin/book/dtbookissuereturnreportlist',[],[],100);
+    });
+} ( jQuery ) )
+</script>
 

@@ -19,7 +19,7 @@
                                 <?php echo $this->customlib->getCSRF(); ?>
                                 <div class="col-sm-6">
                                     <div class="form-group">
-                                        <label><?php echo $this->lang->line('class'); ?></label> <small class="req"> *</small>
+                                        <label><?php echo $this->lang->line('class'); ?></label> 
                                         <select autofocus="" id="class_id" name="class_id" class="form-control" >
                                             <option value=""><?php echo $this->lang->line('select'); ?></option>
                                             <?php
@@ -123,17 +123,13 @@
                                                                 </td>
                                                                 <td><?php echo $student['admission_no']; ?></td>
                                                                 <td>
-                                                                    <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?>
+                                                                    <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname); ?>
                                                                     </a>
                                                                 </td>
-
-
-
-
                                                                 <td><?php echo $student['class'] . "(" . $student['section'] . ")" ?></td>
 
                                                                 <td><?php
-                                                                    if ($student["dob"] != null) {
+                                                                    if ($student["dob"] != null && $student["dob"]!='0000-00-00') {
                                                                         echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob']));
                                                                     }
                                                                     ?></td>

@@ -1,8 +1,8 @@
 <div class="row row-eq">
     <?php
-//print_r($enquiry_data);
+
     $admin = $this->customlib->getLoggedInUserData();
-// print_r($admin);
+
     ?>
     <div class="col-lg-8 col-md-8 col-sm-8 paddlr">
         <!-- general form elements -->
@@ -14,7 +14,7 @@
 
     <div class="col-lg-4 col-md-4 col-sm-4 col-eq">
         <div class="taskside">
-            <?php //print_r($enquiry_data); ?>
+            
             <h4><?php echo $this->lang->line('summary'); ?></h4>
             <div class="box-tools pull-right">
             </div><!-- /.box-tools -->

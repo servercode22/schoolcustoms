@@ -5,8 +5,8 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
 
-        <h1><i class="fa fa-gears"></i> <?php echo $this->lang->line('system_settings'); ?>                           <small class="pull-right">
-                <a type="button" onclick="test_mail()" class="btn btn-primary btn-sm">Test Email --r</a>
+        <h1><i class="fa fa-gears"></i> <?php echo $this->lang->line('system_settings'); ?><small class="pull-right">
+                <a type="button" onclick="test_mail()" class="btn btn-primary btn-sm"><?php echo $this->lang->line('test_email'); ?> </a>
             </small>
         </h1>
     </section>   
@@ -19,7 +19,8 @@
                     </div>   
                     <form id="form1" action="<?php echo base_url() ?>emailconfig/index"   name="employeeform" class="form-horizontal form-label-left" method="post" accept-charset="utf-8">
 
-                        <div class="box-body">
+                    <div class="box-body">
+                        <div class="row">
                             <?php if ($this->session->flashdata('msg')) { ?>
                                 <?php echo $this->session->flashdata('msg') ?>
                             <?php } ?>   
@@ -82,29 +83,55 @@
                                 <div class="form-group">
                                     <label class="control-label col-md-3 col-sm-3 col-xs-12" for="exampleInputEmail1">
                                         <?php echo $this->lang->line('smtp_security'); ?>
-                                    </label><div class="col-md-6 col-sm-6 col-xs-12">
-                                        <input id="name" name="smtp_security" placeholder="" type="text" class="form-control col-md-7 col-xs-12"  value="<?php echo set_value('smtp_security', $emaillist->ssl_tls); ?>"  />
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <select  id="name" name="smtp_security" class="form-control col-md-7 col-xs-12">
+                                            <?php 
+                            foreach ($smtp_encryption as $encryption_key => $encryption_value) {
+                              ?>
+                            <option value="<?php echo $encryption_key?>" <?php echo set_select('smtp_security', $encryption_key, (set_value('smtp_security', $emaillist->ssl_tls) == $encryption_key ) ? TRUE : FALSE ); ?> ><?php echo $encryption_value;?></option>
+                              <?php
+                            }
+                                             ?>
+                                        </select>
+                                   
                                         <span class="text-danger"><?php echo form_error('smtp_security'); ?></span>
-                                    </div></div>  
-                            </div>                          
+                                    </div>
+                                </div>  
+                                           <div class="form-group">
+                                    <label class="control-label col-md-3 col-sm-3 col-xs-12" for="exampleInputEmail1">
+                                   <?php echo $this->lang->line('smtp_auth')?>
+                                    </label>
+                                    <div class="col-md-6 col-sm-6 col-xs-12">
+                                        <select  id="smtp_auth" name="smtp_auth" class="form-control col-md-7 col-xs-12">
+                                            <?php 
+                            foreach ($smtp_auth as $smtp_auth_key => $smtp_auth_value) {
+                              ?>
+                           <option value="<?php echo $smtp_auth_key?>" <?php echo set_select('smtp_security', $smtp_auth_key, (set_value('auth_key', $emaillist->smtp_auth) == $smtp_auth_key ) ? TRUE : FALSE ); ?> ><?php echo $smtp_auth_value;?></option>
+                              <?php
+                            }
+                                             ?>
+                                        </select>
+                                        <span class="text-danger"><?php echo form_error('smtp_security'); ?></span>
+                                    </div>
+                                </div>
+                            </div>
+                          </div>                            
                         </div>
                         <div class="box-footer">
-                            <div class="col-md-6 col-sm-6 col-xs-6 col-md-offset-3">
+                           <div class="row">
+                                <div class="col-md-6 col-sm-6 col-xs-12 col-md-offset-3">
                                 <?php
                                 if ($this->rbac->hasPrivilege('email_setting', 'can_edit')) {
                                     ?>
 
-                                    <button type="submit" class="btn btn-info pull-left"><?php echo $this->lang->line('save'); ?></button>
+                                    <button type="submit" class="btn btn-info btnleftinfo"><?php echo $this->lang->line('save'); ?></button>
                                     <?php
                                 }
                                 ?>
-
-
-
-
                             </div>
+                          </div>
                         </div>
-
                     </form>
                 </div>
             </div>           
@@ -127,7 +154,7 @@
 
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="pwd">Email --r</label><small class="req"> *</small>  
+                                                <label for="pwd"><?php echo $this->lang->line('email'); ?> </label><small class="req"> *</small>  
                                                 <input type="text" id="title" autocomplete="off" class="form-control" value="" name="email">
                                                 <span id="name_add_error" class="text-danger"></span>
                                             </div>

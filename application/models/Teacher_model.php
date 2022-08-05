@@ -129,7 +129,7 @@ class Teacher_model extends CI_Model {
     }
 
     public function get_examsubjects($staff_id) {
-
+        $subject_id=array();
         $query = $this->db->query("select sgs.subject_id  from subject_timetable st inner join subject_group_subjects sgs on st.subject_group_subject_id=sgs.id where st.staff_id='" . $staff_id . "' and st.session_id='" . $this->current_session . "' ");
 
         $querydata = $query->result_array();
@@ -154,10 +154,10 @@ class Teacher_model extends CI_Model {
         $ides11 = array();
         $query = $this->db->query("select CONCAT_WS(',',GROUP_CONCAT(st.class_id)) as c from subject_timetable st where st.staff_id='" . $staff_id . "' and session_id='" . $this->current_session . "' group by st.staff_id");
         $query = $query->result_array();
-        // echo $this->db->last_query();die;
+       
         $query1 = $this->db->query("select CONCAT_WS(',',GROUP_CONCAT(ct.class_id)) as c from class_teacher ct  where  ct.staff_id='" . $staff_id . "' and session_id='" . $this->current_session . "' group by ct.staff_id");
         $query1 = $query1->result_array();
-        // echo $this->db->last_query();die;
+        
         if (!empty($query1) && !empty($query)) {
             $class_ides = $query1[0]['c'] . "," . $query[0]['c'];
         } elseif (!empty($query)) {

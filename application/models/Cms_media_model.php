@@ -70,8 +70,8 @@ class Cms_media_model extends CI_Model {
     function fetch_details($limit, $start, $st = 'img', $media_type = NULL) {
         $output = '';
         $this->db->select("*");
-        $this->db->like('img_name', $st);
-        $this->db->like('file_type', $media_type);
+        // $this->db->like('img_name', $st);
+        // $this->db->like('file_type', $media_type);
         $this->db->from("front_cms_media_gallery");
         $this->db->order_by("id", "DESC");
         $this->db->limit($limit, $start);

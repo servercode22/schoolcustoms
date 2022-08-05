@@ -1,25 +1,12 @@
-<style type="text/css">
-    @media print
-    {
-        .no-print, .no-print *
-        {
-            display: none !important;
-        }
-    }
-</style>
 <?php
 $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 ?>
 <div class="content-wrapper">
-
     <section class="content-header">
         <h1><i class="fa fa-newspaper-o"></i> <?php echo $this->lang->line('certificate'); ?></h1>
     </section>
-
     <section class="content">
         <div class="row">
-
-
             <?php
             if ($this->rbac->hasPrivilege('student_certificate', 'can_add')) {
                 ?>
@@ -193,7 +180,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <?php } ?>
 
                                                 </td>
-                                                <td class="mailbox-date text-right no-print">
+                                                <td class="mailbox-date text-right no-print white-space-nowrap">
                                                     <a data-placement="left" id="<?php echo $certificate->id ?>" class="btn btn-default btn-xs view_data" title="<?php echo $this->lang->line('view'); ?>">
                                                         <i class="fa fa-reorder"></i>
                                                     </a>
@@ -246,17 +233,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#postdate').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true
-        });
-        $("#btnreset").click(function () {
-            $("#form1")[0].reset();
-        });
-    });
-</script>
+
 <script type="text/javascript">
     var base_url = '<?php echo base_url() ?>';
     function printDiv(elem) {
@@ -337,10 +314,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
     function valueChanged()
     {
         if ($('#enable_student_img').is(":checked"))
-            $("#enableImageDiv").show();
-        // alert("Hii")
+            $("#enableImageDiv").show();       
         else
-            $("#enableImageDiv").hide();
-        //alert("Bye")
+            $("#enableImageDiv").hide();        
     }
 </script>

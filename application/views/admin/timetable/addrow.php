@@ -24,10 +24,10 @@
                                 <?php echo $this->lang->line('teacher'); ?>
                             </th>
                             <th>
-                                <?php echo $this->lang->line('time') . " " . $this->lang->line('from') ?>
+                                 <?php echo $this->lang->line('time') . " " . $this->lang->line('from') ?><small class="astrike"> *</small>
                             </th>
                             <th>
-                                <?php echo $this->lang->line('time') . " " . $this->lang->line('to') ?>
+                                <?php echo $this->lang->line('time') . " " . $this->lang->line('to') ?><small class="astrike"> *</small>
                             </th>
                             <th>
                                 <?php echo $this->lang->line('room') . " " . $this->lang->line('no') ?>
@@ -84,7 +84,7 @@
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input type="text" name="time_from_<?php echo $counter; ?>" class="form-control time_from time" id="time_from_<?php echo $counter; ?>" value="<?php echo $prev_rec_value->time_from; ?>">
+                                        <input type="text" name="time_from_<?php echo $counter; ?>" class="form-control time_from time" id="time_from_<?php echo $counter; ?>" value="<?php echo ($prev_rec_value->start_time != "") ? $prev_rec_value->time_from :  $this->customlib->timeFormat($prev_rec_value->start_time);?>">
                                         <div class="input-group-addon">
                                             <span class="fa fa-clock-o"></span>
                                         </div>
@@ -92,7 +92,7 @@
                                 </td>
                                 <td>
                                     <div class="input-group">
-                                        <input type="text" name="time_to_<?php echo $counter; ?>" class="form-control time_to time" id="time_to_<?php echo $counter; ?>" value="<?php echo $prev_rec_value->time_to; ?>">
+                                        <input type="text" name="time_to_<?php echo $counter; ?>" class="form-control time_to time" id="time_to_<?php echo $counter; ?>" value="<?php echo ($prev_rec_value->end_time != "") ? $prev_rec_value->time_to :  $this->customlib->timeFormat($prev_rec_value->end_time);?>">
                                         <div class="input-group-addon">
                                             <span class="fa fa-clock-o"></span>
                                         </div>

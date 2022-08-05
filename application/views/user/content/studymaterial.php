@@ -79,18 +79,7 @@
         </div>
     </section>
 </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#upload_date').datepicker({
-            format: "yyyy-mm-dd",
-            autoclose: true
-        });
 
-        $("#btnreset").click(function () {
-            $("#form1")[0].reset();
-        });
-    });
-</script>
 <script>
     $(document).ready(function () {
         $('.detail_popover').popover({

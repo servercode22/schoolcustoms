@@ -1,5 +1,5 @@
 
-<div class="content-wrapper" style="min-height: 348px;">  
+<div class="content-wrapper">  
     <section class="content-header">
         <h1>
             <i class="fa fa-ioxhost"></i> <?php echo $this->lang->line('front_office'); ?></h1>
@@ -16,12 +16,9 @@
 
                         <form id="form1" action="<?php echo site_url('admin/complaint') ?>"   method="post" accept-charset="utf-8" enctype="multipart/form-data" >
                             <div class="box-body">
-
                                 <?php echo $this->session->flashdata('msg') ?>
-
                                 <div class="form-group">
                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('complain_type'); ?></label>
-
                                     <select name="complaint" class="form-control">
                                         <option value=""><?php echo $this->lang->line('select'); ?></option>  
                                         <?php foreach ($complaint_type as $key => $value) { ?>
@@ -139,16 +136,15 @@
                                             <tr>
                                                 <td class="mailbox-name"><?php echo $value['id']; ?></td>
                                                 <td class="mailbox-name"><?php echo $value['complaint_type']; ?></td>
-
-                                                <td class="mailbox-name"><?php echo $value['name']; ?> </td>
+                                                <td class="mailbox-name"><?php echo $value['name']; ?><?php if(!empty($value['email'])){ ?>
+												<br><a href="mailto:<?php echo $value['email']; ?>">(<?php echo $value['email']; ?>)</a>
+												<?php } ?> </td>
                                                 <td class="mailbox-name"> <?php echo $value['contact']; ?></td>
                                                 <td class="mailbox-name"> <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($value['date'])); ?></td>
-
-
-                                                <td class="mailbox-date pull-right">
+                                                <td class="mailbox-date pull-right white-space-nowrap">
                                                     <a data-placement="left" onclick="getRecord(<?php echo $value['id']; ?>)" class="btn btn-default btn-xs" data-target="#complaintdetails" title="<?php echo $this->lang->line('view') ?>" data-toggle="modal"  data-original-title="<?php echo $this->lang->line('view') ?>"><i class="fa fa-reorder"></i></a>
 
-                                                    <?php if ($value['image'] !== "") { ?><a data-placement="left" href="<?php echo base_url(); ?>admin/complaint/download/<?php echo $value['image']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="Download">
+                                                    <?php if ($value['image'] !== "") { ?><a data-placement="left" href="<?php echo base_url(); ?>admin/complaint/download/<?php echo $value['image']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('download')?>">
                                                             <i class="fa fa-download"></i>
                                                         </a>  <?php } ?> 
                                                     <?php if ($this->rbac->hasPrivilege('complaint', 'can_edit')) { ?>    
@@ -157,11 +153,11 @@
                                                         </a>
                                                     <?php } ?>
                                                     <?php if ($this->rbac->hasPrivilege('complaint', 'can_delete')) { ?>
-                                                        <?php if ($value['image'] !== "") { ?><a data-placement="left" href="<?php echo base_url(); ?>admin/complaint/imagedelete/<?php echo $value['id']; ?>/<?php echo $value['image']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('delete') ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');" data-original-title="Delete">
+                                                        <?php if ($value['image'] !== "") { ?><a data-placement="left" href="<?php echo base_url(); ?>admin/complaint/imagedelete/<?php echo $value['id']; ?>/<?php echo $value['image']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('delete') ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');" data-original-title="<?php echo $this->lang->line('delete')?>">
                                                                 <i class="fa fa-remove"></i>
                                                             </a>
                                                         <?php } else { ?>
-                                                            <a data-placement="left" href="<?php echo base_url(); ?>admin/complaint/delete/<?php echo $value['id']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('delete') ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');" data-original-title="Delete">
+                                                            <a data-placement="left" href="<?php echo base_url(); ?>admin/complaint/delete/<?php echo $value['id']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="<?php echo $this->lang->line('delete') ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');" data-original-title="<?php echo $this->lang->line('delete')?>">
                                                                 <i class="fa fa-remove"></i>
                                                             </a>
                                                             <?php
@@ -176,20 +172,14 @@
                                         }
                                     }
                                     ?>
-
                                 </tbody>
                             </table><!-- /.table -->
-
-
-
                         </div><!-- /.mail-box-messages -->
                     </div><!-- /.box-body -->
                 </div>
             </div><!--/.col (left) -->
             <!-- right column -->
-
         </div>
-
     </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
 
@@ -203,7 +193,6 @@
             </div>
             <div class="modal-body" id="getdetails">
 
-
             </div>
         </div>
     </div>
@@ -211,18 +200,12 @@
 </div><!-- /.content-wrapper -->
 <script type="text/javascript">
 
-
-    function getRecord(id) {
-        //alert(id);
+    function getRecord(id) {        
         $.ajax({
             url: '<?php echo base_url(); ?>admin/complaint/details/' + id,
-            success: function (result) {
-                //alert(result);
+            success: function (result) {              
                 $('#getdetails').html(result);
             }
-
-
         });
     }
-
 </script>

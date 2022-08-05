@@ -250,14 +250,18 @@
                             </div>
                             <span class="text-danger"><?php echo form_error('leave_type'); ?></span>
                         </div>
-                        <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-12">
-                            <label><?php echo $this->lang->line('leave'); ?> <?php echo $this->lang->line('date'); ?>:</label>
-                            <div class="input-group">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-calendar"></i>
-                                </div>
-                                <input type="text" readonly name="leavedates" class="form-control pull-right" id="reservation">
-                            </div>
+                          <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                            <label><?php echo $this->lang->line('leave'); ?> <?php echo $this->lang->line('from'); ?> <?php echo $this->lang->line('date'); ?></label><small class="req"> *</small>
+
+                                <input type="text" readonly id="leave_from_date" name="leave_from_date" class="form-control date" >
+                           
+                            <!-- /.input group -->
+                        </div>
+                         <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6">
+                            <label><?php echo $this->lang->line('leave'); ?> <?php echo $this->lang->line('to'); ?> <?php echo $this->lang->line('date'); ?></label><small class="req"> *</small>
+
+                                <input type="text" readonly id="leave_to_date" name="leave_to_date" class="form-control date" >
+                           
                             <!-- /.input group -->
                         </div>
 
@@ -355,12 +359,7 @@
             }
         });
 
-        var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
-
-        $('#leavefrom,#leaveto').datepicker({
-            format: date_format,
-            autoclose: true
-        });
+      
         $('#reservation').daterangepicker({
             timePickerIncrement: 5, locale: {
                 format: calendar_date_time_format
@@ -376,10 +375,7 @@
 
         var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
 
-        $('#reservation').daterangepicker({
-            timePickerIncrement: 5, locale: {
-                format: calendar_date_time_format
-            }});
+       
         var date = '<?php echo set_value('date', date($this->customlib->getSchoolDateFormat())); ?>';
         $('input[type=text][name=applieddate]').val(date);
 
@@ -588,7 +584,8 @@
                 $('input[name="leavefrom"]').val(new Date(result.leave_from).toString(calendar_date_time_format));
                 $('input[name="filename"]').val(result.document_file);
 
-                $('input[name="leavedates"]').val(result.leavefrom + ' - ' + result.leaveto);
+               $('#leave_from_date').val(result.leavefrom);
+                $('#leave_to_date').val(result.leaveto);
 
                 $('input[name="leaverequestid"]').val(id);
                 $('textarea[name="reason"]').text(result.employee_remark);

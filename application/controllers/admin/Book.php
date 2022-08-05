@@ -1,16 +1,20 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
-class Book extends Admin_Controller {
+class Book extends Admin_Controller
+{
 
-    function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->library('encoding_lib');
     }
 
-    public function index() {
+    public function index()
+    {
         if (!$this->rbac->hasPrivilege('books', 'can_view')) {
             access_denied();
         }
@@ -18,63 +22,60 @@ class Book extends Admin_Controller {
         $this->session->set_userdata('top_menu', 'Library');
         $this->session->set_userdata('sub_menu', 'book/index');
 
-        $data['title'] = 'Add Book';
+        $data['title']      = 'Add Book';
         $data['title_list'] = 'Book Details';
-        $listbook = $this->book_model->listbook();
-        $data['listbook'] = $listbook;
+        $listbook           = $this->book_model->listbook();
+        $data['listbook']   = $listbook;
         $this->load->view('layout/header');
         $this->load->view('admin/book/createbook', $data);
         $this->load->view('layout/footer');
     }
 
-    public function getall() {
-
+    public function getall()
+    {
 
         if (!$this->rbac->hasPrivilege('books', 'can_view')) {
             access_denied();
         }
-
         $this->session->set_userdata('top_menu', 'Library');
         $this->session->set_userdata('sub_menu', 'book/getall');
-
-
-        $listbook = $this->book_model->bookgetall();
-        $data['listbook'] = $listbook;
-
         $this->load->view('layout/header');
-        $this->load->view('admin/book/getall', $data);
+        $this->load->view('admin/book/getall');
         $this->load->view('layout/footer');
     }
 
-    function create() {
+    public function create()
+    {
         if (!$this->rbac->hasPrivilege('books', 'can_add')) {
             access_denied();
         }
-        $data['title'] = 'Add Book';
+        $data['title']      = 'Add Book';
         $data['title_list'] = 'Book Details';
         $this->form_validation->set_rules('book_title', $this->lang->line('book_title'), 'trim|required|xss_clean');
-        if ($this->form_validation->run() == FALSE) {
-            $listbook = $this->book_model->listbook();
+        if ($this->form_validation->run() == false) {
+            $listbook         = $this->book_model->listbook();
             $data['listbook'] = $listbook;
             $this->load->view('layout/header');
             $this->load->view('admin/book/createbook', $data);
             $this->load->view('layout/footer');
         } else {
             $data = array(
-                'book_title' => $this->input->post('book_title'),
-                'book_no' => $this->input->post('book_no'),
-                'isbn_no' => $this->input->post('isbn_no'),
-                'subject' => $this->input->post('subject'),
-                'rack_no' => $this->input->post('rack_no'),
-                'publish' => $this->input->post('publish'),
-                'author' => $this->input->post('author'),
-                'qty' => $this->input->post('qty'),
+                'book_title'  => $this->input->post('book_title'),
+                'book_no'     => $this->input->post('book_no'),
+                'isbn_no'     => $this->input->post('isbn_no'),
+                'subject'     => $this->input->post('subject'),
+                'rack_no'     => $this->input->post('rack_no'),
+                'publish'     => $this->input->post('publish'),
+                'author'      => $this->input->post('author'),
+                'qty'         => $this->input->post('qty'),
                 'perunitcost' => $this->input->post('perunitcost'),
-                'description' => $this->input->post('description')
+                'description' => $this->input->post('description'),
             );
 
             if (isset($_POST['postdate']) && $_POST['postdate'] != '') {
                 $data['postdate'] = date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('postdate')));
+            } else {
+                $data['postdate'] = null;
             }
             $this->book_model->addbooks($data);
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
@@ -82,42 +83,42 @@ class Book extends Admin_Controller {
         }
     }
 
-    function edit($id) {
+    public function edit($id)
+    {
         if (!$this->rbac->hasPrivilege('books', 'can_edit')) {
             access_denied();
         }
 
-        $data['title'] = 'Edit Book';
+        $data['title']      = 'Edit Book';
         $data['title_list'] = 'Book Details';
-        $data['id'] = $id;
-        $editbook = $this->book_model->get($id);
-        $data['editbook'] = $editbook;
+        $data['id']         = $id;
+        $editbook           = $this->book_model->get($id);
+        $data['editbook']   = $editbook;
         $this->form_validation->set_rules('book_title', $this->lang->line('book_title'), 'trim|required|xss_clean');
-        if ($this->form_validation->run() == FALSE) {
-            $listbook = $this->book_model->listbook();
+        if ($this->form_validation->run() == false) {
+            $listbook         = $this->book_model->listbook();
             $data['listbook'] = $listbook;
             $this->load->view('layout/header');
             $this->load->view('admin/book/editbook', $data);
             $this->load->view('layout/footer');
         } else {
             $data = array(
-                'id' => $this->input->post('id'),
-                'book_title' => $this->input->post('book_title'),
-                'book_no' => $this->input->post('book_no'),
-                'isbn_no' => $this->input->post('isbn_no'),
-                'subject' => $this->input->post('subject'),
-                'rack_no' => $this->input->post('rack_no'),
-                'publish' => $this->input->post('publish'),
-                'author' => $this->input->post('author'),
-                'qty' => $this->input->post('qty'),
+                'id'          => $this->input->post('id'),
+                'book_title'  => $this->input->post('book_title'),
+                'book_no'     => $this->input->post('book_no'),
+                'isbn_no'     => $this->input->post('isbn_no'),
+                'subject'     => $this->input->post('subject'),
+                'rack_no'     => $this->input->post('rack_no'),
+                'publish'     => $this->input->post('publish'),
+                'author'      => $this->input->post('author'),
+                'qty'         => $this->input->post('qty'),
                 'perunitcost' => $this->input->post('perunitcost'),
-                //'postdate' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('postdate'))),
-                'description' => $this->input->post('description')
+                'description' => $this->input->post('description'),
             );
             if (isset($_POST['postdate']) && $_POST['postdate'] != '') {
                 $data['postdate'] = date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('postdate')));
             } else {
-                $data['postdate'] = "";
+                $data['postdate'] = null;
             }
 
             $this->book_model->addbooks($data);
@@ -126,7 +127,8 @@ class Book extends Admin_Controller {
         }
     }
 
-    function delete($id) {
+    public function delete($id)
+    {
         if (!$this->rbac->hasPrivilege('books', 'can_delete')) {
             access_denied();
         }
@@ -135,22 +137,24 @@ class Book extends Admin_Controller {
         redirect('admin/book/getall');
     }
 
-    public function getAvailQuantity() {
+    public function getAvailQuantity()
+    {
 
-        $book_id = $this->input->post('book_id');
+        $book_id   = $this->input->post('book_id');
         $available = 0;
         if ($book_id != "") {
-            $result = $this->bookissue_model->getAvailQuantity($book_id);
+            $result    = $this->bookissue_model->getAvailQuantity($book_id);
             $available = $result->qty - $result->total_issue;
         }
         $result_final = array('status' => '1', 'qty' => $available);
         echo json_encode($result_final);
     }
 
-    function import() {
+    public function import()
+    {
         $data['fields'] = array('book_title', 'book_no', 'isbn_no', 'subject', 'rack_no', 'publish', 'author', 'qty', 'perunitcost', 'postdate', 'description', 'available');
         $this->form_validation->set_rules('file', 'Image', 'callback_handle_csv_upload');
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == false) {
 
             $this->load->view('layout/header');
             $this->load->view('admin/book/import', $data);
@@ -166,16 +170,16 @@ class Book extends Admin_Controller {
                     $rowcount = 0;
                     if (!empty($result)) {
                         foreach ($result as $r_key => $r_value) {
-                            $result[$r_key]['book_title'] = $this->encoding_lib->toUTF8($result[$r_key]['book_title']);
-                            $result[$r_key]['book_no'] = $this->encoding_lib->toUTF8($result[$r_key]['book_no']);
-                            $result[$r_key]['isbn_no'] = $this->encoding_lib->toUTF8($result[$r_key]['isbn_no']);
-                            $result[$r_key]['subject'] = $this->encoding_lib->toUTF8($result[$r_key]['subject']);
-                            $result[$r_key]['rack_no'] = $this->encoding_lib->toUTF8($result[$r_key]['rack_no']);
-                            $result[$r_key]['publish'] = $this->encoding_lib->toUTF8($result[$r_key]['publish']);
-                            $result[$r_key]['author'] = $this->encoding_lib->toUTF8($result[$r_key]['author']);
-                            $result[$r_key]['qty'] = $this->encoding_lib->toUTF8($result[$r_key]['qty']);
+                            $result[$r_key]['book_title']  = $this->encoding_lib->toUTF8($result[$r_key]['book_title']);
+                            $result[$r_key]['book_no']     = $this->encoding_lib->toUTF8($result[$r_key]['book_no']);
+                            $result[$r_key]['isbn_no']     = $this->encoding_lib->toUTF8($result[$r_key]['isbn_no']);
+                            $result[$r_key]['subject']     = $this->encoding_lib->toUTF8($result[$r_key]['subject']);
+                            $result[$r_key]['rack_no']     = $this->encoding_lib->toUTF8($result[$r_key]['rack_no']);
+                            $result[$r_key]['publish']     = $this->encoding_lib->toUTF8($result[$r_key]['publish']);
+                            $result[$r_key]['author']      = $this->encoding_lib->toUTF8($result[$r_key]['author']);
+                            $result[$r_key]['qty']         = $this->encoding_lib->toUTF8($result[$r_key]['qty']);
                             $result[$r_key]['perunitcost'] = $this->encoding_lib->toUTF8($result[$r_key]['perunitcost']);
-                            $result[$r_key]['postdate'] = $this->encoding_lib->toUTF8($result[$r_key]['postdate']);
+                            $result[$r_key]['postdate']    = $this->encoding_lib->toUTF8($result[$r_key]['postdate']);
                             $result[$r_key]['description'] = $this->encoding_lib->toUTF8($result[$r_key]['description']);
                             $rowcount++;
                         }
@@ -196,7 +200,8 @@ class Book extends Admin_Controller {
         }
     }
 
-    function import_new() {
+    public function import_new()
+    {
 
         if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
             $ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
@@ -208,16 +213,16 @@ class Book extends Admin_Controller {
                 $rowcount = 0;
                 if (!empty($result)) {
                     foreach ($result as $r_key => $r_value) {
-                        $result[$r_key]['book_title'] = $this->encoding_lib->toUTF8($result[$r_key]['book_title']);
-                        $result[$r_key]['book_no'] = $this->encoding_lib->toUTF8($result[$r_key]['book_no']);
-                        $result[$r_key]['isbn_no'] = $this->encoding_lib->toUTF8($result[$r_key]['isbn_no']);
-                        $result[$r_key]['subject'] = $this->encoding_lib->toUTF8($result[$r_key]['subject']);
-                        $result[$r_key]['rack_no'] = $this->encoding_lib->toUTF8($result[$r_key]['rack_no']);
-                        $result[$r_key]['publish'] = $this->encoding_lib->toUTF8($result[$r_key]['publish']);
-                        $result[$r_key]['author'] = $this->encoding_lib->toUTF8($result[$r_key]['author']);
-                        $result[$r_key]['qty'] = $this->encoding_lib->toUTF8($result[$r_key]['qty']);
+                        $result[$r_key]['book_title']  = $this->encoding_lib->toUTF8($result[$r_key]['book_title']);
+                        $result[$r_key]['book_no']     = $this->encoding_lib->toUTF8($result[$r_key]['book_no']);
+                        $result[$r_key]['isbn_no']     = $this->encoding_lib->toUTF8($result[$r_key]['isbn_no']);
+                        $result[$r_key]['subject']     = $this->encoding_lib->toUTF8($result[$r_key]['subject']);
+                        $result[$r_key]['rack_no']     = $this->encoding_lib->toUTF8($result[$r_key]['rack_no']);
+                        $result[$r_key]['publish']     = $this->encoding_lib->toUTF8($result[$r_key]['publish']);
+                        $result[$r_key]['author']      = $this->encoding_lib->toUTF8($result[$r_key]['author']);
+                        $result[$r_key]['qty']         = $this->encoding_lib->toUTF8($result[$r_key]['qty']);
                         $result[$r_key]['perunitcost'] = $this->encoding_lib->toUTF8($result[$r_key]['perunitcost']);
-                        $result[$r_key]['postdate'] = $this->encoding_lib->toUTF8($result[$r_key]['postdate']);
+                        $result[$r_key]['postdate']    = $this->encoding_lib->toUTF8($result[$r_key]['postdate']);
                         $result[$r_key]['description'] = $this->encoding_lib->toUTF8($result[$r_key]['description']);
                         $rowcount++;
                     }
@@ -236,11 +241,12 @@ class Book extends Admin_Controller {
         echo json_encode($array);
     }
 
-    function handle_csv_upload() {
+    public function handle_csv_upload()
+    {
         $error = "";
         if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
             $allowedExts = array('csv');
-            $mimes = array('text/csv',
+            $mimes       = array('text/csv',
                 'text/plain',
                 'application/csv',
                 'text/comma-separated-values',
@@ -250,7 +256,7 @@ class Book extends Admin_Controller {
                 'text/anytext',
                 'application/octet-stream',
                 'application/txt');
-            $temp = explode(".", $_FILES["file"]["name"]);
+            $temp      = explode(".", $_FILES["file"]["name"]);
             $extension = end($temp);
             if ($_FILES["file"]["error"] > 0) {
                 $error .= "Error opening the file<br />";
@@ -274,26 +280,28 @@ class Book extends Admin_Controller {
         }
     }
 
-    function exportformat() {
+    public function exportformat()
+    {
         $this->load->helper('download');
         $filepath = "./backend/import/import_book_sample_file.csv";
-        $data = file_get_contents($filepath);
-        $name = 'import_book_sample_file.csv';
+        $data     = file_get_contents($filepath);
+        $name     = 'import_book_sample_file.csv';
 
         force_download($name, $data);
     }
 
-    public function issue_report() {
+    public function issue_report()
+    {
 
         $this->session->set_userdata('top_menu', 'Library');
         $this->session->set_userdata('sub_menu', 'Library/book/issue_report');
-        $data['title'] = 'Add Teacher';
-        $teacher_result = $this->teacher_model->getLibraryTeacher();
+        $data['title']       = 'Add Teacher';
+        $teacher_result      = $this->teacher_model->getLibraryTeacher();
         $data['teacherlist'] = $teacher_result;
 
-        $genderList = $this->customlib->getGender();
+        $genderList         = $this->customlib->getGender();
         $data['genderList'] = $genderList;
-        $issued_books = $this->bookissue_model->getissueMemberBooks();
+        $issued_books       = $this->bookissue_model->getissueMemberBooks();
 
         $data['issued_books'] = $issued_books;
 
@@ -303,17 +311,15 @@ class Book extends Admin_Controller {
         $this->load->view('layout/footer', $data);
     }
 
-    public function issue_returnreport() {
+    public function issue_returnreport()
+    {
         $this->session->set_userdata('top_menu', 'Reports');
         $this->session->set_userdata('sub_menu', 'Reports/library');
         $this->session->set_userdata('subsub_menu', 'Reports/library/issue_returnreport');
-        $data['title'] = 'Add Teacher';
+        $data['title']  = 'Add Teacher';
         $teacher_result = $this->teacher_model->getLibraryTeacher();
-        $data['teacherlist'] = $teacher_result;
 
-        $genderList = $this->customlib->getGender();
-        $data['genderList'] = $genderList;
-        $issued_books = $this->bookissue_model->getissuereturnMemberBooks();
+        $issued_books         = $this->bookissue_model->getissuereturnMemberBooks();
         $data['issued_books'] = $issued_books;
 
         $this->load->view('layout/header', $data);
@@ -321,6 +327,99 @@ class Book extends Admin_Controller {
         $this->load->view('layout/footer', $data);
     }
 
-}
+    public function getbooklist()
+    {
 
-?>
+        $listbook        = $this->book_model->getbooklist();
+        $m               = json_decode($listbook);
+        $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
+        $dt_data         = array();
+        if (!empty($m->data)) {
+            foreach ($m->data as $key => $value) {
+                $editbtn   = '';
+                $deletebtn = '';
+
+                if ($this->rbac->hasPrivilege('books', 'can_edit')) {
+                    $editbtn = "<a href='" . base_url() . "admin/book/edit/" . $value->id . "'   class='btn btn-default btn-xs'  data-toggle='tooltip' data-placement='left' title='" . $this->lang->line('edit') . "'><i class='fa fa-pencil'></i></a>";
+                }
+                if ($this->rbac->hasPrivilege('books', 'can_delete')) {
+                    $deletebtn = "<a onclick='return confirm(" . '"' . $this->lang->line('delete_confirm') . '"' . "  )' href='" . base_url() . "admin/book/delete/" . $value->id . "' class='btn btn-default btn-xs' data-placement='left' title='" . $this->lang->line('delete') . "' data-toggle='tooltip'><i class='fa fa-trash'></i></a>";
+                }
+
+                $row   = array();
+                $row[] = $value->book_title;
+                if ($value->description == "") {
+                    $row[] = $this->lang->line('no_description');
+                } else {
+                    $row[] = $value->description;
+                }
+                $row[]     = $value->book_no;
+                $row[]     = $value->isbn_no;
+                $row[]     = $value->publish;
+                $row[]     = $value->author;
+                $row[]     = $value->subject;
+                $row[]     = $value->rack_no;
+                $row[]     = $value->qty;
+                $row[]     = $value->qty - $value->total_issue;
+                $row[]     = $currency_symbol . $value->perunitcost;
+                $row[]     = $this->customlib->dateformat($value->postdate);
+                $row[]     = $editbtn . ' ' . $deletebtn;
+                $dt_data[] = $row;
+            }
+        }
+
+        $json_data = array(
+            "draw"            => intval($m->draw),
+            "recordsTotal"    => intval($m->recordsTotal),
+            "recordsFiltered" => intval($m->recordsFiltered),
+            "data"            => $dt_data,
+        );
+        echo json_encode($json_data);
+    }
+
+    /* function to get book inventory report by using datatable */
+    public function dtbookissuereturnreportlist()
+    {
+        $teacher_result = $this->teacher_model->getLibraryTeacher();
+        $issued_books   = $this->bookissue_model->getissuereturnMemberBooks();
+        $resultlist     = json_decode($issued_books);
+        $dt_data        = array();
+
+        if (!empty($resultlist->data)) {
+
+            $editbtn   = "";
+            $deletebtn = "";
+            foreach ($resultlist->data as $resultlist_key => $value) {
+
+                $row   = array();
+                $row[] = $value->book_title;
+                $row[] = $value->book_no;
+                $row[] = date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($value->issue_date));
+                $row[] = date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($value->return_date));
+                $row[] = $value->members_id;
+                $row[] = $value->library_card_no;
+
+                if ($value->admission != 0) {
+
+                    $row[] = $value->admission;
+
+                } else {
+                    $row[] = "";
+                }
+                $row[] = ucwords($value->fname) . " " . ucwords($value->lname);
+                $row[] = $value->member_type;
+
+                $dt_data[] = $row;
+            }
+
+        }
+        $json_data = array(
+            "draw"            => intval($resultlist->draw),
+            "recordsTotal"    => intval($resultlist->recordsTotal),
+            "recordsFiltered" => intval($resultlist->recordsFiltered),
+            "data"            => $dt_data,
+        );
+        echo json_encode($json_data);
+    }
+
+}

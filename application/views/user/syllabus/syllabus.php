@@ -33,7 +33,7 @@
     </div>
 </div>
 <div class="modal fade syllbus" id="lacture_youtube_modal" role="dialog" aria-labelledby="evaluation">
-    <div class="modal-dialog video-lg" role="document"> 
+    <div class="modal-dialog video-lg" role="document">
         <button type="button" class="close" data-dismiss="modal" onclick="videoUrlBlank()">&times;</button>
         <!-- <h4 class="box-title" ><?php echo $this->lang->line('youtube_link') ?></h4> -->
 
@@ -79,16 +79,15 @@
             type: "POST",
             url: base_url + "user/syllabus/get_weekdates",
             data: {'status': status, 'date': date},
-            //dataType: "json",
             beforeSend: function () {
-                //  $('#weekdates_result').addClass('dropdownloading');
+
             },
             success: function (data) {
 
                 $('#weekdates_result').html(data);
             },
             complete: function () {
-                //  $('#weekdates_result').removeClass('dropdownloading');
+
             }
         });
 
@@ -123,7 +122,6 @@
         for (j = 0; j < tab.rows.length; j++)
         {
             tab_text = tab_text + tab.rows[j].innerHTML + "</tr>";
-            //tab_text=tab_text+"</tr>";
         }
 
         tab_text = tab_text + "</table>";

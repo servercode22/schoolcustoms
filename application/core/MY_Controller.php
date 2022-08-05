@@ -3,11 +3,13 @@
 define('THEMES_DIR', 'themes');
 define('BASE_URI', str_replace('index.php', '', $_SERVER['SCRIPT_NAME']));
 
-class MY_Controller extends CI_Controller {
+class MY_Controller extends CI_Controller
+{
 
     protected $langs = array();
 
-    public function __construct() {
+    public function __construct()
+    {
 
         parent::__construct();
         $this->config->load('license');
@@ -17,24 +19,24 @@ class MY_Controller extends CI_Controller {
         $this->load->library('pushnotification');
         $this->load->library('jsonlib');
         $this->load->helper(array('directory', 'customfield', 'custom'));
-        $this->load->model(array('setting_model', 'customfield_model', 'onlinestudent_model', 'houselist_model', 'onlineexam_model', 'onlineexamquestion_model', 'onlineexamresult_model', 'examstudent_model', 'admitcard_model', 'marksheet_model', 'chatuser_model', 'examgroupstudent_model', 'examgroup_model', 'batchsubject_model'));
+        $this->load->model(array('setting_model', 'customfield_model', 'onlinestudent_model', 'houselist_model', 'onlineexam_model', 'onlineexamquestion_model', 'onlineexamresult_model', 'examstudent_model', 'admitcard_model', 'marksheet_model', 'chatuser_model', 'examgroupstudent_model', 'examgroup_model', 'batchsubject_model', 'filetype_model'));
 
         if ($this->session->has_userdata('admin')) {
 
-            $admin = $this->session->userdata('admin');
+            $admin    = $this->session->userdata('admin');
             $language = ($admin['language']['language']);
         } else if ($this->session->has_userdata('student')) {
 
-            $student = $this->session->userdata('student');
+            $student  = $this->session->userdata('student');
             $language = ($student['language']['language']);
         } else {
             $this->school_details = $this->setting_model->getSchoolDetail();
-            $language = ($this->school_details->language);
+            $language             = ($this->school_details->language);
         }
 
-        $this->config->set_item('language', strtotime($language));
+        $this->config->set_item('language', $language);
         $lang_array = array('form_validation_lang');
-        $map = directory_map(APPPATH . "./language/" . $language . "/app_files");
+        $map        = directory_map(APPPATH . "./language/" . $language . "/app_files");
         foreach ($map as $lang_key => $lang_value) {
             $lang_array[] = 'app_files/' . str_replace(".php", "", $lang_value);
         }
@@ -44,23 +46,26 @@ class MY_Controller extends CI_Controller {
 
 }
 
-class Admin_Controller extends MY_Controller {
+class Admin_Controller extends MY_Controller
+{
 
     protected $aaaa = false;
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->auth->is_logged_in();
         $this->check_license();
         $this->load->library('rbac');
         $this->config->load('app-config');
-        $this->load->model(array('batchsubject_model', 'examgroup_model', 'examsubject_model', 'examgroupstudent_model', 'feereminder_model'));
+        $this->load->model(array('batchsubject_model', 'examgroup_model', 'examsubject_model', 'examgroupstudent_model', 'feereminder_model', 'filetype_model'));
 
         $this->config->load('ci-blog');
         $this->config->load('custom_filed-config');
     }
 
-    public function check_license() {
+    public function check_license()
+    {
 
         $license = $this->config->item('SSLK');
 
@@ -84,16 +89,17 @@ class Admin_Controller extends MY_Controller {
         }
     }
 
-    public function update_ss_routine() {
+    public function update_ss_routine()
+    {
 
-        $license = $this->config->item('SSLK');
-        $fname = APPPATH . 'config/license.php';
+        $license       = $this->config->item('SSLK');
+        $fname         = APPPATH . 'config/license.php';
         $update_handle = fopen($fname, "r");
-        $content = fread($update_handle, filesize($fname));
+        $content       = fread($update_handle, filesize($fname));
         $file_contents = str_replace('$config[\'SSLK\'] = \'' . $license . '\'', '$config[\'SSLK\'] = \'\'', $content);
         $update_handle = fopen($fname, 'w') or die("can't open file");
         if (fwrite($update_handle, $file_contents)) {
-            
+
         }
         fclose($update_handle);
 
@@ -102,9 +108,11 @@ class Admin_Controller extends MY_Controller {
 
 }
 
-class Student_Controller extends MY_Controller {
+class Student_Controller extends MY_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->library('studentmodule_lib');
         $this->config->load('app-config');
@@ -113,17 +121,31 @@ class Student_Controller extends MY_Controller {
 
 }
 
-class Public_Controller extends MY_Controller {
+class Public_Controller extends MY_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
 }
 
-class Parent_Controller extends MY_Controller {
+class OnlineAdmission_Controller extends MY_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+}
+
+class Parent_Controller extends MY_Controller
+{
+
+    public function __construct()
+    {
         parent::__construct();
         $this->auth->is_logged_in_user('parent');
         $this->config->load('app-config');
@@ -132,16 +154,18 @@ class Parent_Controller extends MY_Controller {
 
 }
 
-class Front_Controller extends CI_Controller {
+class Front_Controller extends CI_Controller
+{
 
-    protected $data = array();
+    protected $data           = array();
     protected $school_details = array();
-    protected $parent_menu = '';
-    protected $page_title = '';
-    protected $theme_path = '';
-    protected $front_setting = '';
+    protected $parent_menu    = '';
+    protected $page_title     = '';
+    protected $theme_path     = '';
+    protected $front_setting  = '';
 
-    public function __construct() {
+    public function __construct()
+    {
 
         parent::__construct();
 
@@ -157,16 +181,39 @@ class Front_Controller extends CI_Controller {
         $this->load->model('frontcms_setting_model');
 
         $this->front_setting = $this->frontcms_setting_model->get();
-
+        
         if (!$this->front_setting) {
-
             redirect('site/userlogin');
         } else {
-
-            if (!$this->front_setting->is_active_front_cms) {
-
-                redirect('site/userlogin');
+            $front_cms_class  = $this->router->fetch_class();
+            $front_cms_method = $this->router->fetch_method();
+            if ($this->front_setting->is_active_front_cms) {
+                $this->config->set_item('front_layout', true);
             }
+            if (!$this->front_setting->is_active_front_cms) {
+                $this->config->set_item('front_layout', false);
+            }
+
+            if(!$this->front_setting->is_active_front_cms && !$this->school_details->online_admission){
+                 redirect('site/userlogin');
+            }  
+
+            if($this->school_details->online_admission){
+                if (!$this->front_setting->is_active_front_cms && 
+                    !($front_cms_class == "welcome" && $front_cms_method == "admission") &&
+                    !($front_cms_class == "welcome" && $front_cms_method == "editonlineadmission") && 
+                    !($front_cms_class == "welcome" && $front_cms_method == "online_admission_review") &&
+                    !($front_cms_class == "welcome" && $front_cms_method == "getSections") &&
+                    !($front_cms_class == "welcome" && $front_cms_method == "submitadmission") &&
+                    !($front_cms_class == "checkout" && $front_cms_method == "index") &&
+                    !($front_cms_class == "checkout" && $front_cms_method == "successinvoice") &&
+                    !($front_cms_class == "checkout" && $front_cms_method == "paymentfailed") &&
+                    !($front_cms_class == "welcome" && $front_cms_method == "checkadmissionstatus")
+                ) {                    
+                    redirect('site/userlogin');
+                }
+            }
+
         }
 
         $this->theme_path = $this->front_setting->theme;
@@ -174,7 +221,7 @@ class Front_Controller extends CI_Controller {
         $language = ($this->school_details->language);
         $this->load->helper('directory');
         $lang_array = array('form_validation_lang');
-        $map = directory_map(APPPATH . "./language/" . $language . "/app_files");
+        $map        = directory_map(APPPATH . "./language/" . $language . "/app_files");
         foreach ($map as $lang_key => $lang_value) {
             $lang_array[] = 'app_files/' . str_replace(".php", "", $lang_value);
         }
@@ -185,12 +232,13 @@ class Front_Controller extends CI_Controller {
         $this->load->config('ci-blog');
     }
 
-    protected function load_theme($content = null, $layout = true) {
+    protected function load_theme($content = null, $layout = true)
+    {
 
-        $this->data['main_menus'] = '';
+        $this->data['main_menus']     = '';
         $this->data['school_setting'] = $this->school_details;
-        $this->data['front_setting'] = $this->front_setting;
-        $menu_list = $this->cms_menu_model->getBySlug('main-menu');
+        $this->data['front_setting']  = $this->front_setting;
+        $menu_list                    = $this->cms_menu_model->getBySlug('main-menu');
 
         $footer_menu_list = $this->cms_menu_model->getBySlug('bottom-menu');
         if (count($menu_list) > 0) {
@@ -200,7 +248,8 @@ class Front_Controller extends CI_Controller {
         if (count($footer_menu_list) > 0) {
             $this->data['footer_menus'] = $this->cms_menuitems_model->getMenus($footer_menu_list['id']);
         }
-        $this->data['header'] = $this->load->view('themes/' . $this->theme_path . '/header', $this->data, true);
+        $this->data['layout_type'] = $layout;
+        $this->data['header']      = $this->load->view('themes/' . $this->theme_path . '/header', $this->data, true);
 
         $this->data['slider'] = $this->load->view('themes/' . $this->theme_path . '/home_slider', $this->data, true);
 
@@ -209,22 +258,26 @@ class Front_Controller extends CI_Controller {
         $this->base_assets_url = 'backend/' . THEMES_DIR . '/' . $this->theme_path . '/';
 
         $this->data['base_assets_url'] = BASE_URI . $this->base_assets_url;
+        $is_captcha                    = $this->captchalib->is_captcha('admission');
+        $this->data["is_captcha"]      = $is_captcha;
 
-        // if ($layout == true) {
-        $this->data['content'] = (is_null($content)) ? '' : $this->load->view(THEMES_DIR . '/' . $this->theme_path . '/' . $content, $this->data, true);
-        $this->load->view(THEMES_DIR . '/' . $this->theme_path . '/layout', $this->data);
-        // } else {
-        //     $this->load->view(THEMES_DIR . '/' . $this->config->item('ci_blog_theme') . '/' . $content, $this->data);
-        // }
+        if ($layout == true) {
+            $this->data['content'] = (is_null($content)) ? '' : $this->load->view(THEMES_DIR . '/' . $this->theme_path . '/' . $content, $this->data, true);
+            $this->load->view(THEMES_DIR . '/' . $this->theme_path . '/layout', $this->data);
+        } else {
+            $this->data['content'] = (is_null($content)) ? '' : $this->load->view(THEMES_DIR . '/' . $this->theme_path . '/' . $content, $this->data, true);
+            $this->load->view(THEMES_DIR . '/' . $this->theme_path . '/base_layout', $this->data);
+        }
     }
 
-    protected function load_theme_form($content = null, $layout = true) {
+    protected function load_theme_form($content = null, $layout = true)
+    {
 
-        $this->data['main_menus'] = '';
+        $this->data['main_menus']     = '';
         $this->data['school_setting'] = $this->school_details;
-        $this->data['front_setting'] = $this->front_setting;
-        $menu_list = $this->cms_menu_model->getBySlug('main-menu');
-        $footer_menu_list = $this->cms_menu_model->getBySlug('bottom-menu');
+        $this->data['front_setting']  = $this->front_setting;
+        $menu_list                    = $this->cms_menu_model->getBySlug('main-menu');
+        $footer_menu_list             = $this->cms_menu_model->getBySlug('bottom-menu');
         if (count($menu_list > 0)) {
             $this->data['main_menus'] = $this->cms_menuitems_model->getMenus($menu_list['id']);
         }
@@ -242,15 +295,13 @@ class Front_Controller extends CI_Controller {
 
         $this->data['base_assets_url'] = BASE_URI . $this->base_assets_url;
 
-        // if ($layout == true) {
         $this->data['content'] = (is_null($content)) ? '' : $this->load->view(THEMES_DIR . '/' . $this->theme_path . '/' . $content, $this->data, true);
         $this->load->view(THEMES_DIR . '/' . $this->theme_path . '/layout', $this->data);
-        // } else {
-        //     $this->load->view(THEMES_DIR . '/' . $this->config->item('ci_blog_theme') . '/' . $content, $this->data);
-        // }
+
     }
 
-    private function check_installation() {
+    private function check_installation()
+    {
 
         if ($this->uri->segment(1) !== 'install') {
             $this->load->config('migration');

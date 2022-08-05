@@ -2,7 +2,7 @@
     <!-- Content Header (Page header) -->
     <section class="content-header">
         <h1>
-            <i class="fa fa-gears"></i> Fees Reminder --r
+            <i class="fa fa-gears"></i> <?php echo $this->lang->line('fees') . " " . $this->lang->line('reminder'); ?>
         </h1>
     </section>
     <!-- Main content -->

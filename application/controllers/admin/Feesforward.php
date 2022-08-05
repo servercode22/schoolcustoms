@@ -41,11 +41,11 @@ class Feesforward extends Admin_Controller {
             $pre_session = $this->session_model->getPreSession($current_session);
             $data['pre_session'] = $pre_session;
             //=========date==============
-            $fees_due_days = $this->setting_result[0]['fee_due_days'];
+            $fees_due_days = $setting_result[0]['fee_due_days'];
             if ($fees_due_days > 0 && $fees_due_days != "") {
 
                 $due_date = date('Y-m-d', strtotime('+' . $fees_due_days . ' day'));
-                $data['due_date_formated'] = date($this->setting_result[0]['date_format'], $this->customlib->dateYYYYMMDDtoStrtotime($due_date));
+                $data['due_date_formated'] = date($setting_result[0]['date_format'], $this->customlib->dateYYYYMMDDtoStrtotime($due_date));
             } else {
 
                 $due_date = date('Y-m-d');
@@ -110,20 +110,15 @@ class Feesforward extends Admin_Controller {
             $student_comma_seprate = array();
 
             foreach ($studentlist as $student_list_key => $student_list_value) {
+               
                 $obj = new stdClass();
-                $obj->name = $student_list_value->firstname . " " . $student_list_value->lastname;
+                $obj->name = $this->customlib->getFullName($student_list_value->firstname,$student_list_value->middlename,$student_list_value->lastname,$this->sch_setting_detail->middlename,$this->sch_setting_detail->lastname);
                 $obj->admission_no = $student_list_value->admission_no;
                 $obj->roll_no = $student_list_value->roll_no;
                 $obj->father_name = $student_list_value->father_name;
                 $obj->student_session_id = $student_list_value->current_student_session_id;
                 $obj->student_previous_session_id = $student_list_value->previous_student_session_id;
-                if (strtotime($student_list_value->admission_date) == 0) {
-                    $obj->admission_date = "";
-                } else {
-                    $obj->admission_date = date($this->customlib->getSchoolDateFormat(), $this->customlib->dateYYYYMMDDtoStrtotime($student_list_value->admission_date));
-                }
-
-
+                $obj->admission_date = $this->customlib->dateformat($student_list_value->admission_date);
                 $student_Array[] = $obj;
                 $student_comma_seprate[] = $student_list_value->current_student_session_id;
             }

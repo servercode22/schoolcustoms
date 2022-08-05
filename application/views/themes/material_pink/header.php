@@ -1,4 +1,4 @@
-<div id="alert" class="affix-top">
+
     <header>
         <div class="container">
             <div class="row">
@@ -18,7 +18,7 @@
                 </div><!--./col-md-8-->
             </div><!--./row-->
         </div><!--./container-->
-    </header>
+    
 
 
     <div class="navborder">
@@ -35,9 +35,13 @@
                     </div>
 
                     <div class="collapse navbar-collapse" id="navbar-collapse-3">
-                        <ul class="nav navbar-nav">
+                        <?php 
+if($layout_type){
+?>
+  <ul class="nav navbar-nav">
                             <?php
                             foreach ($main_menus as $menu_key => $menu_value) {
+                            
                                 $submenus = false;
                                 $cls_menu_dropdown = "";
                                 $menu_selected = "";
@@ -104,9 +108,29 @@
 
 
                         </ul>
+<?php
+}else{
+    ?>
+  <ul class="nav navbar-nav">
+                           
+                <li class="active" >
+            <a href="<?php echo site_url('online_admission'); ?>" >Online Admission --r</a>
+                                  
+
+                                </li>
+                        </ul>
+                                <?php
+                            
+
+
+}
+ ?>
+                      
                     </div><!-- /.navbar-collapse -->
                 </nav><!-- /.navbar -->
             </div>
         </div>   
     </div> 
+
+</header>
 </div>

@@ -15,7 +15,7 @@
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
                     <div class="box-body">    
-                        <form role="form" action="<?php echo site_url('student/studentreport') ?>" method="post" class="">
+                        <form role="form" action="<?php echo site_url('student/studentreportvalidation') ?>" method="post" class="" id="reportform">
                             <div class="row">
 
                                 <?php echo $this->customlib->getCSRF(); ?>
@@ -34,7 +34,7 @@
                                             }
                                             ?>
                                         </select>
-                                        <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+                                         <span class="text-danger" id="error_class_id"></span>
                                     </div>
                                 </div> 
                                 <div class="col-sm-6 col-md-3">
@@ -108,20 +108,17 @@
                     </div><!--./box-body-->   
 
 
-                    <?php
-                    if (isset($resultlist)) {
-                        ?>
+                    
                         <div class="">
                             <div class="box-header ptbnull"></div> 
                             <div class="box-header ptbnull">
                                 <h3 class="box-title titlefix"><i class="fa fa-users"></i> <?php echo form_error('student'); ?> <?php echo $this->lang->line('student') . " " . $this->lang->line('report'); ?></h3>
                             </div>
                             <div class="box-body table-responsive">
-                                <div class="download_label"><?php
-                                    echo $this->lang->line('student') . " " . $this->lang->line('report') . "<br>";
-                                    $this->customlib->get_postmessage();
-                                    ?></div>
-                                <table class="table table-striped table-bordered table-hover example" cellspacing="0" width="100%">
+                                
+                                    <div class="download_label"> <?php echo $this->lang->line('student') . " " . $this->lang->line('report'); ?></div>
+                            <div >
+                                <table class="table table-striped table-bordered table-hover student-list" data-export-title="<?php echo $this->lang->line('student') . " " . $this->lang->line('report'); ?>">
                                     <thead>
                                         <tr>
                                             <th><?php echo $this->lang->line('section'); ?></th>
@@ -131,7 +128,7 @@
                                             <th><?php echo $this->lang->line('student_name'); ?></th>
                                             <?php if ($sch_setting->father_name) { ?>
                                                 <th><?php echo $this->lang->line('father_name'); ?></th>
-    <?php } ?>
+                                                <?php } ?>
                                             <th><?php echo $this->lang->line('date_of_birth'); ?></th>
                                             <th><?php echo $this->lang->line('gender'); ?></th>
                                             <?php if ($sch_setting->category) { ?>
@@ -147,55 +144,17 @@
                                                 <th><?php echo $this->lang->line('national_identification_no'); ?></th>
                                             <?php } if ($sch_setting->rte) { ?>
                                                 <th><?php echo $this->lang->line('rte'); ?></th>
-    <?php } ?>
+                                            <?php } ?>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php if (empty($resultlist)) { ?>
-                                        <?php
-                                        } else {
-                                            $count = 1;
-                                            foreach ($resultlist as $student) {
-                                                ?>
-                                                <tr>
-                                                    <td><?php echo $student['section']; ?></td>
-
-                                                    <td><?php echo $student['admission_no']; ?></td>
-
-                                                    <td>
-                                                        <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?></a>
-                                                    </td>
-            <?php if ($sch_setting->father_name) { ?>
-                                                        <td><?php echo $student['father_name']; ?></td>
-                                                    <?php } ?>
-                                                    <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob'])); ?></td>
-                                                    <td><?php echo $student['gender']; ?></td>
-                                                    <?php if ($sch_setting->category) { ?>
-                                                        <td><?php echo $student['category']; ?></td>
-                                                    <?php } if ($sch_setting->mobile_no) { ?>
-                                                        <td><?php echo $student['mobileno']; ?></td>
-                                                    <?php } if ($sch_setting->national_identification_no) { ?>
-                                                        <td><?php echo $student['samagra_id']; ?></td>
-                                                    <?php } if ($sch_setting->local_identification_no) { ?>
-                                                        <td><?php echo $student['adhar_no']; ?></td>
-                                                <?php } if ($sch_setting->rte) { ?>
-                                                        <td><?php echo $student['rte']; ?></td>
-                                                <?php } ?>
-                                                </tr>
-                                                <?php
-                                                $count++;
-                                            }
-                                        }
-                                        ?>
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div><!--./box box-primary -->
 
-    <?php
-}
-?>
+   
             </div><!-- ./col-md-12 -->  
         </div>       
 </div>  
@@ -252,4 +211,54 @@
             });
         });
     });
+</script>
+/script>
+ <script>
+$(document).ready(function() {
+     emptyDatatable('student-list','data');
+});
+</script>           
+<script type="text/javascript">
+$(document).ready(function(){ 
+$(document).on('submit','#reportform',function(e){
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+    var $this = $(this).find("button[type=submit]:focus");  
+    var form = $(this);
+    var url = form.attr('action');
+    var form_data = form.serializeArray();
+    form_data.push({name: 'search_type', value: $this.attr('value')});
+  
+    $.ajax({
+           url: url,
+           type: "POST",
+           dataType:'JSON',
+           data: form_data, // serializes the form's elements.
+              beforeSend: function () {
+                $('[id^=error]').html("");
+                $this.button('loading');
+              
+               },
+              success: function(response) { // your success handler
+                
+                if(!response.status){
+                    $.each(response.error, function(key, value) {
+                    $('#error_' + key).html(value);
+                    });
+                }else{
+                 
+                   initDatatable('student-list','student/dtstudentreportlist',response.params,[],100);
+                }
+              },
+             error: function() { // your error handler
+                 $this.button('reset');
+             },
+             complete: function() {
+             $this.button('reset');
+             }
+         });
+
+        });
+
+    });
+   
 </script>

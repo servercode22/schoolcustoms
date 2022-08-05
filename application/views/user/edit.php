@@ -9,9 +9,7 @@
             <div class="col-md-12">
                 <div class="box box-primary">
                     <div class="">
-
-                        <div class="pull-right box-tools">
-                        </div>
+                        <div class="pull-right box-tools"></div>
                     </div>
                 
                     <form action="<?php echo site_url("user/user/edit") ?>" id="editform" name="editform" method="post" accept-charset="utf-8" enctype="multipart/form-data">
@@ -19,7 +17,7 @@
                             <div class="tshadow mb25 bozero">
                                 <h3 class="pagetitleh2"> <?php echo $this->lang->line('edit'); ?> <?php echo $this->lang->line('student'); ?></h3>
                                 <div class="around10">
-                                    <?php echo validation_errors(); ?>
+                                 
                                     <?php if ($this->session->flashdata('msg')) {?>
                                     <?php echo $this->session->flashdata('msg') ?>
                                 <?php }?>
@@ -36,13 +34,26 @@ if (findSelected($inserted_fields, 'firstname')) {
                                                 <label for="exampleInputEmail1"><?php echo $this->lang->line('first_name'); ?></label><small class="req"> *</small>
                                                 <input id="firstname" name="firstname" placeholder="" type="text" class="form-control"  value="<?php echo set_value('firstname', $student['firstname']); ?>" />
                                                 <input type="hidden" name="studentid" value="<?php echo $student["id"] ?>">
-                                                <span class="text-danger"><?php echo form_error('first_name'); ?></span>
+                                                <span class="text-danger"><?php echo form_error('firstname'); ?></span>
                                             </div>
                                         </div>
 <?php
 }
-?>
+?> 
+ <?php
+if (findSelected($inserted_fields, 'middlename') && ($sch_setting_detail->middlename)) {
+    ?>
+                                        <div class="col-md-3">
+                                            <div class="form-group">
+                                                <label for="exampleInputEmail1"><?php echo $this->lang->line('middle_name'); ?></label>
+                                                <input id="middlename" name="middlename" placeholder="" type="text" class="form-control"  value="<?php echo set_value('middlename', $student['middlename']); ?>" />
+                                                <span class="text-danger"><?php echo form_error('middlename'); ?></span>
+                                            </div>
+                                        </div>
 
+<?php
+}
+?>
  <?php
 if (findSelected($inserted_fields, 'lastname') && ($sch_setting_detail->lastname)) {
     ?>
@@ -326,6 +337,25 @@ if (findSelected($inserted_fields, 'measurement_date')  && ($sch_setting_detail-
                                     </div>
                                 </div>
                             </div>
+                            <?php 
+                            if((findSelected($inserted_fields, 'father_name')  && ($sch_setting_detail->father_name)) || (findSelected($inserted_fields, 'father_phone')  && ($sch_setting_detail->father_phone)) ||
+                              (findSelected($inserted_fields, 'father_occupation')  && ($sch_setting_detail->father_occupation)) ||
+                              (findSelected($inserted_fields, 'father_pic')  && ($sch_setting_detail->father_pic)) ||
+                              (findSelected($inserted_fields, 'mother_name')  && ($sch_setting_detail->mother_name)) ||
+                              (findSelected($inserted_fields, 'mother_phone')  && ($sch_setting_detail->mother_phone)) ||
+                              (findSelected($inserted_fields, 'mother_occupation')  && ($sch_setting_detail->mother_occupation)) ||
+                              (findSelected($inserted_fields, 'mother_pic')  && ($sch_setting_detail->mother_pic)) ||
+                              (findSelected($inserted_fields, 'if_guardian_is')) ||
+                              (findSelected($inserted_fields, 'guardian_name')    && ($sch_setting_detail->guardian_name)) ||
+                              (findSelected($inserted_fields, 'guardian_relation')   && ($sch_setting_detail->guardian_relation)) ||
+                              (findSelected($inserted_fields, 'guardian_phone')  && ($sch_setting_detail->guardian_phone)) ||
+                              (findSelected($inserted_fields, 'guardian_occupation') && ($sch_setting_detail->guardian_occupation)) ||
+                              (findSelected($inserted_fields, 'guardian_email')  && ($sch_setting_detail->guardian_email)) ||
+                              (findSelected($inserted_fields, 'guardian_pic')  && ($sch_setting_detail->guardian_pic)) || 
+                              (findSelected($inserted_fields, 'guardian_address')  && ($sch_setting_detail->guardian_address))
+
+                               ){
+                            ?>
                             <div class="tshadow mb25 bozero">
                                 <h4 class="pagetitleh2"><?php echo $this->lang->line('parent_guardian_detail'); ?></h4>
                                 <div class="around10">
@@ -482,7 +512,7 @@ if (findSelected($inserted_fields, 'if_guardian_is')) {
                                             <div class="row">
                                                  <?php
                                           
-if (findSelected($inserted_fields, 'guardian_name')) {
+if (findSelected($inserted_fields, 'guardian_name')    && ($sch_setting_detail->guardian_name)) {
     ?>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -496,7 +526,7 @@ if (findSelected($inserted_fields, 'guardian_name')) {
 }
 ?>
                                              <?php
-if (findSelected($inserted_fields, 'guardian_relation')) {
+if (findSelected($inserted_fields, 'guardian_relation')   && ($sch_setting_detail->guardian_relation)) {
     ?>
 
                                                 <div class="col-md-6">
@@ -513,7 +543,7 @@ if (findSelected($inserted_fields, 'guardian_relation')) {
                                             </div>
                                             <div class="row">
                                                  <?php
-if (findSelected($inserted_fields, 'guardian_phone')) {
+if (findSelected($inserted_fields, 'guardian_phone')  && ($sch_setting_detail->guardian_phone)) {
     ?>
                                                 <div class="col-md-6">
                                                     <div class="form-group">
@@ -527,7 +557,7 @@ if (findSelected($inserted_fields, 'guardian_phone')) {
 }
 ?>
                                                  <?php
-if (findSelected($inserted_fields, 'guardian_occupation')) {
+if (findSelected($inserted_fields, 'guardian_occupation') && ($sch_setting_detail->guardian_occupation)) {
     ?>
 
                                                 <div class="col-md-6">
@@ -588,6 +618,7 @@ if (findSelected($inserted_fields, 'guardian_address')  && ($sch_setting_detail-
                                     </div>
                                 </div>
                             </div>
+                        <?php } ?>
                             <div class="tshadow mb25 bozero">
                                 <h3 class="pagetitleh2"><?php echo $this->lang->line('address_details'); ?></h3>
                                 <div class="around10">
@@ -654,7 +685,7 @@ if (findSelected($inserted_fields, 'bank_account_no')  && ($sch_setting_detail->
 }
 ?>
                                          <?php
-if (findSelected($inserted_fields, 'bank_name')) {
+if (findSelected($inserted_fields, 'bank_name')  && ($sch_setting_detail->bank_name)) {
     ?>
 
                                         <div class="col-md-4">
@@ -668,7 +699,7 @@ if (findSelected($inserted_fields, 'bank_name')) {
 }
 ?>
                                          <?php
-if (findSelected($inserted_fields, 'ifsc_code')) {
+if (findSelected($inserted_fields, 'ifsc_code')  && ($sch_setting_detail->ifsc_code)) {
     ?>
 
                                         <div class="col-md-4">
@@ -788,20 +819,6 @@ function findSelected($inserted_fields, $find)
 ?>
 
 <script type="text/javascript">
-
-        $(document).ready(function () {
-          var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
-      
-        $('.date').datepicker({
-            format: date_format,
-            autoclose: true,
-
-        });
-
-
-
-    });
-
     function auto_fill_guardian_address() {
         if ($("#autofill_current_address").is(':checked'))
         {

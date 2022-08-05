@@ -198,6 +198,7 @@
                             if ($this->rbac->hasPrivilege('search_due_fees', 'can_view')) {
                                 ?>
                                 <li class="<?php echo set_Submenu('studentfee/feesearch'); ?>"><a href="<?php echo base_url(); ?>studentfee/feesearch"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('search_due_fees'); ?> </a></li>
+                                <li class="<?php echo set_Submenu('studentfee/voucher'); ?>"><a href="<?php echo base_url(); ?>studentfee/voucherTrack"><i class="fa fa-angle-double-right"></i> Track Voucher </a></li>
                                 <?php
                             }
 
@@ -347,7 +348,17 @@
                     <?php
                 }
                 ?>
+             <li class="treeview <?php echo set_Topmenu('Accounts'); ?>">
+             <a href="#">
+             <i class="fa fa-map-o ftlayer"></i> <span><?php echo $this->lang->line('accounts'); ?></span> <i class="fa fa-angle-left pull-right"></i>
+            </a>
+            <ul class="treeview-menu">
 
+<li class="<?php echo set_Submenu('account/index'); ?>"><a href="<?php echo base_url(); ?>admin/account"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('create_account'); ?></a></li>
+<li class="<?php echo set_Submenu('accounts/index'); ?>"><a href="<?php echo site_url('admin/accountstatement') ?>"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('account_statement'); ?></a></li>
+<li class="<?php echo set_Submenu('accounts/balancesheet'); ?>"><a href="<?php echo site_url('admin/balancesheet/balancesheetreport') ?>"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('balance_sheet'); ?></a></li>
+</ul>
+             </li>
                 <?php
             }
             if ($this->module_lib->hasActive('examination')) {
@@ -527,7 +538,8 @@
 
                             if ($this->rbac->hasPrivilege('section', 'can_view')) {
                                 ?>
-                                <li class="<?php echo set_Submenu('sections/index'); ?>"><a href="<?php echo base_url(); ?>sections"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('sections'); ?></a></li>
+								<li class="<?php echo set_Submenu('sections/index'); ?>"><a href="<?php echo base_url(); ?>sections"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('sections'); ?></a></li>
+								<li class="<?php echo set_Submenu('branches/index'); ?>"><a href="<?php echo base_url(); ?>admin/branch"><i class="fa fa-angle-double-right"></i> Branches</a></li>
                                 <?php
                             }
                             ?>
@@ -538,13 +550,13 @@
                 }
             }
             ?>
-
             <?php
             if ($this->module_lib->hasActive('human_resource')) {
                 if (($this->rbac->hasPrivilege('staff', 'can_view') ||
                         $this->rbac->hasPrivilege('approve_leave_request', 'can_view') ||
                         $this->rbac->hasPrivilege('apply_leave', 'can_view') ||
                         $this->rbac->hasPrivilege('leave_types', 'can_view') ||
+                        $this->rbac->hasPrivilege('loan_management', 'can_view') ||
                         $this->rbac->hasPrivilege('teachers_rating', 'can_view') ||
                         $this->rbac->hasPrivilege('department', 'can_view') ||
                         $this->rbac->hasPrivilege('designation', 'can_view') ||
@@ -573,6 +585,7 @@
 
 
                                 <li class="<?php echo set_Submenu('admin/payroll'); ?>"><a href="<?php echo base_url(); ?>admin/payroll"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('payroll'); ?></a></li>
+                                <li class="<?php echo set_Submenu('admin/deductions'); ?>"><a href="<?php echo base_url(); ?>admin/payroll/deduction_type"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('deduction'); ?></a></li>
                                 <?php
                             }
 
@@ -594,7 +607,15 @@
 
                                 <?php
                             }
+                            if( $this->rbac->hasPrivilege('loan_management', 'can_view'))
+                            {
+                            ?>
+                             <li class="<?php echo set_Submenu('admin/loanmanage'); ?>"><a href="<?php echo base_url(); ?>admin/loan"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('loan_type'); ?></a></li>
+                            
+                            <?php
+                            }
                             if ($this->rbac->hasPrivilege('teachers_rating', 'can_view')) {
+                               
                                 ?>
                                 <li class="<?php echo set_Submenu('HR/rating'); ?>"><a href="<?php echo base_url(); ?>admin/staff/rating"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('teachers') . " " . $this->lang->line('rating'); ?></a></li>
                                 <?php
@@ -662,7 +683,7 @@
                 }
             }
             ?>
-            <?php
+             <?php
             if ($this->module_lib->hasModule('zoom_live_classes')) {
                 if ($this->module_lib->hasActive('zoom_live_classes')) {
                     if (($this->rbac->hasPrivilege('setting', 'can_view')) || ($this->rbac->hasPrivilege('live_classes', 'can_view')) || ($this->rbac->hasPrivilege('live_meeting', 'can_view'))) {
@@ -674,18 +695,18 @@
                             <ul class="treeview-menu">
 
 
-                                <?php if ($this->rbac->hasPrivilege('live_classes', 'can_view')) {
+                                <?php if ($this->rbac->hasPrivilege('live_classes', 'can_view') && $this->auth->addonchk('sszlc',false)) {
                                     ?>
                                     <li class="<?php echo set_Submenu('conference/live_class'); ?>"><a href="<?php echo base_url('admin/conference/timetable'); ?>"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('live_class'); ?></a></li>
                                 <?php } ?>
-                                <?php if ($this->rbac->hasPrivilege('live_meeting', 'can_view')) {
+                                <?php if ($this->rbac->hasPrivilege('live_meeting', 'can_view') && $this->auth->addonchk('sszlc',false)) {
                                     ?>
                                     <li class="<?php echo set_Submenu('conference/live_meeting'); ?>"><a href="<?php echo base_url('admin/conference/meeting'); ?>"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('live_meeting'); ?> </a></li>
                                 <?php } ?>
-                                <?php if ($this->rbac->hasPrivilege('live_classes_report', 'can_view')) {
+                                <?php if ($this->rbac->hasPrivilege('live_classes_report', 'can_view')  && $this->auth->addonchk('sszlc',false)) {
                                     ?>
                                     <li class="<?php echo set_Submenu('conference/class_report'); ?>"><a href="<?php echo base_url('admin/conference/class_report'); ?>"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('live_class') . ' ' . $this->lang->line('report'); ?></a></li>
-                                <?php } if ($this->rbac->hasPrivilege('live_meeting_report', 'can_view')) {
+                                <?php } if ($this->rbac->hasPrivilege('live_meeting_report', 'can_view')  && $this->auth->addonchk('sszlc',false)) {
                                     ?>
                                     <li class="<?php echo set_Submenu('conference/meeting_report'); ?>"><a href="<?php echo base_url('admin/conference/meeting_report'); ?>"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('live_meeting') . ' ' . $this->lang->line('report'); ?></a></li>
                                 <?php } ?>
@@ -710,18 +731,19 @@
                         <li class="treeview <?php echo set_Topmenu('gmeet'); ?>">
                             <a href="#">
                                 <i class="fa fa-video-camera ftlayer"></i> <span> <?php echo $this->lang->line('gmeet_live_classes'); ?></span> <i class="fa fa-angle-left pull-right"></i>
-                            </a>
+                            </a> 
                             <ul class="treeview-menu"> 
-                                <?php if ($this->rbac->hasPrivilege('gmeet_live_classes', 'can_view')) { ?>  
+                                <?php if ($this->rbac->hasPrivilege('gmeet_live_classes', 'can_view')  && $this->auth->addonchk('ssglc',false)) { ?>  
                                     <li class="<?php echo set_Submenu('gmeet/live_class'); ?>"><a href="<?php echo site_url('admin/gmeet/timetable'); ?>"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('live_class') ?></a></li>
-                                <?php } if ($this->rbac->hasPrivilege('gmeet_live_meeting', 'can_view')) { ?>
+                                <?php } if ($this->rbac->hasPrivilege('gmeet_live_meeting', 'can_view')  && $this->auth->addonchk('ssglc',false)) { ?>
                                     <li class="<?php echo set_Submenu('gmeet/live_meeting'); ?>"><a href="<?php echo site_url('admin/gmeet/meeting'); ?>"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('live_meeting') ?></a></li>
-                                <?php } if ($this->rbac->hasPrivilege('gmeet_live_classes_report', 'can_view')) { ?>
+                                <?php } if ($this->rbac->hasPrivilege('gmeet_live_classes_report', 'can_view') && $this->auth->addonchk('ssglc',false)) { ?>
                                     <li class="<?php echo set_Submenu('gmeet/class_report'); ?>"><a href="<?php echo site_url('admin/gmeet/class_report'); ?>"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('live_class') . " " . $this->lang->line('report'); ?></a></li>
-                                <?php } if ($this->rbac->hasPrivilege('gmeet_live_meeting_report', 'can_view')) { ?>
+                                <?php } if ($this->rbac->hasPrivilege('gmeet_live_meeting_report', 'can_view')  && $this->auth->addonchk('ssglc',false)) { ?>
                                     <li class="<?php echo set_Submenu('gmeet/meeting_report'); ?>"><a href="<?php echo site_url('admin/gmeet/meeting_report'); ?>"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('live_meeting') . " " . $this->lang->line('report') ?></a></li>
-            <?php } ?>
-
+            <?php } if ($this->rbac->hasPrivilege('gmeet_setting', 'can_view')) {?>
+            <li class="<?php echo set_Submenu('gmeet/gmeet_setting'); ?>"><a href="<?php echo base_url('admin/gmeet/index'); ?>"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('setting') ?></a></li>   
+        <?php } ?>
                             </ul>
                         </li>
 
@@ -880,12 +902,8 @@ if ($this->module_lib->hasActive('download_center')) {
             <?php
         }
         ?>
-
-
                         </ul>
                     </li>
-
-
                     <?php
                 }
             }
@@ -894,7 +912,6 @@ if ($this->module_lib->hasActive('download_center')) {
                         $this->rbac->hasPrivilege('room_type', 'can_view') ||
                         $this->rbac->hasPrivilege('hostel', 'can_view'))) {
                     ?>
-
                     <li class="treeview <?php echo set_Topmenu('Hostel'); ?>">
                         <a href="#">
                             <i class="fa fa-building-o ftlayer"></i> <span><?php echo $this->lang->line('hostel'); ?></span> <i class="fa fa-angle-left pull-right"></i>
@@ -920,7 +937,6 @@ if ($this->module_lib->hasActive('download_center')) {
         ?>
                         </ul>
                     </li>
-
                     <?php
                 }
             }
@@ -928,10 +944,10 @@ if ($this->module_lib->hasActive('download_center')) {
                 if (($this->rbac->hasPrivilege('student_certificate', 'can_view') ||
                         $this->rbac->hasPrivilege('generate_certificate', 'can_view') ||
                         $this->rbac->hasPrivilege('student_id_card', 'can_view') ||
-                        $this->rbac->hasPrivilege('generate_id_card', 'can_view'))) {
+                        $this->rbac->hasPrivilege('generate_id_card', 'can_view') ||
+                        $this->rbac->hasPrivilege('staff_id_card', 'can_view') ||
+                        $this->rbac->hasPrivilege('generate_staff_id_card', 'can_view'))) {
                     ?>
-
-
                     <li class="treeview <?php echo set_Topmenu('Certificate'); ?>">
                         <a href="#">
                             <i class="fa fa-newspaper-o ftlayer"></i> <span><?php echo $this->lang->line('certificate'); ?></span> <i class="fa fa-angle-left pull-right"></i>
@@ -943,23 +959,30 @@ if ($this->module_lib->hasActive('download_center')) {
                                 <li class="<?php echo set_Submenu('admin/certificate'); ?>"><a href="<?php echo base_url(); ?>admin/certificate/"><i class="fa fa-angle-double-right"></i><?php echo $this->lang->line('student'); ?> <?php echo $this->lang->line('certificate'); ?></a></li>
                                 <?php
                             }
-
                             if ($this->rbac->hasPrivilege('generate_certificate', 'can_view')) {
                                 ?>
                                 <li class="<?php echo set_Submenu('admin/generatecertificate'); ?>"><a href="<?php echo base_url(); ?>admin/generatecertificate/"><i class="fa fa-angle-double-right"></i><?php echo $this->lang->line('generate'); ?> <?php echo $this->lang->line('certificate'); ?></a></li>
                                 <?php
                             }
-
                             if ($this->rbac->hasPrivilege('student_id_card', 'can_view')) {
                                 ?>
                                 <li class="<?php echo set_Submenu('admin/studentidcard'); ?>"><a href="<?php echo base_url('admin/studentidcard/'); ?>"><i class="fa fa-angle-double-right"></i><?php echo $this->lang->line('student'); ?> <?php echo $this->lang->line('icard'); ?></a></li>
                                 <?php
                             }
-
                             if ($this->rbac->hasPrivilege('generate_id_card', 'can_view')) {
                                 ?>
                                 <li class="<?php echo set_Submenu('admin/generateidcard'); ?>"><a href="<?php echo base_url('admin/generateidcard/'); ?>"><i class="fa fa-angle-double-right"></i><?php echo $this->lang->line('generate'); ?> <?php echo $this->lang->line('icard'); ?></a></li>
-                    <?php } ?>
+                            <?php
+                            }
+                            if ($this->rbac->hasPrivilege('staff_id_card', 'can_view')) {
+                               ?>
+                                <li class="<?php echo set_Submenu('admin/staffidcard'); ?>"><a href="<?php echo base_url('admin/staffidcard/'); ?>"><i class="fa fa-angle-double-right"></i><?php echo $this->lang->line('staff'); ?> <?php echo $this->lang->line('icard'); ?></a></li>
+                               <?php 
+                            } 
+                            if ($this->rbac->hasPrivilege('generate_staff_id_card', 'can_view')) {
+                               ?>
+                                <li class="<?php echo set_Submenu('admin/generatestaffidcard'); ?>"><a href="<?php echo base_url('admin/generatestaffidcard/'); ?>"><i class="fa fa-angle-double-right"></i><?php echo $this->lang->line('generate'); ?> <?php echo $this->lang->line('staff'); ?> <?php echo $this->lang->line('icard'); ?></a></li>
+                            <?php } ?>
                         </ul>
                     </li>
                     <?php
@@ -1257,10 +1280,9 @@ if ($this->module_lib->hasActive('alumni')) {
                                 ?>
                                 <li class="<?php echo set_Submenu('emailconfig/index'); ?>"><a href="<?php echo base_url(); ?>emailconfig"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('email_setting'); ?></a></li>
                                 <?php
-							}
+                            }
 
-							
-							/* ======Amir Code====== */
+                            /* ======Amir Code====== */
 
 
 							if ($this->rbac->hasPrivilege('voucher_settings', 'can_view')) {
@@ -1271,7 +1293,6 @@ if ($this->module_lib->hasActive('alumni')) {
 							
 
 							/* =========End amir code======== */
-
 
                             if ($this->rbac->hasPrivilege('payment_methods', 'can_view')) {
                                 ?>
@@ -1314,11 +1335,16 @@ if ($this->module_lib->hasActive('alumni')) {
                                 ?>
                                 <li class="<?php echo set_Submenu('System Settings/module'); ?>"><a href="<?php echo base_url(); ?>admin/module"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('modules'); ?></a></li>
                                 <?php
-                            }
+                            } 
                             if ($this->rbac->hasPrivilege('custom_fields', 'can_view')) {
                                 ?>
                                 <li class="<?php echo set_Submenu('System Settings/customfield'); ?>"><a href="<?php echo base_url(); ?>admin/customfield"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('custom') . " " . $this->lang->line('fields'); ?></a></li>
-                            <?php } if ($this->rbac->hasPrivilege('system_fields', 'can_view')) {
+                            <?php } 
+                             if ($this->rbac->hasPrivilege('superadmin')) {
+                            ?>
+                                <li class="<?php echo set_Submenu('System Settings/captcha'); ?>"><a href="<?php echo base_url(); ?>admin/captcha"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('captcha_setting'); ?></a></li>
+                            <?php }
+                            if ($this->rbac->hasPrivilege('system_fields', 'can_view')) {
                                 ?>
                                 <li class="<?php echo set_Submenu('System Settings/systemfield'); ?>"><a href="<?php echo base_url(); ?>admin/systemfield"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('system') . " " . $this->lang->line('fields'); ?></a></li>
                                 <?php
@@ -1327,11 +1353,17 @@ if ($this->module_lib->hasActive('alumni')) {
                                 <li class="<?php echo set_Submenu('System Settings/profilesetting'); ?>"><a href="<?php echo base_url(); ?>student/profilesetting"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('student') . " " . $this->lang->line('profile') . " " . $this->lang->line('update'); ?></a></li>
                                     <?php
                                 }
+                                     if ($this->rbac->hasPrivilege('superadmin')) {
+                                    ?>
+                                <li class="<?php echo set_Submenu('System Settings/filetype'); ?>"><a href="<?php echo site_url('admin/admin/filetype'); ?>"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('file_types'); ?></a></li>
+                        <?php
+                    }
                                 if ($this->rbac->hasPrivilege('superadmin')) {
                                     ?>
                                 <li class="<?php echo set_Submenu('System Settings/updater'); ?>"><a href="<?php echo base_url(); ?>admin/updater"><i class="fa fa-angle-double-right"></i> <?php echo $this->lang->line('system_update') ?></a></li>
                         <?php
                     }
+                      
                     ?> 
 
                         </ul>

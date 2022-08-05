@@ -76,10 +76,6 @@
 </html>
 <script type="text/javascript">
     $(document).ready(function () {
-        // var base_url = '<?php //echo base_url();   ?>';
-        // $.backstretch([
-        //    base_url + "backend/usertemplate/assets/img/backgrounds/user15.jpg"
-        // ], {duration: 3000, fade: 750});
         $('.login-form input[type="text"], .login-form input[type="password"], .login-form textarea').on('focus', function () {
             $(this).removeClass('input-error');
         });

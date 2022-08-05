@@ -35,13 +35,13 @@ class Class_model extends MY_Model {
         return $classlist;
     }
 
+
+
     public function get($id = null, $classteacher = null) {
 
         $userdata = $this->customlib->getUserData();
-
         $role_id = $userdata["role_id"];
         $carray = array();
-
         if (isset($role_id) && ($userdata["role_id"] == 2) && ($userdata["class_teacher"] == "yes")) {
             if ($userdata["class_teacher"] == 'yes') {
 

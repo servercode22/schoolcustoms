@@ -1,7 +1,7 @@
 <?php
 $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 ?>
-<div class="content-wrapper" style="min-height: 946px;">   
+<div class="content-wrapper">   
     <section class="content-header">
         <h1>
             <i class="fa fa-money"></i> <?php echo $this->lang->line('fees_collection'); ?></h1>
@@ -128,7 +128,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <?php
                                                     foreach ($feegroupList as $feegroup) {
                                                         ?>
-                                                        <h4>
+                                                        <h4 class="mt2">
                                                             <input type="hidden" name="fee_session_groups" value="<?php echo $feegroup->id; ?>">
                                                             <a href="#" data-toggle="popover" class="detail_popover"><?php echo $feegroup->group_name; ?></a>
                                                         </h4>
@@ -174,13 +174,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                 <th>
                                                                     <div class="checkbox mb0 mt0">
                                                                         <label class="labelbold"><input type="checkbox" id="select_all"/> <?php echo $this->lang->line('all'); ?></label>
-                                                                    </div>
-                                                                   <!--  <input type="checkbox" id="select_all"/> <span><?php //echo $this->lang->line('all');   ?></span> --></th>
-
+                                                                    </div></th>
                                                                 <th><?php echo $this->lang->line('admission_no'); ?></th>
-
                                                                 <th><?php echo $this->lang->line('student_name'); ?></th>
-
                                                                 <th><?php echo $this->lang->line('class'); ?></th>
                                                                 <?php if ($sch_setting->father_name) { ?>
                                                                     <th><?php echo $this->lang->line('father_name'); ?></th>
@@ -218,7 +214,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                                                         <td><?php echo $student['admission_no']; ?></td>
 
-                                                                        <td><?php echo $student['firstname'] . " " . $student['lastname']; ?></td>
+                                                                        <td><?php echo $this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname); ?></td>
                                                                         <td><?php echo $student['class'] . "(" . $student['section'] . ")" ?></td>
                                                                         <?php if ($sch_setting->father_name) { ?>
                                                                             <td><?php echo $student['father_name']; ?></td>

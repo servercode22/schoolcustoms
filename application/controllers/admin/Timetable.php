@@ -4,15 +4,18 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-class Timetable extends Admin_Controller {
+class Timetable extends Admin_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->load->model("staff_model");
         $this->load->model("classteacher_model");
     }
 
-    public function index() {
+    public function index()
+    {
 
         if (!$this->rbac->hasPrivilege('class_time_table', 'can_view')) {
             access_denied();
@@ -20,13 +23,13 @@ class Timetable extends Admin_Controller {
 
         $this->session->set_userdata('top_menu', 'Academics');
         $this->session->set_userdata('sub_menu', 'Academics/timetable');
-        $session = $this->setting_model->getCurrentSession();
-        $data['title'] = 'Exam Marks';
-        $data['exam_id'] = "";
-        $data['class_id'] = "";
+        $session            = $this->setting_model->getCurrentSession();
+        $data['title']      = 'Exam Marks';
+        $data['exam_id']    = "";
+        $data['class_id']   = "";
         $data['section_id'] = "";
 
-        $class = $this->class_model->get();
+        $class             = $this->class_model->get();
         $data['classlist'] = $class;
 
         $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
@@ -38,38 +41,38 @@ class Timetable extends Admin_Controller {
             $this->load->view('layout/footer', $data);
         } else {
 
-            $class_id = $this->input->post('class_id');
-            $section_id = $this->input->post('section_id');
-            $section_id = $this->input->post('group_id');
-            $data['class_id'] = $class_id;
+            $class_id           = $this->input->post('class_id');
+            $section_id         = $this->input->post('section_id');
+            $section_id         = $this->input->post('group_id');
+            $data['class_id']   = $class_id;
             $data['section_id'] = $section_id;
-            $result_subjects = $this->teachersubject_model->getSubjectByClsandSection($class_id, $section_id);
+            $result_subjects    = $this->teachersubject_model->getSubjectByClsandSection($class_id, $section_id);
 
-            $getDaysnameList = $this->customlib->getDaysname();
+            $getDaysnameList         = $this->customlib->getDaysname();
             $data['getDaysnameList'] = $getDaysnameList;
-            $final_array = array();
+            $final_array             = array();
             if (!empty($result_subjects)) {
                 foreach ($result_subjects as $subject_k => $subject_v) {
                     $result_array = array();
                     foreach ($getDaysnameList as $day_key => $day_value) {
                         $where_array = array(
                             'teacher_subject_id' => $subject_v['id'],
-                            'day_name' => $day_value,
+                            'day_name'           => $day_value,
                         );
                         $result = $this->timetable_model->get($where_array);
                         if (!empty($result)) {
-                            $obj = new stdClass();
-                            $obj->status = "Yes";
-                            $obj->start_time = $result[0]['start_time'];
-                            $obj->end_time = $result[0]['end_time'];
-                            $obj->room_no = $result[0]['room_no'];
+                            $obj                      = new stdClass();
+                            $obj->status              = "Yes";
+                            $obj->start_time          = $result[0]['start_time'];
+                            $obj->end_time            = $result[0]['end_time'];
+                            $obj->room_no             = $result[0]['room_no'];
                             $result_array[$day_value] = $obj;
                         } else {
-                            $obj = new stdClass();
-                            $obj->status = "No";
-                            $obj->start_time = "N/A";
-                            $obj->end_time = "N/A";
-                            $obj->room_no = "N/A";
+                            $obj                      = new stdClass();
+                            $obj->status              = "No";
+                            $obj->start_time          = "N/A";
+                            $obj->end_time            = "N/A";
+                            $obj->room_no             = "N/A";
                             $result_array[$day_value] = $obj;
                         }
                     }
@@ -84,7 +87,8 @@ class Timetable extends Admin_Controller {
         }
     }
 
-    public function mytimetable() {
+    public function mytimetable()
+    {
 
         if (!$this->rbac->hasPrivilege('teachers_time_table', 'can_view')) {
             access_denied();
@@ -93,19 +97,19 @@ class Timetable extends Admin_Controller {
         $data['title'] = 'My Timetable';
         $this->session->set_userdata('top_menu', 'Academics');
         $this->session->set_userdata('sub_menu', 'Academics/timetable/mytimetable');
-        $my_role = $this->customlib->getStaffRole();
-        $role = json_decode($my_role);
+        $my_role  = $this->customlib->getStaffRole();
+        $role     = json_decode($my_role);
         $is_admin = false;
 
         if ($role->id != "2") {
-            $staff_list = $this->staff_model->getEmployee('2');
+            $staff_list         = $this->staff_model->getEmployee('2');
             $data['staff_list'] = $staff_list;
-            $is_admin = true;
+            $is_admin           = true;
         }
 
-        $staff_id = $this->customlib->getStaffID();
+        $staff_id          = $this->customlib->getStaffID();
         $data['timetable'] = array();
-        $days = $this->customlib->getDaysname();
+        $days              = $this->customlib->getDaysname();
 
         foreach ($days as $day_key => $day_value) {
             $data['timetable'][$day_value] = $this->subjecttimetable_model->getByStaffandDay($staff_id, $day_key);
@@ -120,25 +124,28 @@ class Timetable extends Admin_Controller {
         $this->load->view('layout/footer', $data);
     }
 
-    public function view($id) {
+    public function view($id)
+    {
         if (!$this->rbac->hasPrivilege('class_timetable', 'can_view')) {
             access_denied();
         }
         $data['title'] = 'Mark List';
-        $mark = $this->mark_model->get($id);
-        $data['mark'] = $mark;
+        $mark          = $this->mark_model->get($id);
+        $data['mark']  = $mark;
         $this->load->view('layout/header', $data);
         $this->load->view('admin/timetable/timetableShow', $data);
         $this->load->view('layout/footer', $data);
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         $data['title'] = 'Mark List';
         $this->mark_model->remove($id);
         redirect('admin/timetable/index');
     }
 
-    public function create() {
+    public function create()
+    {
         if (!$this->rbac->hasPrivilege('class_timetable', 'can_view')) {
             access_denied();
         }
@@ -146,31 +153,31 @@ class Timetable extends Admin_Controller {
         $this->session->set_userdata('top_menu', 'Academics');
         $this->session->set_userdata('sub_menu', 'Academics/timetable');
 
-        $session = $this->setting_model->getCurrentSession();
-        $data['title'] = 'Exam Schedule';
+        $session            = $this->setting_model->getCurrentSession();
+        $data['title']      = 'Exam Schedule';
         $data['subject_id'] = "";
-        $data['class_id'] = "";
+        $data['class_id']   = "";
         $data['section_id'] = "";
-        $exam = $this->exam_model->get();
-        $class = $this->class_model->get('', $classteacher = 'yes');
-        $data['examlist'] = $exam;
-        $data['classlist'] = $class;
-        $userdata = $this->customlib->getUserData();
+        $exam               = $this->exam_model->get();
+        $class              = $this->class_model->get('', $classteacher = 'yes');
+        $data['examlist']   = $exam;
+        $data['classlist']  = $class;
+        $userdata           = $this->customlib->getUserData();
 
-        $staff = $this->staff_model->getStaffbyrole(2);
-        $data['staff'] = $staff;
-        $data['subject'] = array();
-        $feecategory = $this->feecategory_model->get();
+        $staff                   = $this->staff_model->getStaffbyrole(2);
+        $data['staff']           = $staff;
+        $data['subject']         = array();
+        $feecategory             = $this->feecategory_model->get();
         $data['feecategorylist'] = $feecategory;
         $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('subject_group_id', $this->lang->line('group'), 'trim|required|xss_clean');
-        $class_id = $this->input->post('class_id');
-        $section_id = $this->input->post('section_id');
+        $class_id         = $this->input->post('class_id');
+        $section_id       = $this->input->post('section_id');
         $subject_group_id = $this->input->post('subject_group_id');
 
-        $data['class_id'] = $class_id;
-        $data['section_id'] = $section_id;
+        $data['class_id']         = $class_id;
+        $data['section_id']       = $section_id;
         $data['subject_group_id'] = $subject_group_id;
 
         if ($this->form_validation->run() == false) {
@@ -179,42 +186,38 @@ class Timetable extends Admin_Controller {
             $this->load->view('layout/footer', $data);
         } else {
 
-
-            $getDaysnameList = $this->customlib->getDaysname();
+            $getDaysnameList         = $this->customlib->getDaysname();
             $data['getDaysnameList'] = $getDaysnameList;
-            $subject = $this->subjectgroup_model->getGroupsubjects($subject_group_id);
-
-            $data['subject'] = $subject;
-
+            $subject                 = $this->subjectgroup_model->getGroupsubjects($subject_group_id);
+            $data['subject']         = $subject;
             $this->load->view('layout/header', $data);
             $this->load->view('admin/timetable/timetableCreate', $data);
             $this->load->view('layout/footer', $data);
         }
     }
 
-    public function classreport() {
+    public function classreport()
+    {
         if (!$this->rbac->hasPrivilege('class_timetable', 'can_view')) {
             access_denied();
         }
 
         $this->session->set_userdata('top_menu', 'Academics');
         $this->session->set_userdata('sub_menu', 'Academics/timetable');
-
-        $session = $this->setting_model->getCurrentSession();
-        $data['title'] = 'Exam Schedule';
-        $data['subject_id'] = "";
-        $data['class_id'] = "";
-        $data['section_id'] = "";
-        $exam = $this->exam_model->get();
-        $class = $this->class_model->get('', $classteacher = 'yes');
-        $data['examlist'] = $exam;
-        $data['classlist'] = $class;
-        $userdata = $this->customlib->getUserData();
-
-        $staff = $this->staff_model->getStaffbyrole(2);
-        $data['staff'] = $staff;
-        $data['subject'] = array();
-        $feecategory = $this->feecategory_model->get();
+        $session                 = $this->setting_model->getCurrentSession();
+        $data['title']           = 'Exam Schedule';
+        $data['subject_id']      = "";
+        $data['class_id']        = "";
+        $data['section_id']      = "";
+        $exam                    = $this->exam_model->get();
+        $class                   = $this->class_model->get('', $classteacher = 'yes');
+        $data['examlist']        = $exam;
+        $data['classlist']       = $class;
+        $userdata                = $this->customlib->getUserData();
+        $staff                   = $this->staff_model->getStaffbyrole(2);
+        $data['staff']           = $staff;
+        $data['subject']         = array();
+        $feecategory             = $this->feecategory_model->get();
         $data['feecategorylist'] = $feecategory;
         $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean');
@@ -222,13 +225,13 @@ class Timetable extends Admin_Controller {
         if ($this->form_validation->run() == true) {
             if (isset($_POST['search'])) {
 
-                $class_id = $this->input->post('class_id');
-                $section_id = $this->input->post('section_id');
-                $days = $this->customlib->getDaysname();
+                $class_id    = $this->input->post('class_id');
+                $section_id  = $this->input->post('section_id');
+                $days        = $this->customlib->getDaysname();
                 $days_record = array();
                 foreach ($days as $day_key => $day_value) {
-                    $class_id = $this->input->post('class_id');
-                    $section_id = $this->input->post('section_id');
+                    $class_id              = $this->input->post('class_id');
+                    $section_id            = $this->input->post('section_id');
                     $days_record[$day_key] = $this->subjecttimetable_model->getSubjectByClassandSectionDay($class_id, $section_id, $day_key);
                 }
 
@@ -241,14 +244,15 @@ class Timetable extends Admin_Controller {
         $this->load->view('layout/footer', $data);
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         if (!$this->rbac->hasPrivilege('class_timetable', 'can_edit')) {
             access_denied();
         }
         $data['title'] = 'Edit Mark';
-        $data['id'] = $id;
-        $mark = $this->mark_model->get($id);
-        $data['mark'] = $mark;
+        $data['id']    = $id;
+        $mark          = $this->mark_model->get($id);
+        $data['mark']  = $mark;
         $this->form_validation->set_rules('name', $this->lang->line('mark'), 'trim|required|xss_clean');
         if ($this->form_validation->run() == false) {
             $this->load->view('layout/header', $data);
@@ -256,7 +260,7 @@ class Timetable extends Admin_Controller {
             $this->load->view('layout/footer', $data);
         } else {
             $data = array(
-                'id' => $id,
+                'id'   => $id,
                 'name' => $this->input->post('name'),
                 'note' => $this->input->post('note'),
             );
@@ -266,18 +270,19 @@ class Timetable extends Admin_Controller {
         }
     }
 
-    public function getBydategroupclasssection() {
-        $data = array();
+    public function getBydategroupclasssection()
+    {
+        $data                = array();
         $data['total_count'] = 1;
-        $day = $this->input->post('day');
-        $class_id = $this->input->post('class_id');
-        $section_id = $this->input->post('section_id');
-        $subject_group_id = $this->input->post('subject_group_id');
-        $subject = $this->subjectgroup_model->getGroupsubjects($subject_group_id);
+        $day                 = $this->input->post('day');
+        $class_id            = $this->input->post('class_id');
+        $section_id          = $this->input->post('section_id');
+        $subject_group_id    = $this->input->post('subject_group_id');
+        $subject             = $this->subjectgroup_model->getGroupsubjects($subject_group_id);
 
         $prev_record = $this->subjecttimetable_model->getBySubjectGroupDayClassSection($subject_group_id, $day, $class_id, $section_id);
 
-        $staff = $this->staff_model->getStaffbyrole(2);
+        $staff         = $this->staff_model->getStaffbyrole(2);
         $data['staff'] = $staff;
         if (empty($prev_record)) {
             $data['prev_record'] = array();
@@ -285,17 +290,18 @@ class Timetable extends Admin_Controller {
             $data['total_count'] = count($prev_record);
             $data['prev_record'] = $prev_record;
         }
-        $data['subject'] = $subject;
-        $data['day'] = $day;
-        $data['class_id'] = $class_id;
-        $data['section_id'] = $section_id;
+        $data['subject']          = $subject;
+        $data['day']              = $day;
+        $data['class_id']         = $class_id;
+        $data['section_id']       = $section_id;
         $data['subject_group_id'] = $subject_group_id;
 
         $data['html'] = $this->load->view('admin/timetable/addrow', $data, true);
         echo json_encode($data);
     }
 
-    public function savegroup() {
+    public function savegroup()
+    {
         $json = array();
         $this->form_validation->set_rules('subject_group_id', $this->lang->line('subject_group'), 'trim|required');
         $this->form_validation->set_rules('day', $this->lang->line('day'), 'trim|required');
@@ -312,31 +318,31 @@ class Timetable extends Admin_Controller {
         if (!$this->form_validation->run()) {
             $json = array(
                 'subject_group_id' => form_error('subject_group_id', '<li>', '</li>'),
-                'day' => form_error('day', '<li>', '</li>'),
-                'class_id' => form_error('class_id', '<li>', '</li>'),
-                'section_id' => form_error('section_id', '<li>', '</li>'),
+                'day'              => form_error('day', '<li>', '</li>'),
+                'class_id'         => form_error('class_id', '<li>', '</li>'),
+                'section_id'       => form_error('section_id', '<li>', '</li>'),
             );
 
             foreach ($this->input->post('total_row') as $key => $value) {
-                $json['subject_' . $value] = form_error('subject_' . $value, '<li>', '</li>');
-                $json['staff_' . $value] = form_error('staff_' . $value, '<li>', '</li>');
+                $json['subject_' . $value]   = form_error('subject_' . $value, '<li>', '</li>');
+                $json['staff_' . $value]     = form_error('staff_' . $value, '<li>', '</li>');
                 $json['time_from_' . $value] = form_error('time_from_' . $value, '<li>', '</li>');
-                $json['time_to_' . $value] = form_error('time_to_' . $value, '<li>', '</li>');
-                $json['room_no_' . $value] = form_error('room_no_' . $value, '<li>', '</li>');
+                $json['time_to_' . $value]   = form_error('time_to_' . $value, '<li>', '</li>');
+                $json['room_no_' . $value]   = form_error('room_no_' . $value, '<li>', '</li>');
             }
 
             $json_array = array('status' => '0', 'error' => $json);
         } else {
-            $day = $this->input->post('day');
-            $class_id = $this->input->post('class_id');
-            $section_id = $this->input->post('section_id');
+            $day              = $this->input->post('day');
+            $class_id         = $this->input->post('class_id');
+            $section_id       = $this->input->post('section_id');
             $subject_group_id = $this->input->post('subject_group_id');
-            $total_row = $this->input->post('total_row');
-            $session = $this->setting_model->getCurrentSession();
-            $insert_array = array();
-            $update_array = array();
-            $old_input = array();
-            $prev_array = $this->input->post('prev_array');
+            $total_row        = $this->input->post('total_row');
+            $session          = $this->setting_model->getCurrentSession();
+            $insert_array     = array();
+            $update_array     = array();
+            $old_input        = array();
+            $prev_array       = $this->input->post('prev_array');
             if (isset($prev_array)) {
                 foreach ($prev_array as $prev_arr_key => $prev_arr_value) {
                     $old_input[] = $prev_arr_value;
@@ -349,38 +355,43 @@ class Timetable extends Admin_Controller {
 
                     if ($prev_id == 0) {
                         $insert_array[] = array(
-                            'day' => $day,
-                            'class_id' => $class_id,
-                            'section_id' => $section_id,
-                            'subject_group_id' => $subject_group_id,
+                            'day'                      => $day,
+                            'class_id'                 => $class_id,
+                            'section_id'               => $section_id,
+                            'subject_group_id'         => $subject_group_id,
                             'subject_group_subject_id' => $this->input->post('subject_' . $total_value),
-                            'staff_id' => $this->input->post('staff_' . $total_value),
-                            'time_from' => $this->input->post('time_from_' . $total_value),
-                            'time_to' => $this->input->post('time_to_' . $total_value),
-                            'room_no' => $this->input->post('room_no_' . $total_value),
-                            'session_id' => $session,
+                            'staff_id'                 => $this->input->post('staff_' . $total_value),
+                            'time_from'                => $this->input->post('time_from_' . $total_value),
+                            'time_to'                  => $this->input->post('time_to_' . $total_value),
+                            'start_time'               => $this->customlib->timeFormat($this->input->post('time_from_' . $total_value), true),
+                            'end_time'                 => $this->customlib->timeFormat($this->input->post('time_to_' . $total_value), true),
+                            'room_no'                  => $this->input->post('room_no_' . $total_value),
+                            'session_id'               => $session,
                         );
                     } else {
                         $preserve_array[] = $prev_id;
-                        $update_array[] = array(
-                            'id' => $prev_id,
-                            'day' => $day,
-                            'class_id' => $class_id,
-                            'section_id' => $section_id,
-                            'subject_group_id' => $subject_group_id,
+                        $update_array[]   = array(
+                            'id'                       => $prev_id,
+                            'day'                      => $day,
+                            'class_id'                 => $class_id,
+                            'section_id'               => $section_id,
+                            'subject_group_id'         => $subject_group_id,
                             'subject_group_subject_id' => $this->input->post('subject_' . $total_value),
-                            'staff_id' => $this->input->post('staff_' . $total_value),
-                            'time_from' => $this->input->post('time_from_' . $total_value),
-                            'time_to' => $this->input->post('time_to_' . $total_value),
-                            'room_no' => $this->input->post('room_no_' . $total_value),
-                            'session_id' => $session,
+                            'staff_id'                 => $this->input->post('staff_' . $total_value),
+                            'time_from'                => $this->input->post('time_from_' . $total_value),
+                            'time_to'                  => $this->input->post('time_to_' . $total_value),
+
+                            'start_time'               => $this->customlib->timeFormat($this->input->post('time_from_' . $total_value), true),
+                            'end_time'                 => $this->customlib->timeFormat($this->input->post('time_to_' . $total_value), true),
+                            'room_no'                  => $this->input->post('room_no_' . $total_value),
+                            'session_id'               => $session,
                         );
                     }
                 }
             }
 
             $delete_array = array_diff($old_input, $preserve_array);
-            $result = $this->subjecttimetable_model->add($delete_array, $insert_array, $update_array);
+            $result       = $this->subjecttimetable_model->add($delete_array, $insert_array, $update_array);
             if ($result) {
                 $json_array = array('status' => '1', 'error' => '', 'message' => $this->lang->line('success_message'));
             } else {
@@ -389,11 +400,12 @@ class Timetable extends Admin_Controller {
         }
 
         $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode($json_array));
+            ->set_content_type('application/json')
+            ->set_output(json_encode($json_array));
     }
 
-    public function getteachertimetable() {
+    public function getteachertimetable()
+    {
         $json = array();
         $this->form_validation->set_error_delimiters('', '');
         $this->form_validation->set_rules('teacher', $this->lang->line('teacher'), 'trim|required');
@@ -405,10 +417,9 @@ class Timetable extends Admin_Controller {
 
             $json_array = array('status' => '0', 'error' => $json);
         } else {
-            $staff_id = $this->input->post('teacher');
-            // $staff_id          = $this->customlib->getStaffID();
+            $staff_id          = $this->input->post('teacher');
             $data['timetable'] = array();
-            $days = $this->customlib->getDaysname();
+            $days              = $this->customlib->getDaysname();
 
             foreach ($days as $day_key => $day_value) {
                 $data['timetable'][$day_value] = $this->subjecttimetable_model->getByStaffandDay($staff_id, $day_key);
@@ -420,8 +431,8 @@ class Timetable extends Admin_Controller {
         }
 
         $this->output
-                ->set_content_type('application/json')
-                ->set_output(json_encode($json_array));
+            ->set_content_type('application/json')
+            ->set_output(json_encode($json_array));
     }
 
 }

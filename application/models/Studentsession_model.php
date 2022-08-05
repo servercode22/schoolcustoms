@@ -4,16 +4,19 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-class Studentsession_model extends CI_Model {
+class Studentsession_model extends CI_Model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->current_session = $this->setting_model->getCurrentSession();
     }
 
-    public function searchStudents($class_id = null, $section_id = null, $key = null) {
+    public function searchStudents($class_id = null, $section_id = null, $key = null)
+    {
         $this->db->select('student_session.id,student_session.student_id,classes.class,sections.section,
-            students.firstname,students.lastname,students.admission_no,students.roll_no,students.dob,students.guardian_name,
+            students.firstname,students.middlename,students.lastname,students.admission_no,students.roll_no,students.dob,students.guardian_name,
             ')->from('student_session');
         $this->db->join('classes', 'student_session.class_id = classes.id');
         $this->db->join('sections', 'sections.id = student_session.section_id');
@@ -25,9 +28,10 @@ class Studentsession_model extends CI_Model {
         return $query->result_array();
     }
 
-    public function searchStudentsBySession($student_session_id = null) {
+    public function searchStudentsBySession($student_session_id = null)
+    {
         $this->db->select('students.admission_no,students.roll_no,student_session.session_id, student_session.class_id, student_session.section_id,student_session.id,student_session.student_id,classes.class,sections.section,
-            students.firstname,students.lastname,students.admission_no,students.roll_no,students.dob,students.guardian_name,students.father_name')->from('student_session');
+            students.firstname,students.middlename,students.lastname,students.admission_no,students.roll_no,students.dob,students.guardian_name,students.father_name')->from('student_session');
         $this->db->join('classes', 'student_session.class_id = classes.id');
         $this->db->join('sections', 'sections.id = student_session.section_id');
         $this->db->join('students', 'students.id = student_session.student_id');
@@ -37,9 +41,10 @@ class Studentsession_model extends CI_Model {
         return $query->row_array();
     }
 
-    public function getStudentClass($id) {
+    public function getStudentClass($id)
+    {
         $this->db->select('students.admission_no,students.roll_no,student_session.session_id, student_session.class_id, student_session.section_id,student_session.id,student_session.student_id,classes.class,sections.section,
-            students.firstname,students.lastname,students.admission_no,students.roll_no,students.dob,students.guardian_name,
+            students.firstname,students.middlename,students.lastname,students.admission_no,students.roll_no,students.dob,students.guardian_name,
             ')->from('student_session');
         $this->db->join('classes', 'student_session.class_id = classes.id');
         $this->db->join('sections', 'sections.id = student_session.section_id');
@@ -51,7 +56,8 @@ class Studentsession_model extends CI_Model {
         return $query->row_array();
     }
 
-    public function getStudentByStudentId($id) {
+    public function getStudentByStudentId($id)
+    {
         $this->db->select()->from('student_session');
         $this->db->where('student_id', $id);
         $this->db->where('session_id', $this->current_session);
@@ -60,7 +66,14 @@ class Studentsession_model extends CI_Model {
         return $query->row_array();
     }
 
-    public function getSessionById($id) {
+    public function updateById($update_array)
+    {
+        $this->db->where('id', $update_array['id']);
+        $this->db->update('student_session', $update_array);
+    }
+
+    public function getSessionById($id)
+    {
         $this->db->select()->from('student_session');
         $this->db->where('id', $id);
         $this->db->order_by('id');
@@ -68,13 +81,15 @@ class Studentsession_model extends CI_Model {
         return $query->row();
     }
 
-    public function getTotalStudentBySession() {
+    public function getTotalStudentBySession()
+    {
         $query = "SELECT count(*) as `total_student` FROM `student_session` INNER JOIN students on students.id=student_session.student_id where student_session.session_id=" . $this->db->escape($this->current_session) . " and students.is_active = 'yes' ";
         $query = $this->db->query($query);
         return $query->row();
     }
 
-    public function add($insert_array, $student_id) {
+    public function add($insert_array, $student_id)
+    {
         $not_delarray = array();
         $this->db->trans_start();
         $this->db->trans_strict(false);
@@ -86,7 +101,7 @@ class Studentsession_model extends CI_Model {
                 $this->db->where('section_id', $insert_array_value['section_id']);
                 $q = $this->db->get('student_session');
                 if ($q->num_rows() > 0) {
-                    $result = $q->row();
+                    $result         = $q->row();
                     $not_delarray[] = $result->id;
                 } else {
                     $this->db->insert('student_session', $insert_array[$insert_array_key]);
@@ -102,7 +117,6 @@ class Studentsession_model extends CI_Model {
             $this->db->delete('student_session');
         }
 
-        // print_r($insert_array);
         $this->db->trans_complete();
 
         if ($this->db->trans_status() === false) {
@@ -116,7 +130,8 @@ class Studentsession_model extends CI_Model {
         }
     }
 
-    public function searchMultiStudentByClassSection($class_id = null, $section_id = null) {
+    public function searchMultiStudentByClassSection($class_id = null, $section_id = null)
+    {
 
         $students = $this->student_model->searchByClassSectionWithSession($class_id, $section_id);
 
@@ -127,25 +142,28 @@ class Studentsession_model extends CI_Model {
                 $this->db->where('student_id', $student_value['id']);
                 $this->db->where('session_id', $this->current_session);
                 $this->db->order_by('id');
-                $query = $this->db->get();
+                $query                                      = $this->db->get();
                 $students[$student_key]['student_sessions'] = $query->result();
             }
         }
         return $students;
     }
 
-    public function searchMultiClsSectionByStudent($student_id) {
+    public function searchMultiClsSectionByStudent($student_id)
+    {
         $this->db->select('student_session.*,classes.class,sections.section,student_session.id as `student_session_id`')->from('student_session');
         $this->db->where('student_id', $student_id);
         $this->db->where('session_id', $this->current_session);
         $this->db->join('classes', 'student_session.class_id = classes.id');
         $this->db->join('sections', 'sections.id = student_session.section_id');
+        $this->db->order_by('student_session.default_login','desc');
         $this->db->order_by('id');
         $query = $this->db->get();
         return $query->result();
     }
 
-    public function searchActiveClassSectionStudent($student_id, $enable_session = null) {
+    public function searchActiveClassSectionStudent($student_id, $enable_session = null)
+    {
 
         $this->db->select('student_session.*,classes.class,sections.section')->from('student_session');
         $this->db->where('student_id', $student_id);

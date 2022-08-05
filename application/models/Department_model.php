@@ -105,7 +105,6 @@ class Department_model extends MY_model {
             $action = "Insert";
             $record_id = $id;
             $this->log($message, $record_id, $action);
-            //echo $this->db->last_query();die;
             //======================Code End==============================
 
             $this->db->trans_complete(); # Completing transaction

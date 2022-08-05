@@ -29,7 +29,7 @@ $config['csv_validate'] = array(
     'allowed_extension' => array('csv'), // image extensions
     'upload_size' => 100048576, // bytes
 );
-
+ 
 $config['file_validate'] = array(
     'allowed_mime_type' => array(
         'application/pdf',

@@ -21,7 +21,7 @@ var Lightbox = (function ($) {
 		wrapping: true, //if true, gallery loops infinitely
 		type: null, //force the lightbox into image / youtube mode. if null, or not image|youtube|vimeo; detect it
 		alwaysShowClose: false, //always show the close button, even if there is no title
-		loadingMessage: '<div class="fancy-lightbox-loader"><div><div></div><div></div></div></div>', // http://tobiasahlin.com/spinkit/
+		loadingMessage: '<div class="fancy-lightbox-loader"><div><div></div><div></div></div></div>',
 		leftArrow: '<span>&#10094;</span>',
 		rightArrow: '<span>&#10095;</span>',
 		close: '&#10095;',
@@ -267,7 +267,6 @@ var Lightbox = (function ($) {
 			value: function _containerToUse() {
 				var _this2 = this;
 
-				// if currently showing an image, fade it out and remove
 				var $toUse = this._$lightboxBodyTwo;
 				var $current = this._$lightboxBodyOne;
 

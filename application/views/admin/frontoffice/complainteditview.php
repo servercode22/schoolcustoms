@@ -1,4 +1,4 @@
-<div class="content-wrapper" style="min-height: 348px;">  
+<div class="content-wrapper">  
     <section class="content-header">
         <h1>
             <i class="fa fa-ioxhost"></i> <?php echo $this->lang->line('front_office'); ?></h1>
@@ -123,22 +123,16 @@
                     <div class="box-body">
                         <div class="download_label"></div>
                         <div class="mailbox-messages">
-                            <table class="table table-hover table-striped table-bordered example">
+                            <div class="table-responsive">
+                              <table class="table table-hover table-striped table-bordered example">
                                 <thead>
                                     <tr>
-                                        <th><?php echo $this->lang->line('complain'); ?> #
-                                        </th>
-                                        <th><?php echo $this->lang->line('complain_type'); ?>
-                                        </th>
-
-                                        <th><?php echo $this->lang->line('name'); ?>
-                                        </th>
-                                        <th><?php echo $this->lang->line('phone'); ?>
-                                        </th>
+                                        <th><?php echo $this->lang->line('complain'); ?> #</th>
+                                        <th><?php echo $this->lang->line('complain_type'); ?></th>
+                                        <th><?php echo $this->lang->line('name'); ?> </th>
+										<th><?php echo $this->lang->line('phone'); ?> </th>
                                         <th><?php echo $this->lang->line('date'); ?></th>
-
-
-                                        <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
+										<th class="text-right"><?php echo $this->lang->line('action'); ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -153,13 +147,12 @@
                                             <tr>
                                                 <td class="mailbox-name"><?php echo $value['id']; ?></td>
                                                 <td class="mailbox-name"><?php echo $value['complaint_type']; ?></td>
-
-                                                <td class="mailbox-name"><?php echo $value['name']; ?> </td>
+                                                <td class="mailbox-name"><?php echo $value['name']; ?><?php if(!empty($value['email'])){ ?>
+												<br><a href="mailto:<?php echo $value['email']; ?>">(<?php echo $value['email']; ?>)</a>
+												<?php } ?>  </td>
                                                 <td class="mailbox-name"> <?php echo $value['contact']; ?></td>
                                                 <td class="mailbox-name"> <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($value['date'])); ?></td>
-
-
-                                                <td class="mailbox-date pull-right" "="">
+                                                <td class="mailbox-date pull-right white-space-nowrap">
                                                     <a onclick="getRecord(<?php echo $value['id']; ?>)" class="btn btn-default btn-xs" data-target="#complaintdetails"  title="<?php echo $this->lang->line('view'); ?>"><i class="fa fa-reorder"></i></a>
                                                     <?php if ($value['image'] !== "") { ?><a href="<?php echo base_url(); ?>admin/complaint/download/<?php echo $value['image']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('download'); ?>">
                                                             <i class="fa fa-download"></i>
@@ -182,26 +175,20 @@
                                                     }
                                                     ?>
                                                 </td>
-
                                             </tr>
                                             <?php
                                         }
                                     }
                                     ?>
-
                                 </tbody>
                             </table><!-- /.table -->
-
-
-
+                          </div>  
                         </div><!-- /.mail-box-messages -->
                     </div><!-- /.box-body -->
                 </div>
             </div><!--/.col (left) -->
             <!-- right column -->
-
         </div>
-
     </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
 
@@ -222,19 +209,12 @@
 </div>
 </div><!-- /.content-wrapper -->
 <script type="text/javascript">
-
-
-    function getRecord(id) {
-        //alert(id);
+    function getRecord(id) {       
         $.ajax({
             url: '<?php echo base_url(); ?>admin/complaint/details/' + id,
             success: function (result) {
-                //alert(result);
                 $('#getdetails').html(result);
             }
-
-
         });
     }
-
 </script>

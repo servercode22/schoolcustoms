@@ -18,7 +18,7 @@ if ($page_form) {
             </div>
             <?php
         }
-        $form_content = $this->form_builder->open_form(array('action' => '', 'id' => 'open'));
+        $form_content = $this->form_builder->open_form(array('action' => '', 'id' => 'open','class'=>'form-horizontal col-sm-12 theme-form'));
         $defaults_object_or_array_from_db = NULL;
         $form_content .= "<input type='hidden' value='$form_name' name='form_name'/>";
         $form_content .= $this->form_builder->build_form_horizontal($form, $defaults_object_or_array_from_db);
@@ -27,6 +27,7 @@ if ($page_form) {
 
         $replace_frm = '[form-builder:' . $form_name . ']';
         $replace_to = $form_content;
+
         echo $description = str_replace($replace_frm, $replace_to, $page['description']);
     }
 } else {
@@ -168,4 +169,14 @@ if ($page_form) {
             }
         });
     }
+   function refreshCaptcha(){
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url('site/refreshCaptcha'); ?>",
+            data: {},
+            success: function(captcha){
+                $("#captcha_image").html(captcha);
+            }
+        });
+    }    
 </script>

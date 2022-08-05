@@ -22,10 +22,8 @@ if ($response_json) {
                             <p class="name">
                                 <?php
                                 echo $user_value->user_details->name;
-
                                 echo ($user_value->user_details->user_type == "staff") ? " (" . $this->lang->line('staff') . ")" : " (" . $this->lang->line('student') . ")";
                                 ?></p>
-
 
                             <p class="preview">
                                 <?php

@@ -63,7 +63,6 @@ class Paymentsetting_model extends MY_Model {
             $action = "Insert";
             $record_id = $insert_id;
             $this->log($message, $record_id, $action);
-            //echo $this->db->last_query();die;
             //======================Code End==============================
 
             $this->db->trans_complete(); # Completing transaction
@@ -92,15 +91,18 @@ class Paymentsetting_model extends MY_Model {
             return TRUE;
         }
     }
-
+ 
     function check_data_exists($payment_setting) {
+
         $this->db->where('payment_type', $payment_setting);
         $query = $this->db->get('payment_settings');
+
         if ($query->num_rows() > 0) {
             return TRUE;
         } else {
             return FALSE;
         }
+        
     }
 
     public function active($data, $other = false) {
@@ -119,5 +121,7 @@ class Paymentsetting_model extends MY_Model {
             $this->db->update('payment_settings', $data);
         }
     }
+
+
 
 }

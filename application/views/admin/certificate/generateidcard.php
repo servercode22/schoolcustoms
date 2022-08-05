@@ -3,7 +3,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 ?>
 
 
-<div class="content-wrapper" style="min-height: 946px;">  
+<div class="content-wrapper">  
     <section class="content-header">
         <h1><i class="fa fa-newspaper-o"></i> <?php echo $this->lang->line('certificate'); ?></h1>
     </section>
@@ -20,7 +20,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     </div>
                     <div class="box-body">
                         <div class="row">
-                            <form role="form" action="<?php echo site_url('admin/Generateidcard/search') ?>" method="post" class="">
+                            <form role="form" action="<?php echo site_url('admin/generateidcard/search') ?>" method="post" class="">
                                 <?php echo $this->customlib->getCSRF(); ?>
                                 <div class="col-sm-4">
                                     <div class="form-group"> 
@@ -50,7 +50,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label><?php echo $this->lang->line('icard'); ?></label><small class="req"> *</small>
+                                        <label><?php echo $this->lang->line('id_card_template'); ?></label><small class="req"> *</small>
                                         <select  id="id_card" name="id_card" class="form-control" >
                                             <option value=""><?php echo $this->lang->line('select'); ?></option>
                                             <?php
@@ -79,7 +79,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     <?php
                     if (isset($resultlist)) {
                         ?>
-                        <form method="post" action="<?php echo base_url('admin/Generateidcard/generatemultiple') ?>">
+                        <form method="post" action="<?php echo base_url('admin/generateidcard/generatemultiple') ?>">
                             <div  class="" id="duefee">
                                 <div class="box-header ptbnull"></div>   
                                 <div class="box-header ptbnull">
@@ -91,7 +91,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     <div class="tab-pane active table-responsive no-padding" id="tab_1">
                                         <table class="table table-striped table-bordered table-hover example" cellspacing="0" width="100%">
                                             <thead>
-                                                <tr>
+                                                <tr> 
 
                                                     <th><input type="checkbox" id="select_all" /></th>
                                                     <?php if (!$adm_auto_insert) { ?>
@@ -130,7 +130,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                                 <td><?php echo $student['admission_no']; ?></td>
                                                             <?php } ?>
                                                             <td>
-                                                                <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $student['firstname'] . " " . $student['lastname']; ?>
+                                                                <a href="<?php echo base_url(); ?>student/view/<?php echo $student['id']; ?>"><?php echo $this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname); ?>
                                                                 </a>
                                                             </td>
                                                             <td><?php echo $student['class'] . "(" . $student['section'] . ")" ?></td>
@@ -256,13 +256,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                 alert("<?php echo $this->lang->line('no_record_selected'); ?>");
             } else {
                 $.ajax({
-                    url: '<?php echo site_url("admin/Generateidcard/generatemultiple") ?>',
+                    url: '<?php echo site_url("admin/generateidcard/generatemultiple") ?>',
                     type: 'post',
-                    dataType: "html",
+                    dataType: 'JSON',
                     data: {'data': JSON.stringify(array_to_print), 'class_id': classId, 'id_card': idCard, },
                     success: function (response) {
 
-                        Popup(response);
+                        Popup(response.page);
                     }
                 });
             }
@@ -275,8 +275,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
     function Popup(data)
     {
 
-        var frame1 = $('<iframe />');
-        frame1[0].name = "frame1";
+        var frame1 = $('<iframe>', {
+           id:  'printDiv',
+           name:  'frame1'
+        });
 
         $("body").append(frame1);
         var frameDoc = frame1[0].contentWindow ? frame1[0].contentWindow : frame1[0].contentDocument.document ? frame1[0].contentDocument.document : frame1[0].contentDocument;
@@ -294,12 +296,14 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         frameDoc.document.write('</html>');
         frameDoc.document.close();
         setTimeout(function () {
-            window.frames["frame1"].focus();
-            window.frames["frame1"].print();
+        document.getElementById('printDiv').contentWindow.focus();
+        document.getElementById('printDiv').contentWindow.print();
             frame1.remove();
         }, 500);
 
 
         return true;
     }
+
+
 </script>

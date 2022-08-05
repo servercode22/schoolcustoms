@@ -72,7 +72,7 @@
                                         <div class="form-group">
 
                                             <label for="exampleInputEmail1"><?php echo $this->lang->line('due_date'); ?></label>
-                                            <input id="due_date" name="due_date" placeholder="" type="text" class="form-control date"  value="<?php echo set_value('due_date', $this->customlib->dateformat($feegroup_type->due_date)); ?>" readonly="readonly" />
+                                            <input id="due_date" name="due_date" placeholder="" type="text" class="form-control date"  value="<?php echo set_value('due_date', $this->customlib->dateformat($feegroup_type->due_date)); ?>" />
                                             <span class="text-danger"><?php echo form_error('due_date'); ?></span>
                                         </div>
                                         <div class="form-group">

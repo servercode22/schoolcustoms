@@ -1,8 +1,7 @@
 
-<div class="content-wrapper" style="min-height: 946px;">
-
+<div class="content-wrapper">    
     <!-- Main content -->
-    <section class="content">
+    <section class="content">  
         <div class="row">
             <div class="col-md-12">
                 <div class="box box-primary">
@@ -13,19 +12,19 @@
                         <form role="form" action="<?php echo site_url('admin/onlineexam/assign/' . $id) ?>" method="post" class="row">
 
                             <?php echo $this->customlib->getCSRF(); ?>
-
+                          
                             <input type="hidden" name="onlineexam_id" value="<?php echo $onlineexam->id; ?>">
-
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label><?php echo $this->lang->line('class'); ?></label>
+                           
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                    <label><?php echo $this->lang->line('class'); ?></label>  <small class="req"> *</small>
                                     <select autofocus="" id="class_id" name="class_id" class="form-control" >
                                         <option value=""><?php echo $this->lang->line('select'); ?></option>
                                         <?php
                                         foreach ($classlist as $class) {
                                             ?>
                                             <option value="<?php echo $class['id'] ?>" <?php
-                                            if (set_value('class_id') == $class['id']) {
+                                            if(set_value('class_id') == $class['id']) {
                                                 echo "selected=selected";
                                             }
                                             ?>><?php echo $class['class'] ?></option>
@@ -35,21 +34,21 @@
                                     </select>
                                     <span class="text-danger"><?php echo form_error('class_id'); ?></span>
                                 </div>
-                            </div>
-
-                            <div class="col-md-6">
-
-                                <div class="form-group">
-                                    <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label>
-                                    <select  id="section_id" name="section_id" class="form-control" >
-                                        <option value=""><?php echo $this->lang->line('select'); ?></option>
-                                    </select>
-                                    <span class="text-danger"><?php echo form_error('section_id'); ?></span>
                                 </div>
-                            </div>
 
+                                <div class="col-md-6">
 
+                                    <div class="form-group">
+                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label>
+                                        <select  id="section_id" name="section_id" class="form-control" >
+                                            <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                        </select>
+                                        <span class="text-danger"><?php echo form_error('section_id'); ?></span>
+                                    </div>
+                                </div>
+                          
 
+                          
                             <div class="form-group">
                                 <div class="col-md-12">
                                     <button type="submit" name="search" value="search_filter" class="btn btn-primary pull-right btn-sm checkbox-toggle"><i class="fa fa-search"></i> <?php echo $this->lang->line('search'); ?></button>
@@ -58,22 +57,22 @@
                         </form>
 
                     </div>
+                
+                <form method="post" action="<?php echo site_url('admin/onlineexam/addstudent') ?>" id="assign_form">
 
-                    <form method="post" action="<?php echo site_url('admin/onlineexam/addstudent') ?>" id="assign_form">
 
-
-                        <?php
-                        if (isset($resultlist)) {
-                            ?>
-                            <div class="box-header ptbnull"></div>  
-                            <div class="">
-                                <div class="box-header with-border">
-                                    <h3 class="box-title"><i class="fa fa-users"></i> <?php echo $this->lang->line('assign') . " " . $this->lang->line('online') . " " . $this->lang->line('exam'); ?></h3>
-                                    <div class="box-tools pull-right">
-                                    </div>
+                    <?php
+                    if (isset($resultlist)) {
+                        ?>
+                      <div class="box-header ptbnull"></div>  
+                        <div class="">
+                            <div class="box-header with-border">
+                                <h3 class="box-title"><i class="fa fa-users"></i> <?php echo $this->lang->line('assign')." ".$this->lang->line('online')." ".$this->lang->line('exam');?></h3>
+                                <div class="box-tools pull-right">
                                 </div>
-                                <div class="box-body">
-                                    <div class="row">
+                            </div>
+                            <div class="box-body">
+                                <div class="row">
                                         <div class="col-md-4">
                                             <div class="table-responsive">
 
@@ -84,7 +83,7 @@
                                                     <a href="#" data-toggle="popover" class="detail_popover"><?php echo $onlineexam->exam; ?></a>
                                                 </h4>
 
-
+                                             
 
                                             </div>
                                         </div>
@@ -99,12 +98,12 @@
                                                             <th><?php echo $this->lang->line('student_name'); ?></th>
 
                                                             <th><?php echo $this->lang->line('class'); ?></th>
-                                                            <?php if ($sch_setting->father_name) { ?>
-                                                                <th><?php echo $this->lang->line('father_name'); ?></th><?php } if ($sch_setting->category) { ?>
-                                                                <th><?php echo $this->lang->line('category'); ?></th>
-                                                            <?php } ?>
-                                                            <th><?php echo $this->lang->line('gender'); ?></th>
-
+                                                            <?php if($sch_setting->father_name){ ?>
+                                                            <th><?php echo $this->lang->line('father_name'); ?></th><?php }   if($sch_setting->category){ ?>
+                                                            <th><?php echo $this->lang->line('category'); ?></th>
+                                                        <?php } ?>
+                                                            <th class="pull-right"><?php echo $this->lang->line('gender'); ?></th>
+                                                      
                                                         </tr>
                                                         <?php
                                                         if (empty($resultlist)) {
@@ -116,6 +115,7 @@
                                                         } else {
                                                             $count = 1;
                                                             foreach ($resultlist as $student) {
+                                                     
                                                                 ?>
                                                                 <tr>
 
@@ -136,13 +136,13 @@
 
                                                                     <td><?php echo $student['admission_no']; ?></td>
 
-                                                                    <td><?php echo $student['firstname'] . " " . $student['lastname']; ?></td>
-                                                                    <td><?php echo $student['class'] . " (" . $student['section'] . ")"; ?></td><?php if ($sch_setting->father_name) { ?>
-                                                                        <td><?php echo $student['father_name']; ?></td>
-                                                                    <?php } if ($sch_setting->category) { ?>
-                                                                        <td><?php echo $student['category']; ?></td>
-                                                                    <?php } ?>
-                                                                    <td><?php echo $student['gender']; ?></td>
+                 <td><?php echo $this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname); ?></td>
+                                                                    <td><?php echo $student['class']." (".$student['section'].")"; ?></td><?php if($sch_setting->father_name){ ?>
+                                                                    <td><?php echo $student['father_name']; ?></td>
+                                                                <?php } if($sch_setting->category){ ?>
+                                                                    <td><?php echo $student['category']; ?></td>
+                                                                <?php } ?>
+                                                                    <td class="pull-right"><?php echo $student['gender']; ?></td>
 
                                                                 </tr>
                                                                 <?php
@@ -154,26 +154,26 @@
                                                 </table>
 
                                             </div>
-                                            <?php if ($this->rbac->hasPrivilege('online_assign_view_student', 'can_edit')) { ?>
-                                                <button type="submit" class="allot-fees btn btn-primary btn-sm pull-right" id="load" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Please Wait.."><?php echo $this->lang->line('save'); ?>
-                                                </button>
-                                            <?php } ?>
+                                            <?php if($this->rbac->hasPrivilege('online_assign_view_student','can_edit')){ ?>
+                                            <button type="submit" class="allot-fees btn btn-primary btn-sm pull-right" id="load" data-loading-text="<i class='fa fa-spinner fa-spin '></i> Please Wait.."><?php echo $this->lang->line('save'); ?>
+                                            </button>
+                                        <?php } ?>
                                             <br/>
                                             <br/>
                                         </div>
-
-                                    </div>
-
+                                   
                                 </div>
+
                             </div>
-                            <?php
-                        }
-                        ?>
-
-                    </form>
-                </div>
-
+                        </div>
+                        <?php
+                    }
+                    ?>
+                   
+                </form>
             </div>
+
+        </div>
 
     </section>
 </div>
@@ -241,13 +241,13 @@
         if (false == $(this).prop("checked")) { //if this item is unchecked
             $("#select_all").prop('checked', false); //change "select all" checked status to false
         }
-
+       
         if ($('.checkbox:checked').length == $('.checkbox').length) {
             $("#select_all").prop('checked', true);
         }
     });
     $("#assign_form").submit(function (e) {
-        if (confirm("<?php echo $this->lang->line('are_you_sure'); ?>")) {
+        if (confirm("<?php echo $this->lang->line('are_you_sure');?>")) {
             var $this = $('.allot-fees');
             $.ajax({
                 type: "POST",

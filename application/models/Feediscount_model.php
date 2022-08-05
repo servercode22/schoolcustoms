@@ -109,8 +109,7 @@ class Feediscount_model extends MY_Model {
             $message = INSERT_RECORD_CONSTANT . " On  fees discounts id " . $id;
             $action = "Insert";
             $record_id = $id;
-            $this->log($message, $record_id, $action);
-            //echo $this->db->last_query();die;
+            $this->log($message, $record_id, $action);           
             //======================Code End==============================
 
             $this->db->trans_complete(); # Completing transaction
@@ -135,7 +134,6 @@ class Feediscount_model extends MY_Model {
     }
 
     public function allotdiscount($data) {
-
         $this->db->where('student_session_id', $data['student_session_id']);
         $this->db->where('fees_discount_id', $data['fees_discount_id']);
         $q = $this->db->get('student_fees_discounts');
@@ -146,7 +144,7 @@ class Feediscount_model extends MY_Model {
             $this->db->insert('student_fees_discounts', $data);
             return $this->db->insert_id();
         }
-    }
+    } 
 
     public function searchAssignFeeByClassSection($class_id = null, $section_id = null, $fees_discount_id = null, $category = null, $gender = null, $rte = null) {
         $sql = "SELECT IFNULL(`student_fees_discounts`.`id`, '0') as `student_fees_discount_id`,"
@@ -154,7 +152,7 @@ class Feediscount_model extends MY_Model {
                 . " `students`.`id`, `classes`.`class`, `sections`.`id` AS `section_id`,"
                 . " `sections`.`section`, `students`.`id`, `students`.`admission_no`,"
                 . " `students`.`roll_no`, `students`.`admission_date`, `students`.`firstname`,"
-                . " `students`.`lastname`, `students`.`image`, `students`.`mobileno`,"
+                . " `students`.`lastname`,`students`.`middlename`, `students`.`image`, `students`.`mobileno`,"
                 . " `students`.`email`, `students`.`state`, `students`.`city`, `students`.`pincode`,"
                 . " `students`.`religion`, `students`.`dob`, `students`.`current_address`,"
                 . " `students`.`permanent_address`, IFNULL(students.category_id, 0) as `category_id`,"

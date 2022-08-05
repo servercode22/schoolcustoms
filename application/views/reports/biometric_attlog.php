@@ -184,7 +184,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <td>
                                                     <?php
                                                     if (!empty($device_info)) {
-                                                        echo date($this->customlib->getSchoolDateFormat(true, true), strtotime($device_info->t));
+                                                        echo $logs['created_at'];
+                                                        //echo date($this->customlib->getSchoolDateFormat(true, true), strtotime($device_info->t));
                                                     }
                                                     ?>
                                                 </td>

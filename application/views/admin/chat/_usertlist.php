@@ -1,5 +1,4 @@
 
-
 <?php
 if (!empty($staff)) {
     foreach ($staff as $value) {
@@ -8,7 +7,7 @@ if (!empty($staff)) {
             <div class="row reply" style="corsor:pointer" >
                 <div class="col-sm-5 col-xs-5 reply-emojis">
                     <a href="#" onclick="start_chat('<?php echo $value['id'] ?>', '<?php echo $sender_id; ?>', '1')" >
-                        <?php echo $value['name'] . " (" . $value['role'] . ")"; ?></a>
+                        <?php echo $value['name'] . " (" . $this->lang->line(strtolower($value['role'])) . ")"; ?></a>
                 </div>
 
             </div>
@@ -23,7 +22,7 @@ if (!empty($parent)) {
             ?>
             <div class="row reply"  >
                 <div class="col-sm-5 col-xs-5 reply-emojis">
-                    <a onclick="start_chat('<?php echo $value['parent_id'] ?>', '<?php echo $sender_id; ?>', '3')" ><?php echo $value['father_name'] . " (" . $value['role'] . ")"; ?></a>
+                    <a onclick="start_chat('<?php echo $value['parent_id'] ?>', '<?php echo $sender_id; ?>', '3')" ><?php echo $value['father_name'] . " (" . $this->lang->line(strtolower($value['role'])) . ")"; ?></a>
 
                 </div>
 
@@ -38,7 +37,7 @@ if (!empty($student)) {
             ?>
             <div class="row reply"  >
                 <div class="col-sm-5 col-xs-5 reply-emojis">
-                    <a onclick="start_chat('<?php echo $value['id'] ?>', '<?php echo $sender_id; ?>', '2')" ><?php echo $value['firstname'] . " " . $value['lastname'] . " (" . $value['role'] . ")"; ?></a>
+                    <a onclick="start_chat('<?php echo $value['id'] ?>', '<?php echo $sender_id; ?>', '2')" ><?php echo $value['firstname'] . " " . $value['lastname'] . " (" . $this->lang->line(strtolower($value['role'])) . ")"; ?></a>
 
                 </div>
 
@@ -78,18 +77,8 @@ if (!empty($student)) {
                     $('#message').val('');
                     load_page(sender_id, receiver_id, type);
                 }
-
-
-
-
-
-
             }
         });
 
-
-
     }
-
 </script>
-

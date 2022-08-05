@@ -104,19 +104,7 @@
         </div>  
     </section>
 </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
-        $('.date').datepicker({
-            format: date_format,
-            autoclose: true
-        });
-        $("#btnreset").click(function () {
-            $("#form1")[0].reset();
-        });
-    });
 
-</script>
 <script>
     $(function () {
 

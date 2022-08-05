@@ -83,6 +83,7 @@ class Transaction extends Admin_Controller {
         $feetype_arr = $this->input->post('feetype_arr');
         $data['section_list'] = $this->section_model->getClassBySection($this->input->post('class_id'));
         $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
+        $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean');
 
 
         if ($this->form_validation->run() == false) {
@@ -94,7 +95,7 @@ class Transaction extends Admin_Controller {
             $data['feetype'] = "";
             $data['feetype_arr'] = array();
         } else {
-            $student_Array = array();
+            $student_Array = array(); 
 
             $section = array();
 
@@ -110,7 +111,7 @@ class Transaction extends Admin_Controller {
                 if (!empty($studentlist)) {
                     foreach ($studentlist as $key => $eachstudent) {
                         $obj = new stdClass();
-                        $obj->name = $eachstudent['firstname'] . " " . $eachstudent['lastname'];
+                        $obj->name = $this->customlib->getFullName($eachstudent['firstname'],$eachstudent['middlename'],$eachstudent['lastname'],$this->sch_setting_detail->middlename,$this->sch_setting_detail->lastname);
                         $obj->class = $eachstudent['class'];
                         $obj->section = $eachstudent['section'];
                         $obj->admission_no = $eachstudent['admission_no'];
@@ -120,15 +121,12 @@ class Transaction extends Admin_Controller {
                         $student_total_fees = $this->studentfeemaster_model->getStudentFees($student_session_id);
 
                         if (!empty($student_total_fees)) {
-
-
                             $totalfee = 0;
                             $deposit = 0;
                             $discount = 0;
                             $balance = 0;
                             $fine = 0;
                             foreach ($student_total_fees as $student_total_fees_key => $student_total_fees_value) {
-
 
                                 if (!empty($student_total_fees_value->fees)) {
                                     foreach ($student_total_fees_value->fees as $each_fee_key => $each_fee_value) {

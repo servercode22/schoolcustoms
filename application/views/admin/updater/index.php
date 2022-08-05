@@ -99,7 +99,10 @@
                                 <?php
                             }
                             ?>
-
+<div class="font15">
+Please check <a href="https://smart-school.in/category/changelog/smart-school" target="_blank" class="displayinline align-text-top font-weight-bold">changelog</a> for latest version update. 
+    
+</div>
                         </div><!--./row-->
 
 

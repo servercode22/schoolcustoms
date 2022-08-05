@@ -6,7 +6,7 @@
     <section class="content-header">
         <h1>
             <i class="fa fa-gears"></i> <?php echo $this->lang->line('system_settings'); ?>
-        </h1>
+        </h1> 
     </section>
     <!-- Main content -->
     <section class="content">
@@ -30,7 +30,7 @@
                                         <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
                                     </tr>
                                 </thead>
-                                <tbody>									
+                                <tbody>	 								
                                     <tr>
                                         <td><?php echo $this->lang->line('roll_no'); ?></td>
                                         <td>
@@ -38,6 +38,15 @@
                                                 <input id="roll_no" name="roll_no" type="checkbox" data-role="roll_no" class="chk" data-rowid="1" value="checked" <?php if ($result->roll_no == "1") echo "checked='checked'"; ?> />
                                                 <label for="roll_no" class="label-success"></label>
                                             </div>																			
+                                        </td>                                                
+                                    </tr>
+                                     <tr>
+                                        <td><?php echo $this->lang->line('middle_name'); ?></td>
+                                        <td>
+                                            <div class="material-switch pull-right">
+                                                <input id="middlename" name="middlename" type="checkbox" data-role="middlename" class="chk" data-rowid="1" value="checked" <?php if ($result->middlename == "1") echo "checked='checked'"; ?> />
+                                                <label for="middlename" class="label-success"></label>
+                                            </div>                                                                          
                                         </td>                                                
                                     </tr> 
                                     <tr>
@@ -229,7 +238,33 @@
                                             </div>																			
                                         </td>                                                
                                     </tr>
-
+                                    <tr>
+                                        <td><?php echo $this->lang->line('guardian_name'); ?></td>
+                                        <td>
+                                            <div class="material-switch pull-right">
+                                                <input id="guardian_name" name="guardian_name" type="checkbox" data-role="guardian_name" class="chk" data-rowid="1" value="checked" <?php if ($result->guardian_name == "1") echo "checked='checked'"; ?> />
+                                                <label for="guardian_name" class="label-success"></label>
+                                            </div>                                                                          
+                                        </td>                                                
+                                    </tr>
+                                    <tr>
+                                        <td><?php echo $this->lang->line('guardian_phone'); ?></td>
+                                        <td>
+                                            <div class="material-switch pull-right">
+                                                <input id="guardian_phone" name="guardian_phone" type="checkbox" data-role="guardian_phone" class="chk" data-rowid="1" value="checked" <?php if ($result->guardian_phone == "1") echo "checked='checked'"; ?> />
+                                                <label for="guardian_phone" class="label-success"></label>
+                                            </div>                                                                          
+                                        </td>                                                
+                                    </tr>
+                                     <tr>
+                                        <td><?php echo $this->lang->line('guardian_relation'); ?></td>
+                                        <td>
+                                            <div class="material-switch pull-right">
+                                                <input id="guardian_relation" name="guardian_relation" type="checkbox" data-role="guardian_relation" class="chk" data-rowid="1" value="checked" <?php if ($result->guardian_relation == "1") echo "checked='checked'"; ?> />
+                                                <label for="guardian_relation" class="label-success"></label>
+                                            </div>                                                                          
+                                        </td>                                                
+                                    </tr>
                                     <tr>
                                         <td><?php echo $this->lang->line('guardian_email'); ?></td>
                                         <td>
@@ -240,12 +275,21 @@
                                         </td>                                                
                                     </tr>
                                     <tr>
+                                        <td><?php echo $this->lang->line('guardian_occupation'); ?> </td>
+                                        <td>
+                                            <div class="material-switch pull-right">
+                                                <input id="guardian_occupation" name="guardian_occupation" type="checkbox" data-role="guardian_occupation" class="chk" data-rowid="1" value="checked" <?php if ($result->guardian_occupation == "1") echo "checked='checked'"; ?> />
+                                                <label for="guardian_occupation" class="label-success"></label>
+                                            </div>																			
+                                        </td>                                                
+                                    </tr>
+                                     <tr>
                                         <td><?php echo $this->lang->line('guardian'); ?> <?php echo $this->lang->line('photo'); ?></td>
                                         <td>
                                             <div class="material-switch pull-right">
                                                 <input id="guardian_pic" name="guardian_pic" type="checkbox" data-role="guardian_pic" class="chk" data-rowid="1" value="checked" <?php if ($result->guardian_pic == "1") echo "checked='checked'"; ?> />
                                                 <label for="guardian_pic" class="label-success"></label>
-                                            </div>																			
+                                            </div>                                                                          
                                         </td>                                                
                                     </tr>
                                     <tr>
@@ -285,7 +329,7 @@
                                         </td>                                                
                                     </tr>
                                     <tr>
-                                        <td><?php echo $this->lang->line('hostel'); ?><?php echo $this->lang->line('details'); ?></td>
+                                        <td><?php echo $this->lang->line('hostel'); ?> <?php echo $this->lang->line('details'); ?></td>
                                         <td>
                                             <div class="material-switch pull-right">
                                                 <input id="hostel_id" name="hostel_id" type="checkbox" data-role="hostel_id" class="chk" data-rowid="1" value="checked" <?php if ($result->hostel_id == "1") echo "checked='checked'"; ?> />
@@ -294,12 +338,30 @@
                                         </td>                                                
                                     </tr>
                                     <tr>
-                                        <td><?php echo $this->lang->line('bank_account_no'); ?> / <?php echo $this->lang->line('bank_name'); ?> / <?php echo $this->lang->line('ifsc_code'); ?></td>
+                                        <td><?php echo $this->lang->line('bank_account_no'); ?> </td>
                                         <td>
                                             <div class="material-switch pull-right">
                                                 <input id="bank_account_no" name="bank_account_no" type="checkbox" data-role="bank_account_no" class="chk" data-rowid="1" value="checked" <?php if ($result->bank_account_no == "1") echo "checked='checked'"; ?> />
                                                 <label for="bank_account_no" class="label-success"></label>
                                             </div>																			
+                                        </td>                                                
+                                    </tr>
+                                    <tr>
+                                        <td><?php echo $this->lang->line('bank_name'); ?> </td>
+                                        <td>
+                                            <div class="material-switch pull-right">
+                                                <input id="bank_name" name="bank_name" type="checkbox" data-role="bank_name" class="chk" data-rowid="1" value="checked" <?php if ($result->bank_name == "1") echo "checked='checked'"; ?> />
+                                                <label for="bank_name" class="label-success"></label>
+                                            </div>                                                                          
+                                        </td>                                                
+                                    </tr>
+                                    <tr>
+                                        <td><?php echo $this->lang->line('ifsc_code'); ?></td>
+                                        <td>
+                                            <div class="material-switch pull-right">
+                                                <input id="ifsc_code" name="ifsc_code" type="checkbox" data-role="ifsc_code" class="chk" data-rowid="1" value="checked" <?php if ($result->ifsc_code == "1") echo "checked='checked'"; ?> />
+                                                <label for="ifsc_code" class="label-success"></label>
+                                            </div>                                                                          
                                         </td>                                                
                                     </tr>
                                     <tr>
@@ -345,7 +407,7 @@
                                                 <input id="student_note" name="student_note" type="checkbox" data-role="student_note" class="chk" data-rowid="1" value="checked" <?php if ($result->student_note == "1") echo "checked='checked'"; ?> />
                                                 <label for="student_note" class="label-success"></label>
                                             </div>																			
-                                        </td>                                                
+                                        </td>                                                 
                                     </tr>
                                     <tr>
                                         <td><?php echo $this->lang->line('upload_documents'); ?></td>
@@ -624,7 +686,7 @@
 
             }
         });
-    });
+    });  
 
     function changeStatus(rowid, status, role) {
 

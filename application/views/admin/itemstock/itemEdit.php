@@ -123,7 +123,7 @@
 
                                 <div class="form-group">
                                     <label for="exampleInputEmail1"><?php echo $this->lang->line('date'); ?></label>
-                                    <input id="date" name="date" placeholder="" type="text" class="form-control date"  value="<?php echo set_value('date', date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($item['date']))); ?>" readonly="readonly" />
+                                    <input id="date" name="date" placeholder="" type="text" class="form-control date"  value="<?php if($item['date']!= '0000-00-00'){ echo set_value('date', date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($item['date']))); } ?>" readonly="readonly" />
                                     <span class="text-danger"><?php echo form_error('date'); ?></span>
                                 </div>
 
@@ -228,7 +228,7 @@
 
                                                 </td>
                                                 <td class="mailbox-name">
-                                                    <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($items['date'])); ?>
+                                                    <?php if($items['date']!= '0000-00-00'){ echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($items['date'])); } ?>
 
                                                 </td>
 

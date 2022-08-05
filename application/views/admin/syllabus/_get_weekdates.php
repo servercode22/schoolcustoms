@@ -82,7 +82,7 @@ if ($role->id == 7) {
                                     } else {
                                         ?>
                                         <?php if ($this->rbac->hasPrivilege('manage_lesson_plan', 'can_add')) { ?>
-                                            <a data-placement="left" class="btn btn-default btn-xs pull-left"  data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('add') ?>" onclick="add_syllabus('<?php echo $tm_kue->subject_group_subject_id; ?>', '<?php echo $tm_kue->time_from ?>', '<?php echo $tm_kue->time_to; ?>', '<?php echo date($this->customlib->getSchoolDateFormat(), strtotime($new_date)); ?>', '<?php echo $subject_group_subject_class_section['id']; ?>')"><i class="fa fa-plus"></i></a>
+                                            <a data-placement="left" class="btn btn-default btn-xs pull-left"  data-toggle="tooltip" title="" data-original-title="<?php echo $this->lang->line('add') ?>" onclick="add_syllabus('<?php echo $tm_kue->subject_group_subject_id; ?>', '<?php echo $tm_kue->time_from ?>', '<?php echo $tm_kue->time_to; ?>', '<?php echo date($this->customlib->getSchoolDateFormat(), strtotime($new_date)); ?>', '<?php echo $subject_group_subject_class_section['id']; ?>', '<?php echo $staff_id; ?>')"><i class="fa fa-plus"></i></a>
                                             <?php
                                         }
                                     }

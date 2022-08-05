@@ -19,9 +19,6 @@ class Frontcms extends Admin_Controller {
         $data['front_themes'] = $this->front_themes;
 
         $frontcmslist = $this->frontcms_setting_model->get();
-
-
-
         $data['title'] = 'Add Front CMS Setting';
         $data['title_list'] = 'Front CMS Settings';
         $this->session->set_userdata('top_menu', 'System Settings');
@@ -60,6 +57,7 @@ class Frontcms extends Admin_Controller {
                 'instagram_url' => $this->input->post('instagram_url'),
                 'pinterest_url' => $this->input->post('pinterest_url'),
                 'linkedin_url' => $this->input->post('linkedin_url'),
+                'cookie_consent' => $this->input->post('cookie_consent'),
             );
 
 
@@ -108,6 +106,7 @@ class Frontcms extends Admin_Controller {
             $frontcmslist->instagram_url = '';
             $frontcmslist->pinterest_url = '';
             $frontcmslist->linkedin_url = '';
+            $frontcmslist->cookie_consent = '';
         }
         $data['frontcmslist'] = $frontcmslist;
         $this->load->view('layout/header', $data);

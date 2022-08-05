@@ -21,9 +21,11 @@
                                 <thead>
                                     <tr>
                                         <th><?php echo $this->lang->line('exam'); ?></th>
+										<th class="text-center"><?php echo $this->lang->line('quiz'); ?></th>
                                         <th><?php echo $this->lang->line('date') . " " . $this->lang->line('from') ?></th>
                                         <th><?php echo $this->lang->line('date') . " " . $this->lang->line('to'); ?></th>
                                         <th><?php echo $this->lang->line('duration'); ?></th>
+                                        
                                         <th><?php echo $this->lang->line('total') . " " . $this->lang->line('attempt'); ?></th>
                                         <th><?php echo $this->lang->line('attempted'); ?></th>
                                         <th><?php echo $this->lang->line('status'); ?></th>
@@ -42,10 +44,23 @@
                                             ?>
                                             <tr>
                                                 <td class="mailbox-name"><?php echo $exam->exam; ?></td>
-                                                <td class="mailbox-name"> <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($exam->exam_from)); ?> </td>
-
-                                                <td class="mailbox-name"> <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($exam->exam_to)); ?> </td>
+												<td class="mailbox-name text text-center"><?php
+if($exam->is_quiz){
+    ?>
+<i class="fa fa-check-square-o"></i>
+    <?php
+}else{
+    ?>
+<i class="fa fa-exclamation-circle"></i>
+    <?php
+} ?></td>
+                                                <td class="mailbox-name">
+<?php echo $this->customlib->dateyyyymmddToDateTimeformat($exam->exam_from,false); ?>                           </td>
+<td class="mailbox-name"> 
+  <?php echo $this->customlib->dateyyyymmddToDateTimeformat($exam->exam_to,false); ?> </td>
                                                 <td class="mailbox-name"><?php echo $exam->duration; ?></td>
+
+                                                
                                                 <td class="mailbox-name"><?php echo $exam->attempt; ?></td>
                                                 <td class="mailbox-name"><?php echo $exam->counter; ?></td>
 

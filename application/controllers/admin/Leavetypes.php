@@ -1,8 +1,6 @@
 <?php
 
-/**
- * 
- */
+
 class LeaveTypes extends Admin_Controller {
 
     function __construct() {

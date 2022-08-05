@@ -313,8 +313,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                                 </tbody>
                                             </table>
-                                        </div>    
-                                          <!--   <h4 class="text text-left"><b><?php //echo $this->lang->line('expense_detail');       ?></b></h4><hr/> -->
+                                        </div> 
                                         <div class="tab-pane table-responsive" id="tab_parent">
                                             <div class="download_label"><?php echo $expense_title; ?></div>
                                             <table class="table table-striped table-bordered table-hover example">

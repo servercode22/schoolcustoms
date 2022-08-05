@@ -149,7 +149,6 @@
                                                     <th><input type="checkbox" id="select_all" /></th>
                                                     <th><?php echo $this->lang->line('admission_no'); ?></th>
                                                     <th><?php echo $this->lang->line('student_name'); ?></th>
-
                                                     <th><?php echo $this->lang->line('father_name'); ?></th>
                                                     <th><?php echo $this->lang->line('date_of_birth'); ?></th>
                                                     <th><?php echo $this->lang->line('gender'); ?></th>
@@ -170,7 +169,7 @@
                                                             </td>
                                                             <td><?php echo $student_value->admission_no; ?></td>
                                                             <td>
-                                                                <a href="<?php echo base_url(); ?>student/view/<?php echo $student_value->student_id; ?>"><?php echo $student_value->firstname . " " . $student_value->lastname; ?>
+                                                                <a href="<?php echo base_url(); ?>student/view/<?php echo $student_value->student_id; ?>"><?php echo $this->customlib->getFullName($student_value->firstname,$student_value->middlename,$student_value->lastname,$sch_setting->middlename,$sch_setting->lastname); ?>
                                                                 </a>
                                                             </td>
 
@@ -224,8 +223,6 @@
     var exam_group_id = '<?php echo set_value('exam_group_id') ?>';
     var exam_id = '<?php echo set_value('exam_id') ?>';
     getSectionByClass(class_id, section_id);
-
-    // getExamgroupByClassSectionSession(class_id, section_id, session_id);
     getExamByExamgroup(exam_group_id, exam_id);
     $(document).on('change', '#exam_group_id', function (e) {
         $('#exam_id').html("");
@@ -239,55 +236,13 @@
         getSectionByClass(class_id, 0);
     });
 
-    // $(document).on('change', '#session_id', function (e) {
-
-    //     var class_id = $('#class_id').val();
-    //     var section_id = $('#section_id').val();
-    //     var session_id = $(this).val();
-    //     getExamgroupByClassSectionSession(class_id, section_id, session_id);
-    // });
-
-    // function getExamgroupByClassSectionSession(class_id, section_id, session_id) {
-    //     if (class_id != "" && section_id != "" && session_id != "") {
-    //         $('#exam_group_id').html("");
-
-    //         var div_data = '<option value=""><?php echo $this->lang->line('select'); ?></option>';
-
-
-    //         $.ajax({
-    //             type: "POST",
-    //             url: baseurl + "admin/examgroup/getExamGroupByClassSection",
-    //             data: {'class_id': class_id, "section_id": section_id, "session_id": session_id},
-    //             dataType: "JSON",
-    //             beforeSend: function () {
-    //                 $('#exam_group_id').addClass('dropdownloading');
-    //             },
-    //             success: function (data) {
-    //                 $.each(data.exam_group, function (i, obj)
-    //                 {
-    //                     var sel = "";
-    //                     if (student_id == obj.student_id) {
-    //                         sel = "selected";
-    //                     }
-    //                     div_data += "<option value=" + obj.exam_group_id + " " + sel + ">" + obj.name + "</option>";
-    //                 });
-    //                 $('#exam_group_id').append(div_data);
-    //             },
-    //             complete: function () {
-    //                 $('#exam_group_id').removeClass('dropdownloading');
-    //             }
-    //         });
-    //     }
-    // }
-
-
+    
     function getSectionByClass(class_id, section_id) {
 
         if (class_id != "") {
             $('#section_id').html("");
             var base_url = '<?php echo base_url() ?>';
             var div_data = '<option value=""><?php echo $this->lang->line('select'); ?></option>';
-
 
             $.ajax({
                 type: "GET",
@@ -315,14 +270,12 @@
         }
     }
 
-
     function getExamByExamgroup(exam_group_id, exam_id) {
 
         if (exam_group_id != "") {
             $('#exam_id').html("");
             var base_url = '<?php echo base_url() ?>';
             var div_data = '<option value=""><?php echo $this->lang->line('select'); ?></option>';
-
 
             $.ajax({
                 type: "POST",
@@ -350,17 +303,16 @@
         }
     }
 </script>
-
-
 <script>
-
     $(document).on('submit', 'form#printCard', function (e) {
-
 
         e.preventDefault();
         var form = $(this);
         var subsubmit_button = $(this).find(':submit');
         var formdata = form.serializeArray();
+  
+        var list_selected =  $('form#printCard input[name="exam_group_class_batch_exam_student_id[]"]:checked').length;
+      if(list_selected > 0){
 
         $.ajax({
             type: "POST",
@@ -385,7 +337,9 @@
                 subsubmit_button.button('reset');
             }
         });
-
+    }else{
+         confirm("<?php echo $this->lang->line('please_select_student'); ?>");
+    }
 
     });
     $(document).on('click', '#select_all', function () {
@@ -393,10 +347,6 @@
     });
 
 </script>
-
-
-
-
 <script type="text/javascript">
 
     var base_url = '<?php echo base_url() ?>';
@@ -426,7 +376,6 @@
             window.frames["frame1"].print();
             frame1.remove();
         }, 500);
-
 
         return true;
     }

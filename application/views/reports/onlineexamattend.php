@@ -89,7 +89,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
 
-                    <form role="form" action="<?php echo site_url('report/onlineexamattend') ?>" method="post" class="">
+                    <form role="form" action="<?php echo site_url('report/getformparameter') ?>" method="post" class="" id="report_form" >
                         <div class="box-body row">
 
                             <?php echo $this->customlib->getCSRF(); ?>
@@ -146,20 +146,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                     <div class="">
                         <div class="box-header ptbnull"></div>
                         <div class="box-header ptbnull">
-                            <h3 class="box-title titlefix"><i class="fa fa-money"></i> <?php echo $this->lang->line('online') . " " . $this->lang->line('exam') . " " . $this->lang->line('attempt') . " " . $this->lang->line('report'); ?></h3>
+                            <h3 class="box-title titlefix"><i class="fa fa-money"></i> <?php echo $this->lang->line('exam') . " " . $this->lang->line('attempt') . " " . $this->lang->line('report'); ?></h3>
                         </div>
                         <div class="box-body table-responsive" id="subject_list">
 
-                            <a class="btn btn-default btn-xs pull-right" id="print" onclick="printDiv()" ><i class="fa fa-print"></i></a> <a class="btn btn-default btn-xs pull-right" id="btnExport" onclick="fnExcelReport();"> <i class="fa fa-file-excel-o"></i> </a>
-
-                            <div class="downloadlabel hide"><h3> <?php echo $this->lang->line('online') . " " . $this->lang->line('exam') . " " . $this->lang->line('attempt') . " " . $this->lang->line('report') . "<br>";
-                                                $this->customlib->get_postmessage();
-                                                ?></h3></div>
-
-                            <table class="table table-striped table-bordered table-hover " id="headerTable">
+                             <table class="table table-striped table-bordered table-hover record-list" data-export-title="<?php echo $this->lang->line('exam') . " " . $this->lang->line('attempt') . " " . $this->lang->line('report'); ?>" id="headerTable">
                                 <thead>
                                     <tr>
-
                                         <th><?php echo $this->lang->line('student'); ?></th>
                                         <th><?php echo $this->lang->line('admission_no') ?></th>
                                         <th><?php echo $this->lang->line('class') ?></th>
@@ -170,72 +163,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <th><?php echo $this->lang->line('duration') ?></th>
                                         <th class="text text-center"><?php echo $this->lang->line('exam') . " " . $this->lang->line('publish') ?></th>
                                         <th class="text text-center"><?php echo $this->lang->line('result') . " " . $this->lang->line('publish') ?></th>
-
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    $count = 1;
-                                    foreach ($resultlist as $student_key => $student_value) {
-                                        $exams = explode(',', $student_value['exams']);
-
-
-                                        $exam_name = '';
-                                        $exam_from = '';
-                                        $exam_to = '';
-                                        $exam_duration = '';
-                                        $exam_publish = "";
-                                        $exam_resultpublish = "";
-                                        $exam_publishprint = "";
-                                        $exam_resultpublishprint = "";
-                                        foreach ($exams as $exams_key => $exams_value) {
-                                            $exam_details = explode('@', $exams_value);
-
-
-                                            if (count($exam_details) == 9) {
-
-
-                                                $exam_name .= $exam_details[1];
-                                                $exam_from .= date($this->customlib->getSchoolDateFormat(), $this->customlib->dateYYYYMMDDtoStrtotime($exam_details[3]));
-                                                $exam_to .= date($this->customlib->getSchoolDateFormat(), $this->customlib->dateYYYYMMDDtoStrtotime($exam_details[4]));
-                                                $exam_duration .= $exam_details[5];
-                                                $exam_publish .= ($exam_details[7] == 1) ? "<i class='fa fa-check-square-o'></i>" : "<i class='fa fa-exclamation-circle'></i>";
-                                                $exam_resultpublish .= ($exam_details[8] == 1) ? "<i class='fa fa-check-square-o'></i>" : "<i class='fa fa-exclamation-circle'></i>";
-                                                ;
-                                                $exam_publishprint .= ($exam_details[7] == 1) ? "<span style='display:none'>Yes</span>" : "<span style='display:none'>No</span>";
-                                                $exam_resultpublishprint .= ($exam_details[8] == 1) ? "<span style='display:none'>Yes</span>" : "<span style='display:none'>No</span>";
-
-                                                $exam_name .= '<br>';
-                                                $exam_from .= "<br>";
-                                                $exam_to .= "<br>";
-                                                $exam_duration .= "<br>";
-                                                $exam_publish .= "<br>";
-                                                $exam_resultpublish .= "<br>";
-                                                $exam_publishprint .= "<br>";
-                                                $exam_resultpublishprint .= "<br>";
-                                            }
-                                        }
-                                        //$exam_name.='<br>';
-                                        ?>
-                                        <tr>
-                                            <td class="mailbox-name"> <?php echo $student_value['name']; ?></td>
-                                            <td class="mailbox-name"> <?php echo $student_value['admission_no']; ?></td>
-                                            <td class="mailbox-name"> <?php echo $student_value['class']; ?> </td>
-
-                                            <td class="mailbox-name"><?php echo $student_value['section']; ?> </td>
-
-                                            <td class="mailbox-name"><?php echo $exam_name; ?></td>
-
-                                            <td ><?php echo $exam_from; ?></td>
-                                            <td><?php echo $exam_to; ?></td>
-                                            <td><?php echo $exam_duration; ?></td>
-                                            <td class="text text-center"><?php echo $exam_publish . $exam_publishprint; ?></td>
-                                            <td class="text text-center"><?php echo $exam_resultpublish . $exam_resultpublishprint; ?></td>
-                                        </tr>
-                                        <?php
-                                    }
-                                    $count++;
-                                    ?>
                                 </tbody>
                             </table>
                         </div>
@@ -311,4 +241,50 @@ if ($search_type == 'period') {
 
         return (sa);
     }
+</script>
+<script>
+$(document).ready(function() {
+  //  initDatatable('record-list','report/dtexamattemptreport',[],[],100);
+
+});
+</script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+$(document).on('submit','#report_form',function(e){
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+    var $this = $(this).find("button[type=submit]:focus");  
+    var form = $(this);
+    var url = form.attr('action');
+    var form_data = form.serializeArray();
+    $.ajax({
+           url: url,
+           type: "POST",
+           dataType:'JSON',
+           data: form_data, // serializes the form's elements.
+              beforeSend: function () {
+                $('[id^=error]').html("");
+                $this.button('loading');
+               },
+              success: function(response) { // your success handler
+                
+                if(!response.status){
+                    $.each(response.error, function(key, value) {
+                    $('#error_' + key).html(value);
+                    });
+                }else{
+                   initDatatable('record-list','report/dtexamattemptreport',response.params);
+                }
+              },
+             error: function() { // your error handler
+                 $this.button('reset');
+             },
+             complete: function() {
+                 $this.button('reset');
+             }
+         });
+
+        });
+
+    });
+    
 </script>

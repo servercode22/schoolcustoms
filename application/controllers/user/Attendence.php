@@ -4,41 +4,44 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-class Attendence extends Student_Controller {
+class Attendence extends Student_Controller
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
-    public function getdaysubattendence() {
+    public function getdaysubattendence()
+    {
         $date = $this->input->post('date');
         $date = date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('date')));
 
         $attendencetypes = $this->attendencetype_model->get();
-        // $date=date('2019-11-11');   
-        $timestamp = strtotime($date);
-        $day = date('l', $timestamp);
+        $timestamp       = strtotime($date);
+        $day             = date('l', $timestamp);
 
-        $student_id = $this->customlib->getStudentSessionUserID();
-        $student = $this->student_model->get($student_id);
-        $student_current_class = $this->customlib->getStudentCurrentClsSection();
-        $student_session_id = $student_current_class->student_session_id;
-        $class_id = $student_current_class->class_id;
-        $section_id = $student_current_class->section_id;
+        $student_id                    = $this->customlib->getStudentSessionUserID();
+        $student                       = $this->student_model->get($student_id);
+        $student_current_class         = $this->customlib->getStudentCurrentClsSection();
+        $student_session_id            = $student_current_class->student_session_id;
+        $class_id                      = $student_current_class->class_id;
+        $section_id                    = $student_current_class->section_id;
         $result['attendencetypeslist'] = $attendencetypes;
-        $result['attendence'] = $this->studentsubjectattendence_model->studentAttendanceByDate($class_id, $section_id, $day, $date, $student_session_id);
-        $result_page = $this->load->view('user/attendence/_getdaysubattendence', $result, true);
+        $result['attendence']          = $this->studentsubjectattendence_model->studentAttendanceByDate($class_id, $section_id, $day, $date, $student_session_id);
+        $result_page                   = $this->load->view('user/attendence/_getdaysubattendence', $result, true);
         echo json_encode(array('status' => 1, 'result_page' => $result_page));
     }
 
-    public function index() {
+    public function index()
+    {
 
         $this->session->set_userdata('top_menu', 'Attendence');
         $this->session->set_userdata('sub_menu', 'book/index');
-        $data['title'] = 'Attendence List';
-        $result = array();
+        $data['title']      = 'Attendence List';
+        $result             = array();
         $data['resultList'] = $result;
-        $setting_result = $this->setting_model->get();
+        $setting_result     = $this->setting_model->get();
 
         $setting_result = ($setting_result[0]);
         $setting_result['attendence_type'];
@@ -54,29 +57,30 @@ class Attendence extends Student_Controller {
         $this->load->view('layout/student/footer');
     }
 
-    public function getAttendence() {
-        $year = $this->input->get('year');
-        $month = $this->input->get('month');
-        $student_id = $this->customlib->getStudentSessionUserID();
-        $student = $this->student_model->get($student_id);
+    public function getAttendence()
+    {
+        $year                  = $this->input->get('year');
+        $month                 = $this->input->get('month');
+        $student_id            = $this->customlib->getStudentSessionUserID();
+        $student               = $this->student_model->get($student_id);
         $student_current_class = $this->customlib->getStudentCurrentClsSection();
-        $student_session_id = $student_current_class->student_session_id;
-        $result = array();
-        $new_date = "01-" . $month . "-" . $year;
-        $totalDays = cal_days_in_month(CAL_GREGORIAN, $month, $year);
-        $first_day_this_month = date('01-m-Y');
-        $fst_day_str = strtotime(date('d-m-Y', strtotime($new_date)));
-        $array = array();
+        $student_session_id    = $student_current_class->student_session_id;
+        $result                = array();
+        $new_date              = "01-" . $month . "-" . $year;
+        $totalDays             = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+        $first_day_this_month  = date('01-m-Y');
+        $fst_day_str           = strtotime(date('d-m-Y', strtotime($new_date)));
+        $array                 = array();
         for ($day = 1; $day <= $totalDays; $day++) {
-            $date = date('Y-m-d', $fst_day_str);
+            $date               = date('Y-m-d', $fst_day_str);
             $student_attendence = $this->attendencetype_model->getStudentAttendence($date, $student_session_id);
             if (!empty($student_attendence)) {
-                $s = array();
-                $s['date'] = $date;
-                $s['badge'] = false;
+                $s           = array();
+                $s['date']   = $date;
+                $s['badge']  = false;
                 $s['footer'] = "Extra information";
-                $type = $student_attendence->type;
-                $s['title'] = $type;
+                $type        = $student_attendence->type;
+                $s['title']  = $type;
                 if ($type == 'Present') {
                     $s['classname'] = "grade-4";
                 } else if ($type == 'Absent') {

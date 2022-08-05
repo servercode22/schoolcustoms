@@ -31,16 +31,15 @@ class Book_model extends MY_Model {
         }
     }
 
-    public function bookgetall() {
+    public function getbooklist() {
 
-        $sql = "SELECT books.*,IFNULL(total_issue, '0') as `total_issue` FROM books LEFT JOIN (SELECT COUNT(*) as `total_issue`, book_id from book_issues  where is_returned= 0  GROUP by book_id) as `book_count` on books.id=book_count.book_id where 0=0  ";
-
-        $query = $this->db->query($sql);
-
-        if ($query->num_rows() > 0) {
-            return $query->result_array();
-        }
-        return false;
+       $this->datatables
+            ->select('books.*,IFNULL(total_issue, "0") as `total_issue` ')
+            ->searchable('book_title,description,book_no,isbn_no,publish,author,subject,rack_no,qty," ",perunitcost,postdate')
+            ->orderable('book_title,description,book_no,isbn_no,publish,author,subject,rack_no,qty," ",perunitcost,postdate')
+            ->join(" (SELECT COUNT(*) as `total_issue`, book_id from book_issues  where is_returned= 0  GROUP by book_id) as `book_count`","books.id=book_count.book_id","left")
+            ->from('books');
+            return $this->datatables->generate('json');
     }
 
     public function getBookwithQty() {
@@ -119,7 +118,6 @@ class Book_model extends MY_Model {
             $action = "Insert";
             $record_id = $insert_id;
             $this->log($message, $record_id, $action);
-            //echo $this->db->last_query();die;
             //======================Code End==============================
 
             $this->db->trans_complete(); # Completing transaction
@@ -138,7 +136,6 @@ class Book_model extends MY_Model {
 
     public function listbook() {
         $this->db->select()->from('books');
-        $this->db->limit(10);
         $this->db->order_by("id", "desc");
         $listbook = $this->db->get();
         return $listbook->result_array();
@@ -175,12 +172,15 @@ class Book_model extends MY_Model {
         $condition = " and date_format(`books`.`postdate`,'%Y-%m-%d') between '" . $start_date . "' and '" . $end_date . "'";
         $sql = "SELECT books.*,IFNULL(total_issue, '0') as `total_issue` FROM books LEFT JOIN (SELECT COUNT(*) as `total_issue`, book_id from book_issues  where is_returned= 0  GROUP by book_id) as `book_count` on books.id=book_count.book_id where 0=0 " . $condition . " ";
 
-        $query = $this->db->query($sql);
+        $this->datatables->query($sql)
+        ->orderable('book_title,book_no,isbn_no,publish,author,subject,rack_no,qty,null,null,perunitcost,postdate')
+        ->searchable('book_title,book_no,isbn_no,publish,author,subject,rack_no,qty,null,null,perunitcost,postdate')
+     
+        ->query_where_enable(TRUE);
+       
+        return $this->datatables->generate('json');  
 
-        if ($query->num_rows() > 0) {
-            return $query->result_array();
-        }
-        return false;
+
     }
 
     public function bookoverview($start_date, $end_date) {

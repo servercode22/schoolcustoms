@@ -152,7 +152,7 @@
                                             <div class="pull-right">
                                             </div>
                                         </div>
-                                        <div class="download_label"><?php echo $this->lang->line('student'); ?> <?php echo $this->lang->line('attendance'); ?> <?php echo $this->lang->line('report') . "<br>";
+                                        <div class="download_label"><?php echo $this->lang->line('student'); ?> <?php echo $this->lang->line('attendance'); ?> <?php echo $this->lang->line('report') . " ";
                             $this->customlib->get_postmessage();
                                         ?></div>
                                         <table class="table table-striped table-bordered table-hover example">
@@ -164,12 +164,10 @@
                                                     <th><br/><span data-toggle="tooltip" title="<?php echo "Gross Present Percentage(%)"; ?>">%</span></th>
 
                                                     <?php
-                                                    foreach ($attendencetypeslist as $key => $value) {
-                                                        //   echo "<pre>";
-                                                        // print_r($value);
+                                                    foreach ($attendencetypeslist as $key => $value) {                                                       
                                                         if (strip_tags($value["key_value"]) != "E") {
                                                             ?>
-                                                            <th colspan="" ><br/><span data-toggle="tooltip" title="<?php echo "Total " . $value["type"]; ?>"><?php echo strip_tags($value["key_value"]); ?>
+                                                            <th colspan="" ><span data-toggle="tooltip" title="<?php echo "Total " . $value["type"]; ?>"><?php echo strip_tags($value["key_value"]); ?>
 
                                                                 </span></th>
 
@@ -215,15 +213,13 @@
                                                 } else {
                                                     $row_count = 1;
                                                     $i = 0;
-                                                    //echo "<pre>";
 
 
-                                                    foreach ($student_array as $student_key => $student_value) {
-                                                        //echo $i;
+                                                    foreach ($student_array as $student_key => $student_value) {                                                      
                                                         ?>
                                                         <tr>
                                                             <th class="tdclsname">
-                                                                <span data-toggle="popover" class="detail_popover" data-original-title="" title=""><a href="#" style="color:#333"><?php echo $student_value['firstname'] . " " . $student_value['lastname']; ?></a></span>
+                                                                <span data-toggle="popover" class="detail_popover" data-original-title="" title=""><a href="#" style="color:#333"><?php echo $this->customlib->getFullName($student_value['firstname'],$student_value['middlename'],$student_value['lastname'],$sch_setting->middlename,$sch_setting->lastname); ?></a></span>
                                                                 <div class="fee_detail_popover" style="display: none"><?php echo "Admission No: " . $student_value['admission_no']; ?></div> 
                                                             </th>
                                                             <th><?php

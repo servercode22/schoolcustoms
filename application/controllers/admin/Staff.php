@@ -4,13 +4,14 @@ if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
 }
 
-class Staff extends Admin_Controller {
+class Staff extends Admin_Controller
+{
 
     public $sch_setting_detail = array();
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
-
         $this->config->load("payroll");
         $this->config->load("app-config");
         $this->load->library('Enc_lib');
@@ -18,33 +19,33 @@ class Staff extends Admin_Controller {
         $this->load->model("staff_model");
         $this->load->library('encoding_lib');
         $this->load->model("leaverequest_model");
-        $this->contract_type = $this->config->item('contracttype');
-        $this->marital_status = $this->config->item('marital_status');
-        $this->staff_attendance = $this->config->item('staffattendance');
-        $this->payroll_status = $this->config->item('payroll_status');
-        $this->payment_mode = $this->config->item('payment_mode');
-        $this->status = $this->config->item('status');
+        $this->contract_type      = $this->config->item('contracttype');
+        $this->marital_status     = $this->config->item('marital_status');
+        $this->staff_attendance   = $this->config->item('staffattendance');
+        $this->payroll_status     = $this->config->item('payroll_status');
+        $this->payment_mode       = $this->config->item('payment_mode');
+        $this->status             = $this->config->item('status');
         $this->sch_setting_detail = $this->setting_model->getSetting();
     }
 
-    public function index() {
+    public function index()
+    {
+
         if (!$this->rbac->hasPrivilege('staff', 'can_view')) {
             access_denied();
         }
 
-
-        $data['title'] = 'Staff Search';
+        $data['title']  = 'Staff Search';
         $data['fields'] = $this->customfield_model->get_custom_fields('staff', 1);
         $this->session->set_userdata('top_menu', 'HR');
         $this->session->set_userdata('sub_menu', 'HR/staff');
-        $search = $this->input->post("search");
-        $resultlist = $this->staff_model->searchFullText("", 1);
+        $search             = $this->input->post("search");
+        $resultlist         = $this->staff_model->searchFullText("", 1);
         $data['resultlist'] = $resultlist;
-        $staffRole = $this->staff_model->getStaffRole();
-        $data["role"] = $staffRole;
-        $data["role_id"] = "";
-
-        $search_text = $this->input->post('search_text');
+        $staffRole          = $this->staff_model->getStaffRole();
+        $data["role"]       = $staffRole;
+        $data["role_id"]    = "";
+        $search_text        = $this->input->post('search_text');
         if (isset($search)) {
             if ($search == 'search_filter') {
                 $this->form_validation->set_rules('role', $this->lang->line('role'), 'trim|required|xss_clean');
@@ -52,21 +53,21 @@ class Staff extends Admin_Controller {
 
                     $data["resultlist"] = array();
                 } else {
-                    $data['searchby'] = "filter";
-                    $role = $this->input->post('role');
+                    $data['searchby']    = "filter";
+                    $role                = $this->input->post('role');
                     $data['employee_id'] = $this->input->post('empid');
-                    $data["role_id"] = $role;
+                    $data["role_id"]     = $role;
                     $data['search_text'] = $this->input->post('search_text');
-                    $resultlist = $this->staff_model->getEmployee($role, 1);
-                    $data['resultlist'] = $resultlist;
+                    $resultlist          = $this->staff_model->getEmployee($role, 1);
+                    $data['resultlist']  = $resultlist;
                 }
             } else if ($search == 'search_full') {
-                $data['searchby'] = "text";
+                $data['searchby']    = "text";
                 $data['search_text'] = trim($this->input->post('search_text'));
-                $resultlist = $this->staff_model->searchFullText($search_text, 1);
+                $resultlist          = $this->staff_model->searchFullText($search_text, 1);
 
                 $data['resultlist'] = $resultlist;
-                $data['title'] = 'Search Details: ' . $data['search_text'];
+                $data['title']      = 'Search Details: ' . $data['search_text'];
             }
         }
 
@@ -75,7 +76,8 @@ class Staff extends Admin_Controller {
         $this->load->view('layout/footer');
     }
 
-    public function disablestafflist() {
+    public function disablestafflist()
+    {
 
         if (!$this->rbac->hasPrivilege('disable_staff', 'can_view')) {
             access_denied();
@@ -90,34 +92,35 @@ class Staff extends Admin_Controller {
         $this->session->set_userdata('top_menu', 'HR');
         $this->session->set_userdata('sub_menu', 'HR/staff/disablestafflist');
         $data['title'] = 'Staff Search';
-        $staffRole = $this->staff_model->getStaffRole();
-        $data["role"] = $staffRole;
-        $search = $this->input->post("search");
-        $search_text = $this->input->post('search_text');
-        $resultlist = $this->staff_model->searchFullText($search_text, 0);
+        $staffRole     = $this->staff_model->getStaffRole();
+
+        $data["role"]       = $staffRole;
+        $search             = $this->input->post("search");
+        $search_text        = $this->input->post('search_text');
+        $resultlist         = $this->staff_model->searchFullText($search_text, 0);
         $data['resultlist'] = $resultlist;
 
         if (isset($search)) {
             if ($search == 'search_filter') {
                 $this->form_validation->set_rules('role', $this->lang->line('role'), 'trim|required|xss_clean');
                 if ($this->form_validation->run() == false) {
-                    $resultlist = array();
+                    $resultlist         = array();
                     $data['resultlist'] = $resultlist;
                 } else {
-                    $data['searchby'] = "filter";
-                    $role = $this->input->post('role');
+                    $data['searchby']    = "filter";
+                    $role                = $this->input->post('role');
                     $data['employee_id'] = $this->input->post('empid');
 
                     $data['search_text'] = $this->input->post('search_text');
-                    $resultlist = $this->staff_model->getEmployee($role, 0);
-                    $data['resultlist'] = $resultlist;
+                    $resultlist          = $this->staff_model->getEmployee($role, 0);
+                    $data['resultlist']  = $resultlist;
                 }
             } else if ($search == 'search_full') {
-                $data['searchby'] = "text";
+                $data['searchby']    = "text";
                 $data['search_text'] = trim($this->input->post('search_text'));
-                $resultlist = $this->staff_model->searchFullText($search_text, 0);
-                $data['resultlist'] = $resultlist;
-                $data['title'] = 'Search Details: ' . $data['search_text'];
+                $resultlist          = $this->staff_model->searchFullText($search_text, 0);
+                $data['resultlist']  = $resultlist;
+                $data['title']       = 'Search Details: ' . $data['search_text'];
             }
         }
         $this->load->view('layout/header', $data);
@@ -125,7 +128,8 @@ class Staff extends Admin_Controller {
         $this->load->view('layout/footer', $data);
     }
 
-    public function profile($id) {
+    public function profile($id)
+    {
         $data['enable_disable'] = 1;
         if ($this->customlib->getStaffID() == $id) {
             $data['enable_disable'] = 0;
@@ -135,57 +139,57 @@ class Staff extends Admin_Controller {
 
         $this->load->model("staffattendancemodel");
         $this->load->model("setting_model");
-        $data["id"] = $id;
+        $data["id"]    = $id;
         $data['title'] = 'Staff Details';
-        $staff_info = $this->staff_model->getProfile($id);
-        $userdata = $this->customlib->getUserData();
+        $staff_info    = $this->staff_model->getProfile($id);
+        $userdata      = $this->customlib->getUserData();
 
-        $userid = $userdata['id'];
+        $userid          = $userdata['id'];
         $timeline_status = '';
 
         if ($userid == $id) {
             $timeline_status = 'yes';
         }
 
-        $timeline_list = $this->timeline_model->getStaffTimeline($id, $timeline_status);
+        $timeline_list         = $this->timeline_model->getStaffTimeline($id, $timeline_status);
         $data["timeline_list"] = $timeline_list;
-        $staff_payroll = $this->staff_model->getStaffPayroll($id);
-        $staff_leaves = $this->leaverequest_model->staff_leave_request($id);
-        $alloted_leavetype = $this->staff_model->allotedLeaveType($id);
-        $data['sch_setting'] = $this->sch_setting_detail;
+        $staff_payroll         = $this->staff_model->getStaffPayroll($id);
+        $staff_leaves          = $this->leaverequest_model->staff_leave_request($id);
+        $alloted_leavetype     = $this->staff_model->allotedLeaveType($id);
+        $data['sch_setting']   = $this->sch_setting_detail;
 
         $data['staffid_auto_insert'] = $this->sch_setting_detail->staffid_auto_insert;
         $this->load->model("payroll_model");
-        $salary = $this->payroll_model->getSalaryDetails($id);
-        $attendencetypes = $this->staffattendancemodel->getStaffAttendanceType();
+        $salary                      = $this->payroll_model->getSalaryDetails($id);
+        $attendencetypes             = $this->staffattendancemodel->getStaffAttendanceType();
         $data['attendencetypeslist'] = $attendencetypes;
-        $i = 0;
-        $leaveDetail = array();
+        $i                           = 0;
+        $leaveDetail                 = array();
         foreach ($alloted_leavetype as $key => $value) {
-            $count_leaves[] = $this->leaverequest_model->countLeavesData($id, $value["leave_type_id"]);
-            $leaveDetail[$i]['type'] = $value["type"];
+            $count_leaves[]                   = $this->leaverequest_model->countLeavesData($id, $value["leave_type_id"]);
+            $leaveDetail[$i]['type']          = $value["type"];
             $leaveDetail[$i]['alloted_leave'] = $value["alloted_leave"];
             $leaveDetail[$i]['approve_leave'] = $count_leaves[$i]['approve_leave'];
             $i++;
         }
-        $data["leavedetails"] = $leaveDetail;
-        $data["staff_leaves"] = $staff_leaves;
-        $data['staff_doc_id'] = $id;
-        $data['staff'] = $staff_info;
+        $data["leavedetails"]  = $leaveDetail;
+        $data["staff_leaves"]  = $staff_leaves;
+        $data['staff_doc_id']  = $id;
+        $data['staff']         = $staff_info;
         $data['staff_payroll'] = $staff_payroll;
-        $data['salary'] = $salary;
+        $data['salary']        = $salary;
 
-        $monthlist = $this->customlib->getMonthDropdown();
-        $startMonth = $this->setting_model->getStartMonth();
-        $data["monthlist"] = $monthlist;
-        $data['yearlist'] = $this->staffattendancemodel->attendanceYearCount();
-        $session_current = $this->setting_model->getCurrentSessionName();
-        $startMonth = $this->setting_model->getStartMonth();
-        $centenary = substr($session_current, 0, 2); //2017-18 to 2017
-        $year_first_substring = substr($session_current, 2, 2); //2017-18 to 2017
+        $monthlist             = $this->customlib->getMonthDropdown();
+        $startMonth            = $this->setting_model->getStartMonth();
+        $data["monthlist"]     = $monthlist;
+        $data['yearlist']      = $this->staffattendancemodel->attendanceYearCount();
+        $session_current       = $this->setting_model->getCurrentSessionName();
+        $startMonth            = $this->setting_model->getStartMonth();
+        $centenary             = substr($session_current, 0, 2); //2017-18 to 2017
+        $year_first_substring  = substr($session_current, 2, 2); //2017-18 to 2017
         $year_second_substring = substr($session_current, 5, 2); //2017-18 to 18
-        $month_number = date("m", strtotime($startMonth));
-        $data['rate_canview'] = 0;
+        $month_number          = date("m", strtotime($startMonth));
+        $data['rate_canview']  = 0;
 
         if ($id != '1') {
             $staff_rating = $this->staff_model->staff_ratingById($id);
@@ -202,71 +206,71 @@ class Staff extends Admin_Controller {
 
         $year = date("Y");
 
-        $staff_list = $this->staff_model->user_reviewlist($id);
+        $staff_list              = $this->staff_model->user_reviewlist($id);
         $data['user_reviewlist'] = $staff_list;
 
         $attendence_count = array();
-        $attendencetypes = $this->attendencetype_model->getStaffAttendanceType();
+        $attendencetypes  = $this->attendencetype_model->getStaffAttendanceType();
         foreach ($attendencetypes as $att_key => $att_value) {
             $attendence_count[$att_value['type']] = array();
         }
 
         foreach ($monthlist as $key => $value) {
-            $datemonth = date("m", strtotime($value));
+            $datemonth       = date("m", strtotime($value));
             $date_each_month = date('Y-' . $datemonth . '-01');
 
-
             $date_start = date('01', strtotime($date_each_month));
-            $date_end = date('t', strtotime($date_each_month));
+            $date_end   = date('t', strtotime($date_each_month));
             for ($n = $date_start; $n <= $date_end; $n++) {
-                $att_dates = $year . "-" . $datemonth . "-" . sprintf("%02d", $n);
-                $date_array[] = $att_dates;
-                $staff_attendence = $this->staffattendancemodel->searchStaffattendance($id, $att_dates, false);
-
-                if ($staff_attendence['att_type'] != "") {
+                $att_dates        = $year . "-" . $datemonth . "-" . sprintf("%02d", $n);
+                $date_array[]     = $att_dates;
+                $staff_attendence = $this->staffattendancemodel->searchStaffattendance($att_dates, $id, false);
+				if(!empty($staff_attendence)){
+					if ($staff_attendence['att_type'] != "") {
                     $attendence_count[$staff_attendence['att_type']][] = 1;
-                }
+					}
+				}else{
+					
+				}
                 $res[$att_dates] = $staff_attendence;
             }
         }
 
-
         $session = $this->setting_model->getCurrentSessionName();
 
         $session_start = explode("-", $session);
-        $start_year = $session_start[0];
+        $start_year    = $session_start[0];
 
-        $date = $start_year . "-" . $startMonth;
+        $date    = $start_year . "-" . $startMonth;
         $newdate = date("Y-m-d", strtotime($date . "+1 month"));
 
-//        $countAttendance = $this->countAttendance($start_year, $startMonth, $id);
         $data["countAttendance"] = $attendence_count;
-
-        $data["resultlist"] = $res;
+        $data["resultlist"]       = $res;
         $data["attendence_array"] = range(01, 31);
-        $data["date_array"] = $date_array;
-        $data["payroll_status"] = $this->payroll_status;
-        $data["payment_mode"] = $this->payment_mode;
-        $data["contract_type"] = $this->contract_type;
-        $data["status"] = $this->status;
-        $roles = $this->role_model->get();
-        $data["roles"] = $roles;
-        $stafflist = $this->staff_model->get();
-        $data['stafflist'] = $stafflist;
+        $data["date_array"]       = $date_array;
+        $data["payroll_status"]   = $this->payroll_status;
+        $data["payment_mode"]     = $this->payment_mode;
+        $data["contract_type"]    = $this->contract_type;
+        $data["status"]           = $this->status;
+        $roles                    = $this->role_model->get();
+        $data["roles"]            = $roles;
+        $stafflist                = $this->staff_model->get();
+        $data['stafflist']        = $stafflist;
 
         $this->load->view('layout/header', $data);
         $this->load->view('admin/staff/staffprofile', $data);
         $this->load->view('layout/footer', $data);
     }
 
-    public function countAttendance($st_month, $no_of_months, $emp) {
+    public function countAttendance($st_month, $no_of_months, $emp)
+    {
 
         $record = array();
         for ($i = 1; $i <= 1; $i++) {
 
-            $r = array();
+            $r     = array();
             $month = date('m', strtotime($st_month . " -$i month"));
-            $year = date('Y', strtotime($st_month . " -$i month"));
+            $year  = date('Y', strtotime($st_month . " -$i month"));
 
             foreach ($this->staff_attendance as $att_key => $att_value) {
 
@@ -281,10 +285,11 @@ class Staff extends Admin_Controller {
         return $record;
     }
 
-    public function getSession() {
-        $session = $this->session_model->getAllSession();
-        $data = array();
-        $session_array = $this->session->has_userdata('session_array');
+    public function getSession()
+    {
+        $session             = $this->session_model->getAllSession();
+        $data                = array();
+        $session_array       = $this->session->has_userdata('session_array');
         $data['sessionData'] = array('session_id' => 0);
         if ($session_array) {
             $data['sessionData'] = $this->session->userdata('session_array');
@@ -298,72 +303,72 @@ class Staff extends Admin_Controller {
         return $data;
     }
 
-    public function getSessionMonthDropdown() {
+    public function getSessionMonthDropdown()
+    {
         $startMonth = $this->setting_model->getStartMonth();
-        $array = array();
+        $array      = array();
         for ($m = $startMonth; $m <= $startMonth + 11; $m++) {
-            $month = date('F', mktime(0, 0, 0, $m, 1, date('Y')));
+            $month         = date('F', mktime(0, 0, 0, $m, 1, date('Y')));
             $array[$month] = $month;
         }
         return $array;
     }
 
-    public function download($staff_id, $doc) {
+    public function download($staff_id, $doc)
+    {
         $this->load->helper('download');
-        $filepath = "./uploads/staff_documents/$staff_id/" . $this->uri->segment(5);
-        $data = file_get_contents($filepath);
-        $name = $this->uri->segment(5);
+        $filepath = "./uploads/staff_documents/$staff_id/" . urldecode($this->uri->segment(5));
+        $data     = file_get_contents($filepath);
+        $name     = $this->uri->segment(5);
         force_download($name, $data);
     }
 
-    public function doc_delete($id, $doc, $file) {
+    public function doc_delete($id, $doc, $file)
+    {
         $this->staff_model->doc_delete($id, $doc, $file);
         $this->session->set_flashdata('msg', '<i class="fa fa-check-square-o" aria-hidden="true"></i>' . $this->lang->line('delete_message') . '');
         redirect('admin/staff/profile/' . $id);
     }
 
-    public function ajax_attendance($id) {
+    public function ajax_attendance($id)
+    {
         $this->load->model("staffattendancemodel");
-        $attendencetypes = $this->staffattendancemodel->getStaffAttendanceType();
+        $attendencetypes             = $this->staffattendancemodel->getStaffAttendanceType();
         $data['attendencetypeslist'] = $attendencetypes;
-        $year = $this->input->post("year");
-        $data["year"] = $year;
+        $year                        = $this->input->post("year");
+        $data["year"]                = $year;
         if (!empty($year)) {
 
-            $monthlist = $this->customlib->getMonthDropdown();
-            $startMonth = $this->setting_model->getStartMonth();
+            $monthlist         = $this->customlib->getMonthDropdown();
+            $startMonth        = $this->setting_model->getStartMonth();
             $data["monthlist"] = $monthlist;
-            $data['yearlist'] = $this->staffattendancemodel->attendanceYearCount();
-            $session_current = $this->setting_model->getCurrentSessionName();
-            $startMonth = $this->setting_model->getStartMonth();
+            $data['yearlist']  = $this->staffattendancemodel->attendanceYearCount();
+            $session_current   = $this->setting_model->getCurrentSessionName();
+            $startMonth        = $this->setting_model->getStartMonth();
 
-            $j = 0;
-            for ($n = 1; $n <= 31; $n++) {
+            foreach ($monthlist as $key => $value) {
+                $datemonth       = date("m", strtotime($value));
+                $date_each_month = date('Y-' . $datemonth . '-01');
+                $date_end        = date('t', strtotime($date_each_month));
+                for ($n = 1; $n <= $date_end; $n++) {
+                    $att_date           = sprintf("%02d", $n);
+                    $attendence_array[] = $att_date;
+                    $datemonth          = date("m", strtotime($value));
+                    $att_dates          = $year . "-" . $datemonth . "-" . sprintf("%02d", $n);
 
-                $att_date = sprintf("%02d", $n);
-
-                $attendence_array[] = $att_date;
-
-                foreach ($monthlist as $key => $value) {
-
-                    $datemonth = date("m", strtotime($value));
-                    $att_dates = $year . "-" . $datemonth . "-" . sprintf("%02d", $n);
-                    $date_array[] = $att_dates;
-                    $res[$att_dates] = $this->staffattendancemodel->searchStaffattendance($id, $att_dates);
+                    $date_array[]    = $att_dates;
+					$res[$att_dates] = $this->staffattendancemodel->searchStaffattendance($att_dates, $id);
                 }
-
-                $j++;
             }
-
-            $date = $year . "-" . $startMonth;
+            $date    = $year . "-" . $startMonth;
             $newdate = date("Y-m-d", strtotime($date . "+1 month"));
 
-            $countAttendance = $this->countAttendance($year, $startMonth, $id);
-            $data["countAttendance"] = $countAttendance;
-            $data["id"] = $id;
-            $data["resultlist"] = $res;
+            $countAttendance          = $this->countAttendance($year, $startMonth, $id);
+            $data["countAttendance"]  = $countAttendance;
+            $data["id"]               = $id;
+            $data["resultlist"]       = $res;
             $data["attendence_array"] = $attendence_array;
-            $data["date_array"] = $date_array;
+            $data["date_array"]       = $date_array;
 
             $this->load->view("admin/staff/ajaxattendance", $data);
         } else {
@@ -372,32 +377,33 @@ class Staff extends Admin_Controller {
         }
     }
 
-    public function create() {
+    public function create()
+    {
         $this->session->set_userdata('top_menu', 'HR');
         $this->session->set_userdata('sub_menu', 'admin/staff');
-        $roles = $this->role_model->get();
-        $data["roles"] = $roles;
-        $genderList = $this->customlib->getGender();
-        $data['genderList'] = $genderList;
-        $payscaleList = $this->staff_model->getPayroll();
-        $leavetypeList = $this->staff_model->getLeaveType();
-        $data["leavetypeList"] = $leavetypeList;
-        $data["payscaleList"] = $payscaleList;
-        $designation = $this->staff_model->getStaffDesignation();
-        $data["designation"] = $designation;
-        $department = $this->staff_model->getDepartment();
-        $data["department"] = $department;
-        $marital_status = $this->marital_status;
+        $roles                  = $this->role_model->get();
+        $data["roles"]          = $roles;
+        $genderList             = $this->customlib->getGender();
+        $data['genderList']     = $genderList;
+        $payscaleList           = $this->staff_model->getPayroll();
+        $leavetypeList          = $this->staff_model->getLeaveType();
+        $data["leavetypeList"]  = $leavetypeList;
+        $data["payscaleList"]   = $payscaleList;
+        $designation            = $this->staff_model->getStaffDesignation();
+        $data["designation"]    = $designation;
+        $department             = $this->staff_model->getDepartment();
+        $data["department"]     = $department;
+        $marital_status         = $this->marital_status;
         $data["marital_status"] = $marital_status;
 
-        $data['title'] = 'Add Staff';
-        $data["contract_type"] = $this->contract_type;
-        $data['sch_setting'] = $this->sch_setting_detail;
+        $data['title']               = 'Add Staff';
+        $data["contract_type"]       = $this->contract_type;
+        $data['sch_setting']         = $this->sch_setting_detail;
         $data['staffid_auto_insert'] = $this->sch_setting_detail->staffid_auto_insert;
-        $custom_fields = $this->customfield_model->getByBelong('staff');
+        $custom_fields               = $this->customfield_model->getByBelong('staff');
         foreach ($custom_fields as $custom_fields_key => $custom_fields_value) {
             if ($custom_fields_value['validation']) {
-                $custom_fields_id = $custom_fields_value['id'];
+                $custom_fields_id   = $custom_fields_value['id'];
                 $custom_fields_name = $custom_fields_value['name'];
                 $this->form_validation->set_rules("custom_fields[staff][" . $custom_fields_id . "]", $custom_fields_name, 'trim|required');
             }
@@ -413,9 +419,9 @@ class Staff extends Admin_Controller {
         $this->form_validation->set_rules('third_doc', $this->lang->line('image'), 'callback_handle_third_upload');
         $this->form_validation->set_rules('fourth_doc', $this->lang->line('image'), 'callback_handle_fourth_upload');
         $this->form_validation->set_rules(
-                'email', $this->lang->line('email'), array('required', 'valid_email',
-            array('check_exists', array($this->staff_model, 'valid_email_id')),
-                )
+            'email', $this->lang->line('email'), array('required', 'valid_email',
+                array('check_exists', array($this->staff_model, 'valid_email_id')),
+            )
         );
         if (!$this->sch_setting_detail->staffid_auto_insert) {
 
@@ -426,71 +432,70 @@ class Staff extends Admin_Controller {
 
         if ($this->form_validation->run() == true) {
 
-            $custom_field_post = $this->input->post("custom_fields[staff]");
+            $custom_field_post  = $this->input->post("custom_fields[staff]");
             $custom_value_array = array();
-            if (!empty($custom_fields_value)) {
-
+            if (!empty($custom_fields)) {
                 foreach ($custom_field_post as $key => $value) {
                     $check_field_type = $this->input->post("custom_fields[staff][" . $key . "]");
-                    $field_value = is_array($check_field_type) ? implode(",", $check_field_type) : $check_field_type;
-                    $array_custom = array(
+                    $field_value      = is_array($check_field_type) ? implode(",", $check_field_type) : $check_field_type;
+                    $array_custom     = array(
                         'belong_table_id' => 0,
                         'custom_field_id' => $key,
-                        'field_value' => $field_value,
+                        'field_value'     => $field_value,
                     );
                     $custom_value_array[] = $array_custom;
                 }
             }
 
-            $employee_id = $this->input->post("employee_id");
-            $department = $this->input->post("department");
-            $designation = $this->input->post("designation");
-            $role = $this->input->post("role");
-            $name = $this->input->post("name");
-            $gender = $this->input->post("gender");
-            $marital_status = $this->input->post("marital_status");
-            $dob = $this->input->post("dob");
-            $contact_no = $this->input->post("contactno");
-            $emergency_no = $this->input->post("emergency_no");
-            $email = $this->input->post("email");
-            $date_of_joining = $this->input->post("date_of_joining");
-            $date_of_leaving = $this->input->post("date_of_leaving");
-            $address = $this->input->post("address");
-            $qualification = $this->input->post("qualification");
-            $work_exp = $this->input->post("work_exp");
-            $basic_salary = $this->input->post('basic_salary');
-            $account_title = $this->input->post("account_title");
-            $bank_account_no = $this->input->post("bank_account_no");
-            $bank_name = $this->input->post("bank_name");
-            $ifsc_code = $this->input->post("ifsc_code");
-            $bank_branch = $this->input->post("bank_branch");
-            $contract_type = $this->input->post("contract_type");
-            $shift = $this->input->post("shift");
-            $location = $this->input->post("location");
-            $leave = $this->input->post("leave");
-            $facebook = $this->input->post("facebook");
-            $twitter = $this->input->post("twitter");
-            $linkedin = $this->input->post("linkedin");
-            $instagram = $this->input->post("instagram");
+            $employee_id       = $this->input->post("employee_id");
+            $department        = $this->input->post("department");
+            $designation       = $this->input->post("designation");
+            $role              = $this->input->post("role");
+            $name              = $this->input->post("name");
+            $gender            = $this->input->post("gender");
+            $marital_status    = $this->input->post("marital_status");
+            $dob               = $this->input->post("dob");
+            $contact_no        = $this->input->post("contactno");
+            $emergency_no      = $this->input->post("emergency_no");
+            $email             = $this->input->post("email");
+            $date_of_joining   = $this->input->post("date_of_joining");
+            $date_of_leaving   = $this->input->post("date_of_leaving");
+            $address           = $this->input->post("address");
+            $qualification     = $this->input->post("qualification");
+            $work_exp          = $this->input->post("work_exp");
+            $basic_salary      = $this->input->post('basic_salary');
+            $account_title     = $this->input->post("account_title");
+            $bank_account_no   = $this->input->post("bank_account_no");
+            $bank_name         = $this->input->post("bank_name");
+            $ifsc_code         = $this->input->post("ifsc_code");
+            $bank_branch       = $this->input->post("bank_branch");
+            $contract_type     = $this->input->post("contract_type");
+            $shift             = $this->input->post("shift");
+            $location          = $this->input->post("location");
+            $leave             = $this->input->post("leave");
+            $facebook          = $this->input->post("facebook");
+            $twitter           = $this->input->post("twitter");
+            $linkedin          = $this->input->post("linkedin");
+            $instagram         = $this->input->post("instagram");
             $permanent_address = $this->input->post("permanent_address");
-            $father_name = $this->input->post("father_name");
-            $surname = $this->input->post("surname");
-            $mother_name = $this->input->post("mother_name");
-            $note = $this->input->post("note");
-            $epf_no = $this->input->post("epf_no");
+            $father_name       = $this->input->post("father_name");
+            $surname           = $this->input->post("surname");
+            $mother_name       = $this->input->post("mother_name");
+            $note              = $this->input->post("note");
+            $epf_no            = $this->input->post("epf_no");
 
             $password = $this->role->get_random_password($chars_min = 6, $chars_max = 6, $use_upper_case = false, $include_numbers = true, $include_special_chars = false);
 
             $data_insert = array(
-                'password' => $this->enc_lib->passHashEnc($password),
-                'employee_id' => $employee_id,
-                'name' => $name,
-                'email' => $email,
-                'dob' => date('Y-m-d', $this->customlib->datetostrtotime($dob)),
+                'password'        => $this->enc_lib->passHashEnc($password),
+                'employee_id'     => $employee_id,
+                'name'            => $name,
+                'email'           => $email,
+                'dob'             => date('Y-m-d', $this->customlib->datetostrtotime($dob)),
                 'date_of_leaving' => '',
-                'gender' => $gender,
-                'payscale' => '',
-                'is_active' => 1,
+                'gender'          => $gender,
+                'payscale'        => '',
+                'is_active'       => 1,
             );
 
             if (isset($surname)) {
@@ -630,12 +635,12 @@ class Staff extends Admin_Controller {
                 $data_insert['date_of_joining'] = date('Y-m-d', $this->customlib->datetostrtotime($date_of_joining));
             }
 
-            $leave_type = $this->input->post('leave_type');
+            $leave_type  = $this->input->post('leave_type');
             $leave_array = array();
             if (!empty($leave_array)) {
                 foreach ($leave_type as $leave_key => $leave_value) {
                     $leave_array[] = array(
-                        'staff_id' => 0,
+                        'staff_id'      => 0,
                         'leave_type_id' => $leave_value,
                         'alloted_leave' => $this->input->post('alloted_leave_' . $leave_value),
                     );
@@ -643,12 +648,12 @@ class Staff extends Admin_Controller {
             }
             $role_array = array('role_id' => $this->input->post('role'), 'staff_id' => 0);
 //==========================
-            $insert = true;
-            $data_setting = array();
-            $data_setting['id'] = $this->sch_setting_detail->id;
-            $data_setting['staffid_auto_insert'] = $this->sch_setting_detail->staffid_auto_insert;
+            $insert                                = true;
+            $data_setting                          = array();
+            $data_setting['id']                    = $this->sch_setting_detail->id;
+            $data_setting['staffid_auto_insert']   = $this->sch_setting_detail->staffid_auto_insert;
             $data_setting['staffid_update_status'] = $this->sch_setting_detail->staffid_update_status;
-            $employee_id = 0;
+            $employee_id                           = 0;
 
             if ($this->sch_setting_detail->staffid_auto_insert) {
                 if ($this->sch_setting_detail->staffid_update_status) {
@@ -659,10 +664,10 @@ class Staff extends Admin_Controller {
 
                     $last_admission_digit = str_replace($this->sch_setting_detail->staffid_prefix, "", $last_student->employee_id);
 
-                    $employee_id = $this->sch_setting_detail->staffid_prefix . sprintf("%0" . $this->sch_setting_detail->staffid_no_digit . "d", $last_admission_digit + 1);
+                    $employee_id                = $this->sch_setting_detail->staffid_prefix . sprintf("%0" . $this->sch_setting_detail->staffid_no_digit . "d", $last_admission_digit + 1);
                     $data_insert['employee_id'] = $employee_id;
                 } else {
-                    $employee_id = $this->sch_setting_detail->staffid_prefix . $this->sch_setting_detail->staffid_start_from;
+                    $employee_id                = $this->sch_setting_detail->staffid_prefix . $this->sch_setting_detail->staffid_start_from;
                     $data_insert['employee_id'] = $employee_id;
                 }
 
@@ -678,7 +683,7 @@ class Staff extends Admin_Controller {
             if ($insert) {
 
                 $insert_id = $this->staff_model->batchInsert($data_insert, $role_array, $leave_array, $data_setting);
-                $staff_id = $insert_id;
+                $staff_id  = $insert_id;
                 if (!empty($custom_value_array)) {
                     $this->customfield_model->insertRecord($custom_value_array, $insert_id);
                 }
@@ -695,11 +700,11 @@ class Staff extends Admin_Controller {
                     if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
                         die("Error creating folder $uploaddir");
                     }
-                    $fileInfo = pathinfo($_FILES["first_doc"]["name"]);
+                    $fileInfo    = pathinfo($_FILES["first_doc"]["name"]);
                     $first_title = 'resume';
-                    $filename = "resume" . $staff_id . '.' . $fileInfo['extension'];
-                    $img_name = $uploaddir . $filename;
-                    $resume = $filename;
+                    $filename    = "resume" . $staff_id . '.' . $fileInfo['extension'];
+                    $img_name    = $uploaddir . $filename;
+                    $resume      = $filename;
                     move_uploaded_file($_FILES["first_doc"]["tmp_name"], $img_name);
                 } else {
 
@@ -711,10 +716,10 @@ class Staff extends Admin_Controller {
                     if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
                         die("Error creating folder $uploaddir");
                     }
-                    $fileInfo = pathinfo($_FILES["second_doc"]["name"]);
-                    $first_title = 'joining_letter';
-                    $filename = "joining_letter" . $staff_id . '.' . $fileInfo['extension'];
-                    $img_name = $uploaddir . $filename;
+                    $fileInfo       = pathinfo($_FILES["second_doc"]["name"]);
+                    $first_title    = 'joining_letter';
+                    $filename       = "joining_letter" . $staff_id . '.' . $fileInfo['extension'];
+                    $img_name       = $uploaddir . $filename;
                     $joining_letter = $filename;
                     move_uploaded_file($_FILES["second_doc"]["tmp_name"], $img_name);
                 } else {
@@ -727,10 +732,10 @@ class Staff extends Admin_Controller {
                     if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
                         die("Error creating folder $uploaddir");
                     }
-                    $fileInfo = pathinfo($_FILES["third_doc"]["name"]);
-                    $first_title = 'resignation_letter';
-                    $filename = "resignation_letter" . $staff_id . '.' . $fileInfo['extension'];
-                    $img_name = $uploaddir . $filename;
+                    $fileInfo           = pathinfo($_FILES["third_doc"]["name"]);
+                    $first_title        = 'resignation_letter';
+                    $filename           = "resignation_letter" . $staff_id . '.' . $fileInfo['extension'];
+                    $img_name           = $uploaddir . $filename;
                     $resignation_letter = $filename;
                     move_uploaded_file($_FILES["third_doc"]["tmp_name"], $img_name);
                 } else {
@@ -742,14 +747,14 @@ class Staff extends Admin_Controller {
                     if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
                         die("Error creating folder $uploaddir");
                     }
-                    $fileInfo = pathinfo($_FILES["fourth_doc"]["name"]);
+                    $fileInfo     = pathinfo($_FILES["fourth_doc"]["name"]);
                     $fourth_title = 'uploads/staff_images/' . 'Other Doucment';
-                    $fourth_doc = "otherdocument" . $staff_id . '.' . $fileInfo['extension'];
-                    $img_name = $uploaddir . $fourth_doc;
+                    $fourth_doc   = "otherdocument" . $staff_id . '.' . $fileInfo['extension'];
+                    $img_name     = $uploaddir . $fourth_doc;
                     move_uploaded_file($_FILES["fourth_doc"]["tmp_name"], $img_name);
                 } else {
                     $fourth_title = "";
-                    $fourth_doc = "";
+                    $fourth_doc   = "";
                 }
 
                 $data_doc = array('id' => $staff_id, 'resume' => $resume, 'joining_letter' => $joining_letter, 'resignation_letter' => $resignation_letter, 'other_document_name' => $fourth_title, 'other_document_file' => $fourth_doc);
@@ -781,16 +786,20 @@ class Staff extends Admin_Controller {
         $this->load->view('layout/footer', $data);
     }
 
-    public function handle_upload() {
+    public function handle_upload()
+    {
         $image_validate = $this->config->item('image_validate');
+        $result         = $this->filetype_model->get();
         if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
 
             $file_type = $_FILES["file"]['type'];
             $file_size = $_FILES["file"]["size"];
             $file_name = $_FILES["file"]["name"];
-            $allowed_extension = $image_validate['allowed_extension'];
-            $ext = pathinfo($file_name, PATHINFO_EXTENSION);
-            $allowed_mime_type = $image_validate['allowed_mime_type'];
+
+            $allowed_extension = array_map('trim', array_map('strtolower', explode(',', $result->image_extension)));
+            $allowed_mime_type = array_map('trim', array_map('strtolower', explode(',', $result->image_mime)));
+            $ext               = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
             if ($files = @getimagesize($_FILES['file']['tmp_name'])) {
 
                 if (!in_array($files['mime'], $allowed_mime_type)) {
@@ -801,7 +810,8 @@ class Staff extends Admin_Controller {
                     $this->form_validation->set_message('handle_upload', $this->lang->line('file_type_not_allowed'));
                     return false;
                 }
-                if ($file_size > $image_validate['upload_size']) {
+
+                if ($file_size > $result->image_size) {
                     $this->form_validation->set_message('handle_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($image_validate['upload_size'] / 1048576, 2) . " MB");
                     return false;
                 }
@@ -815,21 +825,23 @@ class Staff extends Admin_Controller {
         return true;
     }
 
-    public function handle_first_upload() {
+    public function handle_first_upload()
+    {
         $file_validate = $this->config->item('file_validate');
-
+        $result        = $this->filetype_model->get();
         if (isset($_FILES["first_doc"]) && !empty($_FILES['first_doc']['name'])) {
 
             $file_type = $_FILES["first_doc"]['type'];
             $file_size = $_FILES["first_doc"]["size"];
             $file_name = $_FILES["first_doc"]["name"];
-            $allowed_extension = $file_validate['allowed_extension'];
-            $ext = pathinfo($file_name, PATHINFO_EXTENSION);
-            $allowed_mime_type = $file_validate['allowed_mime_type'];
+
+            $allowed_extension = array_map('trim', array_map('strtolower', explode(',', $result->file_extension)));
+            $allowed_mime_type = array_map('trim', array_map('strtolower', explode(',', $result->file_mime)));
+            $ext               = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mtype = finfo_file($finfo, $_FILES['first_doc']['tmp_name']);
             finfo_close($finfo);
-
 
             if (!in_array($mtype, $allowed_mime_type)) {
                 $this->form_validation->set_message('handle_first_upload', $this->lang->line('file_type_not_allowed'));
@@ -840,32 +852,32 @@ class Staff extends Admin_Controller {
                 $this->form_validation->set_message('handle_first_upload', $this->lang->line('extension_not_allowed'));
                 return false;
             }
-            if ($file_size > $file_validate['upload_size']) {
+            if ($file_size > $result->file_size) {
                 $this->form_validation->set_message('handle_first_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($file_validate['upload_size'] / 1048576, 2) . " MB");
                 return false;
             }
-
 
             return true;
         }
         return true;
     }
 
-    public function handle_second_upload() {
+    public function handle_second_upload()
+    {
         $file_validate = $this->config->item('file_validate');
-
+        $result        = $this->filetype_model->get();
         if (isset($_FILES["second_doc"]) && !empty($_FILES['second_doc']['name'])) {
 
-            $file_type = $_FILES["second_doc"]['type'];
-            $file_size = $_FILES["second_doc"]["size"];
-            $file_name = $_FILES["second_doc"]["name"];
-            $allowed_extension = $file_validate['allowed_extension'];
-            $ext = pathinfo($file_name, PATHINFO_EXTENSION);
-            $allowed_mime_type = $file_validate['allowed_mime_type'];
+            $file_type         = $_FILES["second_doc"]['type'];
+            $file_size         = $_FILES["second_doc"]["size"];
+            $file_name         = $_FILES["second_doc"]["name"];
+            $allowed_extension = array_map('trim', array_map('strtolower', explode(',', $result->file_extension)));
+            $allowed_mime_type = array_map('trim', array_map('strtolower', explode(',', $result->file_mime)));
+            $ext               = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mtype = finfo_file($finfo, $_FILES['second_doc']['tmp_name']);
             finfo_close($finfo);
-
 
             if (!in_array($mtype, $allowed_mime_type)) {
                 $this->form_validation->set_message('handle_second_upload', $this->lang->line('file_type_not_allowed'));
@@ -876,32 +888,33 @@ class Staff extends Admin_Controller {
                 $this->form_validation->set_message('handle_second_upload', $this->lang->line('extension_not_allowed'));
                 return false;
             }
-            if ($file_size > $file_validate['upload_size']) {
+            if ($file_size > $result->file_size) {
                 $this->form_validation->set_message('handle_second_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($file_validate['upload_size'] / 1048576, 2) . " MB");
                 return false;
             }
-
 
             return true;
         }
         return true;
     }
 
-    public function handle_third_upload() {
+    public function handle_third_upload()
+    {
         $file_validate = $this->config->item('file_validate');
-
+        $result        = $this->filetype_model->get();
         if (isset($_FILES["third_doc"]) && !empty($_FILES['third_doc']['name'])) {
 
             $file_type = $_FILES["third_doc"]['type'];
             $file_size = $_FILES["third_doc"]["size"];
             $file_name = $_FILES["third_doc"]["name"];
-            $allowed_extension = $file_validate['allowed_extension'];
-            $ext = pathinfo($file_name, PATHINFO_EXTENSION);
-            $allowed_mime_type = $file_validate['allowed_mime_type'];
+
+            $allowed_extension = array_map('trim', array_map('strtolower', explode(',', $result->file_extension)));
+            $allowed_mime_type = array_map('trim', array_map('strtolower', explode(',', $result->file_mime)));
+            $ext               = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mtype = finfo_file($finfo, $_FILES['third_doc']['tmp_name']);
             finfo_close($finfo);
-
 
             if (!in_array($mtype, $allowed_mime_type)) {
                 $this->form_validation->set_message('handle_third_upload', $this->lang->line('file_type_not_allowed'));
@@ -912,32 +925,33 @@ class Staff extends Admin_Controller {
                 $this->form_validation->set_message('handle_third_upload', $this->lang->line('extension_not_allowed'));
                 return false;
             }
-            if ($file_size > $file_validate['upload_size']) {
+            if ($file_size > $result->file_size) {
                 $this->form_validation->set_message('handle_third_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($file_validate['upload_size'] / 1048576, 2) . " MB");
                 return false;
             }
-
 
             return true;
         }
         return true;
     }
 
-    public function handle_fourth_upload() {
+    public function handle_fourth_upload()
+    {
         $file_validate = $this->config->item('file_validate');
-
+        $result        = $this->filetype_model->get();
         if (isset($_FILES["fourth_doc"]) && !empty($_FILES['fourth_doc']['name'])) {
 
             $file_type = $_FILES["fourth_doc"]['type'];
             $file_size = $_FILES["fourth_doc"]["size"];
             $file_name = $_FILES["fourth_doc"]["name"];
-            $allowed_extension = $file_validate['allowed_extension'];
-            $ext = pathinfo($file_name, PATHINFO_EXTENSION);
-            $allowed_mime_type = $file_validate['allowed_mime_type'];
+
+            $allowed_extension = array_map('trim', array_map('strtolower', explode(',', $result->file_extension)));
+            $allowed_mime_type = array_map('trim', array_map('strtolower', explode(',', $result->file_mime)));
+            $ext               = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
             $finfo = finfo_open(FILEINFO_MIME_TYPE);
             $mtype = finfo_file($finfo, $_FILES['fourth_doc']['tmp_name']);
             finfo_close($finfo);
-
 
             if (!in_array($mtype, $allowed_mime_type)) {
                 $this->form_validation->set_message('handle_fourth_upload', $this->lang->line('file_type_not_allowed'));
@@ -948,18 +962,18 @@ class Staff extends Admin_Controller {
                 $this->form_validation->set_message('handle_fourth_upload', $this->lang->line('extension_not_allowed'));
                 return false;
             }
-            if ($file_size > $file_validate['upload_size']) {
+            if ($file_size > $result->file_size) {
                 $this->form_validation->set_message('handle_fourth_upload', $this->lang->line('file_size_shoud_be_less_than') . number_format($file_validate['upload_size'] / 1048576, 2) . " MB");
                 return false;
             }
-
 
             return true;
         }
         return true;
     }
 
-    public function username_check($str) {
+    public function username_check($str)
+    {
         if (empty($str)) {
             $this->form_validation->set_message('username_check', $this->lang->line('staff_ID_field_is_required'));
             return false;
@@ -974,35 +988,36 @@ class Staff extends Admin_Controller {
         }
     }
 
-    public function edit($id) {
+    public function edit($id)
+    {
         if (!$this->rbac->hasPrivilege('staff', 'can_edit')) {
             access_denied();
         }
-        $a = 0;
+        $a           = 0;
         $sessionData = $this->session->userdata('admin');
-        $userdata = $this->customlib->getUserData();
+        $userdata    = $this->customlib->getUserData();
 
-        $data['title'] = 'Edit Staff';
-        $data['id'] = $id;
-        $genderList = $this->customlib->getGender();
-        $data['genderList'] = $genderList;
-        $payscaleList = $this->staff_model->getPayroll();
-        $leavetypeList = $this->staff_model->getLeaveType();
-        $data["leavetypeList"] = $leavetypeList;
-        $data["payscaleList"] = $payscaleList;
-        $staffRole = $this->staff_model->getStaffRole();
-        $data["getStaffRole"] = $staffRole;
-        $designation = $this->staff_model->getStaffDesignation();
-        $data["designation"] = $designation;
-        $department = $this->staff_model->getDepartment();
-        $data["department"] = $department;
-        $marital_status = $this->marital_status;
-        $data["marital_status"] = $marital_status;
-        $data['title'] = 'Edit Staff';
-        $staff = $this->staff_model->get($id);
-        $data['staff'] = $staff;
-        $data["contract_type"] = $this->contract_type;
-        $data['sch_setting'] = $this->sch_setting_detail;
+        $data['title']               = 'Edit Staff';
+        $data['id']                  = $id;
+        $genderList                  = $this->customlib->getGender();
+        $data['genderList']          = $genderList;
+        $payscaleList                = $this->staff_model->getPayroll();
+        $leavetypeList               = $this->staff_model->getLeaveType();
+        $data["leavetypeList"]       = $leavetypeList;
+        $data["payscaleList"]        = $payscaleList;
+        $staffRole                   = $this->staff_model->getStaffRole();
+        $data["getStaffRole"]        = $staffRole;
+        $designation                 = $this->staff_model->getStaffDesignation();
+        $data["designation"]         = $designation;
+        $department                  = $this->staff_model->getDepartment();
+        $data["department"]          = $department;
+        $marital_status              = $this->marital_status;
+        $data["marital_status"]      = $marital_status;
+        $data['title']               = 'Edit Staff';
+        $staff                       = $this->staff_model->get($id);
+        $data['staff']               = $staff;
+        $data["contract_type"]       = $this->contract_type;
+        $data['sch_setting']         = $this->sch_setting_detail;
         $data['staffid_auto_insert'] = $this->sch_setting_detail->staffid_auto_insert;
         if ($staff["role_id"] == 7) {
             $a = 0;
@@ -1017,19 +1032,19 @@ class Staff extends Admin_Controller {
             access_denied();
         }
 
-        $staffLeaveDetails = $this->staff_model->getLeaveDetails($id);
+        $staffLeaveDetails         = $this->staff_model->getLeaveDetails($id);
         $data['staffLeaveDetails'] = $staffLeaveDetails;
-        $resume = $this->input->post("resume");
-        $joining_letter = $this->input->post("joining_letter");
-        $resignation_letter = $this->input->post("resignation_letter");
-        $other_document_name = $this->input->post("other_document_name");
-        $other_document_file = $this->input->post("other_document_file");
-        $custom_fields = $this->customfield_model->getByBelong('staff');
+        $resume                    = $this->input->post("resume");
+        $joining_letter            = $this->input->post("joining_letter");
+        $resignation_letter        = $this->input->post("resignation_letter");
+        $other_document_name       = $this->input->post("other_document_name");
+        $other_document_file       = $this->input->post("other_document_file");
+        $custom_fields             = $this->customfield_model->getByBelong('staff');
 
         foreach ($custom_fields as $custom_fields_key => $custom_fields_value) {
 
             if ($custom_fields_value['validation']) {
-                $custom_fields_id = $custom_fields_value['id'];
+                $custom_fields_id   = $custom_fields_value['id'];
                 $custom_fields_name = $custom_fields_value['name'];
                 $this->form_validation->set_rules("custom_fields[staff][" . $custom_fields_id . "]", $custom_fields_name, 'trim|required');
             }
@@ -1050,9 +1065,9 @@ class Staff extends Admin_Controller {
         }
 
         $this->form_validation->set_rules(
-                'email', $this->lang->line('email'), array('required', 'valid_email',
-            array('check_exists', array($this->staff_model, 'valid_email_id')),
-                )
+            'email', $this->lang->line('email'), array('required', 'valid_email',
+                array('check_exists', array($this->staff_model, 'valid_email_id')),
+            )
         );
         if ($this->form_validation->run() == false) {
 
@@ -1061,92 +1076,94 @@ class Staff extends Admin_Controller {
             $this->load->view('layout/footer', $data);
         } else {
 
-            $employee_id = $this->input->post("employee_id");
-            $department = $this->input->post("department");
-            $designation = $this->input->post("designation");
-            $role = $this->input->post("role");
-            $name = $this->input->post("name");
-            $gender = $this->input->post("gender");
-            $marital_status = $this->input->post("marital_status");
-            $dob = $this->input->post("dob");
-            $contact_no = $this->input->post("contactno");
-            $emergency_no = $this->input->post("emergency_no");
-            $email = $this->input->post("email");
-            $date_of_joining = $this->input->post("date_of_joining");
-            $date_of_leaving = $this->input->post("date_of_leaving");
-            $address = $this->input->post("address");
-            $qualification = $this->input->post("qualification");
-            $work_exp = $this->input->post("work_exp");
-            $basic_salary = $this->input->post('basic_salary');
-            $account_title = $this->input->post("account_title");
-            $bank_account_no = $this->input->post("bank_account_no");
-            $bank_name = $this->input->post("bank_name");
-            $ifsc_code = $this->input->post("ifsc_code");
-            $bank_branch = $this->input->post("bank_branch");
-            $contract_type = $this->input->post("contract_type");
-            $shift = $this->input->post("shift");
-            $location = $this->input->post("location");
-            $leave = $this->input->post("leave");
-            $facebook = $this->input->post("facebook");
-            $twitter = $this->input->post("twitter");
-            $linkedin = $this->input->post("linkedin");
-            $instagram = $this->input->post("instagram");
+            $employee_id       = $this->input->post("employee_id");
+            $department        = $this->input->post("department");
+            $designation       = $this->input->post("designation");
+            $role              = $this->input->post("role");
+            $name              = $this->input->post("name");
+            $gender            = $this->input->post("gender");
+            $marital_status    = $this->input->post("marital_status");
+            $dob               = $this->input->post("dob");
+            $contact_no        = $this->input->post("contactno");
+            $emergency_no      = $this->input->post("emergency_no");
+            $email             = $this->input->post("email");
+            $date_of_joining   = $this->input->post("date_of_joining");
+            $date_of_leaving   = $this->input->post("date_of_leaving");
+            $address           = $this->input->post("address");
+            $qualification     = $this->input->post("qualification");
+            $work_exp          = $this->input->post("work_exp");
+            $basic_salary      = $this->input->post('basic_salary');
+            $account_title     = $this->input->post("account_title");
+            $bank_account_no   = $this->input->post("bank_account_no");
+            $bank_name         = $this->input->post("bank_name");
+            $ifsc_code         = $this->input->post("ifsc_code");
+            $bank_branch       = $this->input->post("bank_branch");
+            $contract_type     = $this->input->post("contract_type");
+            $shift             = $this->input->post("shift");
+            $location          = $this->input->post("location");
+            $leave             = $this->input->post("leave");
+            $facebook          = $this->input->post("facebook");
+            $twitter           = $this->input->post("twitter");
+            $linkedin          = $this->input->post("linkedin");
+            $instagram         = $this->input->post("instagram");
             $permanent_address = $this->input->post("permanent_address");
-            $father_name = $this->input->post("father_name");
-            $surname = $this->input->post("surname");
-            $mother_name = $this->input->post("mother_name");
-            $note = $this->input->post("note");
-            $epf_no = $this->input->post("epf_no");
+            $father_name       = $this->input->post("father_name");
+            $surname           = $this->input->post("surname");
+            $mother_name       = $this->input->post("mother_name");
+            $note              = $this->input->post("note");
+            $epf_no            = $this->input->post("epf_no");
 
             $custom_field_post = $this->input->post("custom_fields[staff]");
 
             $custom_value_array = array();
-            foreach ($custom_field_post as $key => $value) {
-                $check_field_type = $this->input->post("custom_fields[staff][" . $key . "]");
-                $field_value = is_array($check_field_type) ? implode(",", $check_field_type) : $check_field_type;
-                $array_custom = array(
-                    'belong_table_id' => $id,
-                    'custom_field_id' => $key,
-                    'field_value' => $field_value,
-                );
-                $custom_value_array[] = $array_custom;
+            if (!empty($custom_fields)) {
+                foreach ($custom_field_post as $key => $value) {
+                    $check_field_type = $this->input->post("custom_fields[staff][" . $key . "]");
+                    $field_value      = is_array($check_field_type) ? implode(",", $check_field_type) : $check_field_type;
+                    $array_custom     = array(
+                        'belong_table_id' => $id,
+                        'custom_field_id' => $key,
+                        'field_value'     => $field_value,
+                    );
+                    $custom_value_array[] = $array_custom;
+                }
+                $this->customfield_model->updateRecord($custom_value_array, $id, 'staff');
             }
-            $this->customfield_model->updateRecord($custom_value_array, $id, 'staff');
 
             $data1 = array(
-                'id' => $id,
-                'department' => $department,
-                'designation' => $designation,
-                'qualification' => $qualification,
-                'work_exp' => $work_exp,
-                'name' => $name,
-                'contact_no' => $contact_no,
+                'id'                   => $id,
+                'department'           => $department,
+                'designation'          => $designation,
+                'qualification'        => $qualification,
+                'work_exp'             => $work_exp,
+                'name'                 => $name,
+                'contact_no'           => $contact_no,
                 'emergency_contact_no' => $emergency_no,
-                'email' => $email,
-                'dob' => date('Y-m-d', $this->customlib->datetostrtotime($dob)),
-                'marital_status' => $marital_status,
-                'local_address' => $address,
-                'permanent_address' => $permanent_address,
-                'note' => $note,
-                'surname' => $surname,
-                'mother_name' => $mother_name,
-                'father_name' => $father_name,
-                'gender' => $gender,
-                'account_title' => $account_title,
-                'bank_account_no' => $bank_account_no,
-                'bank_name' => $bank_name,
-                'ifsc_code' => $ifsc_code,
-                'bank_branch' => $bank_branch,
-                'payscale' => '',
-                'basic_salary' => $basic_salary,
-                'epf_no' => $epf_no,
-                'contract_type' => $contract_type,
-                'shift' => $shift,
-                'location' => $location,
-                'facebook' => $facebook,
-                'twitter' => $twitter,
-                'linkedin' => $linkedin,
-                'instagram' => $instagram,
+                'email'                => $email,
+                'dob'                  => date('Y-m-d', $this->customlib->datetostrtotime($dob)),
+                'marital_status'       => $marital_status,
+                'local_address'        => $address,
+                'permanent_address'    => $permanent_address,
+                'note'                 => $note,
+                'surname'              => $surname,
+                'mother_name'          => $mother_name,
+                'father_name'          => $father_name,
+                'gender'               => $gender,
+                'account_title'        => $account_title,
+                'bank_account_no'      => $bank_account_no,
+                'bank_name'            => $bank_name,
+                'ifsc_code'            => $ifsc_code,
+                'bank_branch'          => $bank_branch,
+                'payscale'             => '',
+                'basic_salary'         => $basic_salary,
+                'epf_no'               => $epf_no,
+                'contract_type'        => $contract_type,
+                'shift'                => $shift,
+                'location'             => $location,
+                'facebook'             => $facebook,
+                'twitter'              => $twitter,
+                'linkedin'             => $linkedin,
+                'instagram'            => $instagram,
             );
             if ($date_of_joining != "") {
                 $data1['date_of_joining'] = date('Y-m-d', $this->customlib->datetostrtotime($date_of_joining));
@@ -1174,7 +1191,7 @@ class Staff extends Admin_Controller {
             $leave_type = $this->input->post("leave_type_id");
 
             $alloted_leave = $this->input->post("alloted_leave");
-            $altid = $this->input->post("altid");
+            $altid         = $this->input->post("altid");
 
             if (!empty($leave_type)) {
                 $i = 0;
@@ -1183,15 +1200,15 @@ class Staff extends Admin_Controller {
                     if (!empty($altid[$i])) {
 
                         $data2 = array('staff_id' => $id,
-                            'leave_type_id' => $leave_type[$i],
-                            'id' => $altid[$i],
-                            'alloted_leave' => $alloted_leave[$i],
+                            'leave_type_id'           => $leave_type[$i],
+                            'id'                      => $altid[$i],
+                            'alloted_leave'           => $alloted_leave[$i],
                         );
                     } else {
 
                         $data2 = array('staff_id' => $id,
-                            'leave_type_id' => $leave_type[$i],
-                            'alloted_leave' => $alloted_leave[$i],
+                            'leave_type_id'           => $leave_type[$i],
+                            'alloted_leave'           => $alloted_leave[$i],
                         );
                     }
 
@@ -1213,10 +1230,10 @@ class Staff extends Admin_Controller {
                 if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
                     die("Error creating folder $uploaddir");
                 }
-                $fileInfo = pathinfo($_FILES["first_doc"]["name"]);
+                $fileInfo    = pathinfo($_FILES["first_doc"]["name"]);
                 $first_title = 'resume';
-                $resume_doc = "resume" . $id . '.' . $fileInfo['extension'];
-                $img_name = $uploaddir . $resume_doc;
+                $resume_doc  = "resume" . $id . '.' . $fileInfo['extension'];
+                $img_name    = $uploaddir . $resume_doc;
                 move_uploaded_file($_FILES["first_doc"]["tmp_name"], $img_name);
             } else {
 
@@ -1228,10 +1245,10 @@ class Staff extends Admin_Controller {
                 if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
                     die("Error creating folder $uploaddir");
                 }
-                $fileInfo = pathinfo($_FILES["second_doc"]["name"]);
-                $first_title = 'joining_letter';
+                $fileInfo           = pathinfo($_FILES["second_doc"]["name"]);
+                $first_title        = 'joining_letter';
                 $joining_letter_doc = "joining_letter" . $id . '.' . $fileInfo['extension'];
-                $img_name = $uploaddir . $joining_letter_doc;
+                $img_name           = $uploaddir . $joining_letter_doc;
                 move_uploaded_file($_FILES["second_doc"]["tmp_name"], $img_name);
             } else {
 
@@ -1243,10 +1260,10 @@ class Staff extends Admin_Controller {
                 if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
                     die("Error creating folder $uploaddir");
                 }
-                $fileInfo = pathinfo($_FILES["third_doc"]["name"]);
-                $first_title = 'resignation_letter';
+                $fileInfo               = pathinfo($_FILES["third_doc"]["name"]);
+                $first_title            = 'resignation_letter';
                 $resignation_letter_doc = "resignation_letter" . $id . '.' . $fileInfo['extension'];
-                $img_name = $uploaddir . $resignation_letter_doc;
+                $img_name               = $uploaddir . $resignation_letter_doc;
                 move_uploaded_file($_FILES["third_doc"]["tmp_name"], $img_name);
             } else {
 
@@ -1258,14 +1275,14 @@ class Staff extends Admin_Controller {
                 if (!is_dir($uploaddir) && !mkdir($uploaddir)) {
                     die("Error creating folder $uploaddir");
                 }
-                $fileInfo = pathinfo($_FILES["fourth_doc"]["name"]);
+                $fileInfo     = pathinfo($_FILES["fourth_doc"]["name"]);
                 $fourth_title = 'Other Doucment';
-                $fourth_doc = "otherdocument" . $id . '.' . $fileInfo['extension'];
-                $img_name = $uploaddir . $fourth_doc;
+                $fourth_doc   = "otherdocument" . $id . '.' . $fileInfo['extension'];
+                $img_name     = $uploaddir . $fourth_doc;
                 move_uploaded_file($_FILES["fourth_doc"]["tmp_name"], $img_name);
             } else {
                 $fourth_title = 'Other Document';
-                $fourth_doc = $other_document_file;
+                $fourth_doc   = $other_document_file;
             }
 
             $data_doc = array('id' => $id, 'resume' => $resume_doc, 'joining_letter' => $joining_letter_doc, 'resignation_letter' => $resignation_letter_doc, 'other_document_name' => $fourth_title, 'other_document_file' => $fourth_doc);
@@ -1276,15 +1293,16 @@ class Staff extends Admin_Controller {
         }
     }
 
-    public function delete($id) {
+    public function delete($id)
+    {
         if (!$this->rbac->hasPrivilege('staff', 'can_delete')) {
             access_denied();
         }
 
-        $a = 0;
+        $a           = 0;
         $sessionData = $this->session->userdata('admin');
-        $userdata = $this->customlib->getUserData();
-        $staff = $this->staff_model->get($id);
+        $userdata    = $this->customlib->getUserData();
+        $staff       = $this->staff_model->get($id);
 
         if ($staff['id'] == $userdata['id']) {
             $a = 1;
@@ -1300,17 +1318,17 @@ class Staff extends Admin_Controller {
         redirect('admin/staff');
     }
 
-    public function disablestaff($id) {
+    public function disablestaff($id)
+    {
         if (!$this->rbac->hasPrivilege('disable_staff', 'can_view')) {
 
             access_denied();
         }
 
-
-        $a = 0;
+        $a           = 0;
         $sessionData = $this->session->userdata('admin');
-        $userdata = $this->customlib->getUserData();
-        $staff = $this->staff_model->get($id);
+        $userdata    = $this->customlib->getUserData();
+        $staff       = $this->staff_model->get($id);
         if ($staff["role_id"] == 7) {
             $a = 0;
             if ($userdata["email"] == $staff["email"]) {
@@ -1329,12 +1347,13 @@ class Staff extends Admin_Controller {
         echo json_encode($array);
     }
 
-    public function enablestaff($id) {
+    public function enablestaff($id)
+    {
 
-        $a = 0;
+        $a           = 0;
         $sessionData = $this->session->userdata('admin');
-        $userdata = $this->customlib->getUserData();
-        $staff = $this->staff_model->get($id);
+        $userdata    = $this->customlib->getUserData();
+        $staff       = $this->staff_model->get($id);
         if ($staff["role_id"] == 7) {
             $a = 0;
             if ($userdata["email"] == $staff["email"]) {
@@ -1351,9 +1370,10 @@ class Staff extends Admin_Controller {
         redirect('admin/staff/profile/' . $id);
     }
 
-    public function staffLeaveSummary() {
+    public function staffLeaveSummary()
+    {
 
-        $resultdata = $this->staff_model->getLeaveSummary();
+        $resultdata         = $this->staff_model->getLeaveSummary();
         $data["resultdata"] = $resultdata;
 
         $this->load->view("layout/header");
@@ -1361,7 +1381,8 @@ class Staff extends Admin_Controller {
         $this->load->view("layout/footer");
     }
 
-    public function getEmployeeByRole() {
+    public function getEmployeeByRole()
+    {
 
         $role = $this->input->post("role");
 
@@ -1370,7 +1391,8 @@ class Staff extends Admin_Controller {
         echo json_encode($data);
     }
 
-    public function dateDifference($date_1, $date_2, $differenceFormat = '%a') {
+    public function dateDifference($date_1, $date_2, $differenceFormat = '%a')
+    {
         $datetime1 = date_create($date_1);
         $datetime2 = date_create($date_2);
 
@@ -1379,29 +1401,30 @@ class Staff extends Admin_Controller {
         return $interval->format($differenceFormat) + 1;
     }
 
-    public function permission($id) {
-        $data['title'] = 'Add Role';
-        $data['id'] = $id;
-        $staff = $this->staff_model->get($id);
-        $data['staff'] = $staff;
-        $userpermission = $this->userpermission_model->getUserPermission($id);
+    public function permission($id)
+    {
+        $data['title']          = 'Add Role';
+        $data['id']             = $id;
+        $staff                  = $this->staff_model->get($id);
+        $data['staff']          = $staff;
+        $userpermission         = $this->userpermission_model->getUserPermission($id);
         $data['userpermission'] = $userpermission;
 
         if ($this->input->server('REQUEST_METHOD') == "POST") {
-            $staff_id = $this->input->post('staff_id');
+            $staff_id   = $this->input->post('staff_id');
             $prev_array = $this->input->post('prev_array');
             if (!isset($prev_array)) {
                 $prev_array = array();
             }
-            $module_perm = $this->input->post('module_perm');
+            $module_perm  = $this->input->post('module_perm');
             $delete_array = array_diff($prev_array, $module_perm);
-            $insert_diff = array_diff($module_perm, $prev_array);
+            $insert_diff  = array_diff($module_perm, $prev_array);
             $insert_array = array();
             if (!empty($insert_diff)) {
 
                 foreach ($insert_diff as $key => $value) {
                     $insert_array[] = array(
-                        'staff_id' => $staff_id,
+                        'staff_id'      => $staff_id,
                         'permission_id' => $value,
                     );
                 }
@@ -1418,7 +1441,8 @@ class Staff extends Admin_Controller {
         $this->load->view('layout/footer');
     }
 
-    public function leaverequest() {
+    public function leaverequest()
+    {
 
         if (!$this->rbac->hasPrivilege('apply_leave', 'can_view')) {
             access_denied();
@@ -1426,32 +1450,33 @@ class Staff extends Admin_Controller {
 
         $this->session->set_userdata('top_menu', 'HR');
         $this->session->set_userdata('sub_menu', 'admin/staff/leaverequest');
-        $userdata = $this->customlib->getUserData();
-        $leave_request = $this->leaverequest_model->user_leave_request($userdata["id"]);
+        $userdata              = $this->customlib->getUserData();
+        $leave_request         = $this->leaverequest_model->user_leave_request($userdata["id"]);
         $data["leave_request"] = $leave_request;
-        $LeaveTypes = $this->leaverequest_model->allotedLeaveType($userdata["id"]);
-        $data["staff_id"] = $userdata["id"];
-        $data["leavetype"] = $LeaveTypes;
-        $staffRole = $this->staff_model->getStaffRole();
-        $data["staffrole"] = $staffRole;
-        $data["status"] = $this->status;
+        $LeaveTypes            = $this->leaverequest_model->allotedLeaveType($userdata["id"]);
+        $data["staff_id"]      = $userdata["id"];
+        $data["leavetype"]     = $LeaveTypes;
+        $staffRole             = $this->staff_model->getStaffRole();
+        $data["staffrole"]     = $staffRole;
+        $data["status"]        = $this->status;
 
         $this->load->view("layout/header", $data);
         $this->load->view("admin/staff/leaverequest", $data);
         $this->load->view("layout/footer", $data);
     }
 
-    public function change_password($id) {
+    public function change_password($id)
+    {
 
         $sessionData = $this->session->userdata('admin');
-        $userdata = $this->customlib->getUserData();
+        $userdata    = $this->customlib->getUserData();
 
         $this->form_validation->set_rules('new_pass', $this->lang->line('new_password'), 'trim|required|xss_clean|matches[confirm_pass]');
         $this->form_validation->set_rules('confirm_pass', $this->lang->line('confirm_password'), 'trim|required|xss_clean');
         if ($this->form_validation->run() == false) {
 
             $msg = array(
-                'new_pass' => form_error('new_pass'),
+                'new_pass'     => form_error('new_pass'),
                 'confirm_pass' => form_error('confirm_pass'),
             );
 
@@ -1460,7 +1485,7 @@ class Staff extends Admin_Controller {
 
             if (!empty($id)) {
                 $newdata = array(
-                    'id' => $id,
+                    'id'       => $id,
                     'password' => $this->enc_lib->passHashEnc($this->input->post('new_pass')),
                 );
 
@@ -1479,32 +1504,33 @@ class Staff extends Admin_Controller {
         echo json_encode($array);
     }
 
-    public function import() {
+    public function import()
+    {
         $data['field'] = array(
-            "staff_id" => "staff_id",
-            "first_name" => "first_name",
-            "last_name" => "last_name",
-            "father_name" => "father_name",
-            "mother_name" => "mother_name",
-            "email_login_username" => "email",
-            "gender" => "gender",
-            "date_of_birth" => "date_of_birth",
-            "date_of_joining" => "date_of_joining",
-            "phone" => "phone",
+            "staff_id"                 => "staff_id",
+            "first_name"               => "first_name",
+            "last_name"                => "last_name",
+            "father_name"              => "father_name",
+            "mother_name"              => "mother_name",
+            "email_login_username"     => "email",
+            "gender"                   => "gender",
+            "date_of_birth"            => "date_of_birth",
+            "date_of_joining"          => "date_of_joining",
+            "phone"                    => "phone",
             "emergency_contact_number" => "emergency_contact_number",
-            "marital_status" => "marital_status",
-            "current_address" => "current_address",
-            "permanent_address" => "permanent_address",
-            "qualification" => "qualification",
-            "work_experience" => "work_experience",
-            "note" => "note",
+            "marital_status"           => "marital_status",
+            "current_address"          => "current_address",
+            "permanent_address"        => "permanent_address",
+            "qualification"            => "qualification",
+            "work_experience"          => "work_experience",
+            "note"                     => "note",
         );
-        $roles = $this->role_model->get();
-        $data["roles"] = $roles;
-        $designation = $this->staff_model->getStaffDesignation();
+        $roles               = $this->role_model->get();
+        $data["roles"]       = $roles;
+        $designation         = $this->staff_model->getStaffDesignation();
         $data["designation"] = $designation;
-        $department = $this->staff_model->getDepartment();
-        $data["department"] = $department;
+        $department          = $this->staff_model->getDepartment();
+        $data["department"]  = $department;
 
         $this->form_validation->set_rules('file', $this->lang->line('image'), 'callback_handle_csv_upload');
         $this->form_validation->set_rules('role', $this->lang->line('role'), 'required');
@@ -1530,51 +1556,51 @@ class Staff extends Admin_Controller {
 
                         foreach ($result as $r_key => $r_value) {
 
-                            $check_exists = $this->staff_model->import_check_data_exists($result[$r_key]['name'], $result[$r_key]['employee_id']);
-                            $check_emailexists = $this->staff_model->import_check_email_exists($result[$r_key]['name'], $result[$r_key]['employee_id']);
+                            $check_exists      = $this->staff_model->import_check_data_exists($result[$r_key]['name'], $result[$r_key]['employee_id']);
+                            $check_emailexists = $this->staff_model->import_check_email_exists($result[$r_key]['name'], $result[$r_key]['email']);
 
                             if ($check_exists == 0 && $check_emailexists == 0) {
 
-                                $result[$r_key]['employee_id'] = $this->encoding_lib->toUTF8($result[$r_key]['employee_id']);
-                                $result[$r_key]['qualification'] = $this->encoding_lib->toUTF8($result[$r_key]['qualification']);
-                                $result[$r_key]['work_exp'] = $this->encoding_lib->toUTF8($result[$r_key]['work_exp']);
-                                $result[$r_key]['name'] = $this->encoding_lib->toUTF8($result[$r_key]['name']);
-                                $result[$r_key]['surname'] = $this->encoding_lib->toUTF8($result[$r_key]['surname']);
-                                $result[$r_key]['father_name'] = $this->encoding_lib->toUTF8($result[$r_key]['father_name']);
-                                $result[$r_key]['mother_name'] = $this->encoding_lib->toUTF8($result[$r_key]['mother_name']);
-                                $result[$r_key]['contact_no'] = $this->encoding_lib->toUTF8($result[$r_key]['contact_no']);
+                                $result[$r_key]['employee_id']          = $this->encoding_lib->toUTF8($result[$r_key]['employee_id']);
+                                $result[$r_key]['qualification']        = $this->encoding_lib->toUTF8($result[$r_key]['qualification']);
+                                $result[$r_key]['work_exp']             = $this->encoding_lib->toUTF8($result[$r_key]['work_exp']);
+                                $result[$r_key]['name']                 = $this->encoding_lib->toUTF8($result[$r_key]['name']);
+                                $result[$r_key]['surname']              = $this->encoding_lib->toUTF8($result[$r_key]['surname']);
+                                $result[$r_key]['father_name']          = $this->encoding_lib->toUTF8($result[$r_key]['father_name']);
+                                $result[$r_key]['mother_name']          = $this->encoding_lib->toUTF8($result[$r_key]['mother_name']);
+                                $result[$r_key]['contact_no']           = $this->encoding_lib->toUTF8($result[$r_key]['contact_no']);
                                 $result[$r_key]['emergency_contact_no'] = $this->encoding_lib->toUTF8($result[$r_key]['emergency_contact_no']);
-                                $result[$r_key]['email'] = $this->encoding_lib->toUTF8($result[$r_key]['email']);
-                                $result[$r_key]['dob'] = $this->encoding_lib->toUTF8($result[$r_key]['dob']);
-                                $result[$r_key]['marital_status'] = $this->encoding_lib->toUTF8($result[$r_key]['marital_status']);
-                                $result[$r_key]['date_of_joining'] = $this->encoding_lib->toUTF8($result[$r_key]['date_of_joining']);
-                                $result[$r_key]['date_of_leaving'] = $this->encoding_lib->toUTF8($result[$r_key]['date_of_leaving']);
-                                $result[$r_key]['local_address'] = $this->encoding_lib->toUTF8($result[$r_key]['local_address']);
-                                $result[$r_key]['permanent_address'] = $this->encoding_lib->toUTF8($result[$r_key]['permanent_address']);
-                                $result[$r_key]['note'] = $this->encoding_lib->toUTF8($result[$r_key]['note']);
-                                $result[$r_key]['gender'] = $this->encoding_lib->toUTF8($result[$r_key]['gender']);
-                                $result[$r_key]['account_title'] = $this->encoding_lib->toUTF8($result[$r_key]['account_title']);
-                                $result[$r_key]['bank_account_no'] = $this->encoding_lib->toUTF8($result[$r_key]['bank_account_no']);
-                                $result[$r_key]['bank_name'] = $this->encoding_lib->toUTF8($result[$r_key]['bank_name']);
-                                $result[$r_key]['ifsc_code'] = $this->encoding_lib->toUTF8($result[$r_key]['ifsc_code']);
-                                $result[$r_key]['payscale'] = $this->encoding_lib->toUTF8($result[$r_key]['payscale']);
-                                $result[$r_key]['basic_salary'] = $this->encoding_lib->toUTF8($result[$r_key]['basic_salary']);
-                                $result[$r_key]['epf_no'] = $this->encoding_lib->toUTF8($result[$r_key]['epf_no']);
-                                $result[$r_key]['contract_type'] = $this->encoding_lib->toUTF8($result[$r_key]['contract_type']);
-                                $result[$r_key]['shift'] = $this->encoding_lib->toUTF8($result[$r_key]['shift']);
-                                $result[$r_key]['location'] = $this->encoding_lib->toUTF8($result[$r_key]['location']);
-                                $result[$r_key]['facebook'] = $this->encoding_lib->toUTF8($result[$r_key]['facebook']);
-                                $result[$r_key]['twitter'] = $this->encoding_lib->toUTF8($result[$r_key]['twitter']);
-                                $result[$r_key]['linkedin'] = $this->encoding_lib->toUTF8($result[$r_key]['linkedin']);
-                                $result[$r_key]['instagram'] = $this->encoding_lib->toUTF8($result[$r_key]['instagram']);
-                                $result[$r_key]['resume'] = $this->encoding_lib->toUTF8($result[$r_key]['resume']);
-                                $result[$r_key]['joining_letter'] = $this->encoding_lib->toUTF8($result[$r_key]['joining_letter']);
-                                $result[$r_key]['resignation_letter'] = $this->encoding_lib->toUTF8($result[$r_key]['resignation_letter']);
-                                $result[$r_key]['user_id'] = $this->input->post('role');
-                                $result[$r_key]['designation'] = $this->input->post('designation');
-                                $result[$r_key]['department'] = $this->input->post('department');
-                                $result[$r_key]['is_active'] = 1;
-
+                                $result[$r_key]['email']                = $this->encoding_lib->toUTF8($result[$r_key]['email']);
+                                $result[$r_key]['dob']                  = $this->encoding_lib->toUTF8($result[$r_key]['dob']);
+                                $result[$r_key]['marital_status']       = $this->encoding_lib->toUTF8($result[$r_key]['marital_status']);
+                                $result[$r_key]['date_of_joining']      = $this->encoding_lib->toUTF8($result[$r_key]['date_of_joining']);
+                                $result[$r_key]['date_of_leaving']      = $this->encoding_lib->toUTF8($result[$r_key]['date_of_leaving']);
+                                $result[$r_key]['local_address']        = $this->encoding_lib->toUTF8($result[$r_key]['local_address']);
+                                $result[$r_key]['permanent_address']    = $this->encoding_lib->toUTF8($result[$r_key]['permanent_address']);
+                                $result[$r_key]['note']                 = $this->encoding_lib->toUTF8($result[$r_key]['note']);
+                                $result[$r_key]['gender']               = $this->encoding_lib->toUTF8($result[$r_key]['gender']);
+                                $result[$r_key]['account_title']        = $this->encoding_lib->toUTF8($result[$r_key]['account_title']);
+                                $result[$r_key]['bank_account_no']      = $this->encoding_lib->toUTF8($result[$r_key]['bank_account_no']);
+                                $result[$r_key]['bank_name']            = $this->encoding_lib->toUTF8($result[$r_key]['bank_name']);
+                                $result[$r_key]['ifsc_code']            = $this->encoding_lib->toUTF8($result[$r_key]['ifsc_code']);
+                                $result[$r_key]['payscale']             = $this->encoding_lib->toUTF8($result[$r_key]['payscale']);
+                                $result[$r_key]['basic_salary']         = $this->encoding_lib->toUTF8($result[$r_key]['basic_salary']);
+                                $result[$r_key]['epf_no']               = $this->encoding_lib->toUTF8($result[$r_key]['epf_no']);
+                                $result[$r_key]['contract_type']        = $this->encoding_lib->toUTF8($result[$r_key]['contract_type']);
+                                $result[$r_key]['shift']                = $this->encoding_lib->toUTF8($result[$r_key]['shift']);
+                                $result[$r_key]['location']             = $this->encoding_lib->toUTF8($result[$r_key]['location']);
+                                $result[$r_key]['facebook']             = $this->encoding_lib->toUTF8($result[$r_key]['facebook']);
+                                $result[$r_key]['twitter']              = $this->encoding_lib->toUTF8($result[$r_key]['twitter']);
+                                $result[$r_key]['linkedin']             = $this->encoding_lib->toUTF8($result[$r_key]['linkedin']);
+                                $result[$r_key]['instagram']            = $this->encoding_lib->toUTF8($result[$r_key]['instagram']);
+                                $result[$r_key]['resume']               = $this->encoding_lib->toUTF8($result[$r_key]['resume']);
+                                $result[$r_key]['joining_letter']       = $this->encoding_lib->toUTF8($result[$r_key]['joining_letter']);
+                                $result[$r_key]['resignation_letter']   = $this->encoding_lib->toUTF8($result[$r_key]['resignation_letter']);
+                                $result[$r_key]['user_id']              = $this->input->post('role');
+                                $result[$r_key]['designation']          = $this->input->post('designation');
+                                $result[$r_key]['department']           = $this->input->post('department');
+                                $result[$r_key]['is_active']            = 1;
+                                
                                 $password = $this->role->get_random_password($chars_min = 6, $chars_max = 6, $use_upper_case = false, $include_numbers = true, $include_special_chars = false);
 
                                 $result[$r_key]['password'] = $this->enc_lib->passHashEnc($password);
@@ -1582,7 +1608,7 @@ class Staff extends Admin_Controller {
                                 $role_array = array('role_id' => $this->input->post('role'), 'staff_id' => 0);
 
                                 $insert_id = $this->staff_model->batchInsert($result[$r_key], $role_array);
-                                $staff_id = $insert_id;
+                                $staff_id  = $insert_id;
                                 if ($staff_id) {
 
                                     $teacher_login_detail = array('id' => $staff_id, 'credential_for' => 'staff', 'username' => $result[$r_key]['email'], 'password' => $password, 'contact_no' => $result[$r_key]['contact_no'], 'email' => $result[$r_key]['email']);
@@ -1608,11 +1634,12 @@ class Staff extends Admin_Controller {
         }
     }
 
-    public function handle_csv_upload() {
+    public function handle_csv_upload()
+    {
         $error = "";
         if (isset($_FILES["file"]) && !empty($_FILES['file']['name'])) {
             $allowedExts = array('csv');
-            $mimes = array('text/csv',
+            $mimes       = array('text/csv',
                 'text/plain',
                 'application/csv',
                 'text/comma-separated-values',
@@ -1622,7 +1649,7 @@ class Staff extends Admin_Controller {
                 'text/anytext',
                 'application/octet-stream',
                 'application/txt');
-            $temp = explode(".", $_FILES["file"]["name"]);
+            $temp      = explode(".", $_FILES["file"]["name"]);
             $extension = end($temp);
             if ($_FILES["file"]["error"] > 0) {
                 $error .= "Error opening the file<br />";
@@ -1646,16 +1673,18 @@ class Staff extends Admin_Controller {
         }
     }
 
-    public function exportformat() {
+    public function exportformat()
+    {
         $this->load->helper('download');
         $filepath = "./backend/import/staff_csvfile.csv";
-        $data = file_get_contents($filepath);
-        $name = 'staff_csvfile.csv';
+        $data     = file_get_contents($filepath);
+        $name     = 'staff_csvfile.csv';
 
         force_download($name, $data);
     }
 
-    public function rating() {
+    public function rating()
+    {
 
         $this->session->set_userdata('top_menu', 'HR');
         $this->session->set_userdata('sub_menu', 'HR/rating');
@@ -1668,13 +1697,15 @@ class Staff extends Admin_Controller {
         $this->load->view('layout/footer');
     }
 
-    public function ratingapr($id) {
+    public function ratingapr($id)
+    {
         $approve['status'] = '1';
         $this->staff_model->ratingapr($id, $approve);
         redirect('admin/staff/rating');
     }
 
-    public function delete_rateing($id) {
+    public function delete_rateing($id)
+    {
         $this->staff_model->rating_remove($id);
         redirect('admin/staff/rating');
     }

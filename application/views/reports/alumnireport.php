@@ -126,7 +126,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <tr>
                                                         <td><?php echo $student['admission_no']; ?></td>
                                                         <td>
-                                                            <?php echo $student['firstname'] . " " . $student['lastname']; ?>
+                                                            <?php echo $this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname); ?>
 
                                                         </td>
                                                         <td><?php echo $student['class']; ?></td>

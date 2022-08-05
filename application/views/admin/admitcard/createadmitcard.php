@@ -10,35 +10,31 @@
 </style>
 <?php
 $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
-?>     
+?>
 <div class="content-wrapper">
-
     <section class="content-header">
         <h1><i class="fa fa-newspaper-o"></i> <?php echo $this->lang->line('certificate'); ?></h1>
     </section>
-
     <section class="content">
         <div class="row">
             <?php
-            if ($this->rbac->hasPrivilege('design_admit_card', 'can_add')) {
-                ?>
+if ($this->rbac->hasPrivilege('design_admit_card', 'can_add')) {
+    ?>
                 <div class="col-md-4">
                     <div class="box box-primary">
                         <div class="box-header with-border">
                             <h3 class="box-title"> <?php echo $this->lang->line('add'); ?> <?php echo $this->lang->line('admit'); ?> <?php echo $this->lang->line('card'); ?></h3>
                         </div><!-- /.box-header -->
-
                         <form id="form1" enctype="multipart/form-data" action="<?php echo site_url('admin/admitcard') ?>"  id="certificateform" name="certificateform" method="post" accept-charset="utf-8">
                             <div class="box-body">
-                                <?php //echo validation_errors(); ?>
-                                <?php if ($this->session->flashdata('msg')) { ?>
+                                <?php if ($this->session->flashdata('msg')) {?>
                                     <?php echo $this->session->flashdata('msg') ?>
-                                <?php } ?>
+                                <?php }?>
                                 <?php
-                                if (isset($error_message)) {
-                                    echo "<div class='alert alert-danger'>" . $error_message . "</div>";
-                                }
-                                ?>                           
+if (isset($error_message)) {
+        echo "<div class='alert alert-danger'>" . $error_message . "</div>";
+    }
+    ?>
                                 <div class="form-group">
                                     <label> <?php echo $this->lang->line('template') ?></label><small class="req"> *</small>
                                     <input autofocus="" id="template" value="<?php echo set_value('template'); ?>" name="template" placeholder="" type="text" class="form-control" />
@@ -110,7 +106,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <label for="is_father_name" class="label-success"></label>
                                     </div>
                                 </div>
-
                                 <div class="form-group switch-inline">
                                     <label><?php echo $this->lang->line('mother') . " " . $this->lang->line('name'); ?></label>
                                     <div class="material-switch switchcheck">
@@ -124,7 +119,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <input id="is_dob" name="is_dob" type="checkbox" class="chk" value="1">
                                         <label for="is_dob" class="label-success"></label>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="form-group switch-inline">
                                     <label><?php echo $this->lang->line('admission') . " " . $this->lang->line('no'); ?></label>
                                     <div class="material-switch switchcheck">
@@ -132,7 +127,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <label for="is_admission_no" class="label-success"></label>
                                     </div>
                                 </div>
-
                                 <div class="form-group switch-inline">
                                     <label><?php echo $this->lang->line('roll') . " " . $this->lang->line('no'); ?></label>
                                     <div class="material-switch switchcheck">
@@ -140,7 +134,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <label for="is_roll_no" class="label-success"></label>
                                     </div>
                                 </div>
-
                                 <div class="form-group switch-inline">
                                     <label><?php echo $this->lang->line('address') ?></label>
                                     <div class="material-switch switchcheck">
@@ -148,7 +141,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <label for="is_address" class="label-success"></label>
                                     </div>
                                 </div>
-
                                 <div class="form-group switch-inline">
                                     <label><?php echo $this->lang->line('gender'); ?></label>
                                     <div class="material-switch switchcheck">
@@ -156,7 +148,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <label for="is_gender" class="label-success"></label>
                                     </div>
                                 </div>
-
                                 <div class="form-group switch-inline">
                                     <label><?php echo $this->lang->line('photo'); ?></label>
                                     <div class="material-switch switchcheck">
@@ -178,25 +169,22 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <label for="is_section" class="label-success"></label>
                                     </div>
                                 </div>
-
-
                             </div><!-- /.box-body -->
                             <div class="box-footer">
                                 <button type="submit" class="btn btn-info pull-right"><?php echo $this->lang->line('save'); ?></button>
                             </div>
                         </form>
                     </div>
-
                 </div><!--/.col (right) -->
                 <!-- left column -->
-            <?php } ?>
+            <?php }?>
             <div class="col-md-<?php
-            if ($this->rbac->hasPrivilege('design_admit_card', 'can_add')) {
-                echo "8";
-            } else {
-                echo "12";
-            }
-            ?>">
+if ($this->rbac->hasPrivilege('design_admit_card', 'can_add')) {
+    echo "8";
+} else {
+    echo "12";
+}
+?>">
                 <!-- general form elements -->
                 <div class="box box-primary" id="hroom">
                     <div class="box-header ptbnull">
@@ -209,57 +197,55 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 <thead>
                                     <tr>
                                         <th><?php echo $this->lang->line('certificate'); ?> <?php echo $this->lang->line('name'); ?></th>
-
                                         <th><?php echo $this->lang->line('background_image'); ?></th>
                                         <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     <?php if (empty($admitcardList)) {
-                                        ?>
+    ?>
 
                                         <?php
-                                    } else {
-                                        $count = 1;
-                                        foreach ($admitcardList as $certificate) {
-                                            ?>
+} else {
+    $count = 1;
+    foreach ($admitcardList as $certificate) {
+        ?>
                                             <tr>
                                                 <td class="mailbox-name">
                                                     <a style="cursor: pointer;" class="view_data" id="<?php echo $certificate->id ?>" data-toggle="popover" class="detail_popover" ><?php echo $certificate->template; ?></a>
                                                 </td>
                                                 <td class="mailbox-name">
-                                                    <?php if ($certificate->background_img != '' && !is_null($certificate->background_img)) { ?>
+                                                    <?php if ($certificate->background_img != '' && !is_null($certificate->background_img)) {?>
                                                         <img src="<?php echo base_url('uploads/admit_card/') ?><?php echo $certificate->background_img ?>" width="40">
-                                                    <?php } else { ?>
+                                                    <?php } else {?>
                                                         <i class="fa fa-picture-o fa-3x" aria-hidden="true"></i>
-                                                    <?php } ?>
-
+                                                    <?php }?>
                                                 </td>
-                                                <td class="mailbox-date text-right no-print">
+                                                <td class="mailbox-date text-right no-print white-space-nowrap">
                                                     <a id="<?php echo $certificate->id ?>" class="btn btn-default btn-xs view_data" title="<?php echo $this->lang->line('view'); ?>">
                                                         <i class="fa fa-reorder"></i>
                                                     </a>
                                                     <?php
-                                                    if ($this->rbac->hasPrivilege('design_admit_card', 'can_edit')) {
-                                                        ?>
+if ($this->rbac->hasPrivilege('design_admit_card', 'can_edit')) {
+            ?>
                                                         <a data-placement="left" href="<?php echo site_url('admin/admitcard/edit/' . $certificate->id); ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
                                                             <i class="fa fa-pencil"></i>
                                                         </a>
                                                         <?php
-                                                    }
-                                                    if ($this->rbac->hasPrivilege('design_admit_card', 'can_delete')) {
-                                                        ?>
+}
+        if ($this->rbac->hasPrivilege('design_admit_card', 'can_delete')) {
+            ?>
                                                         <a data-placement="left" href="<?php echo base_url(); ?>admin/admitcard/delete/<?php echo $certificate->id ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
                                                             <i class="fa fa-remove"></i>
                                                         </a>
-                                                    <?php } ?>
+                                                    <?php }?>
                                                 </td>
                                             </tr>
                                             <?php
-                                        }
-                                        $count++;
-                                    }
-                                    ?>
+}
+    $count++;
+}
+?>
                                 </tbody>
                             </table><!-- /.table -->
                         </div><!-- /.mail-box-messages -->
@@ -288,17 +274,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         </div>
     </div>
 </div>
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#postdate').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true
-        });
-        $("#btnreset").click(function () {
-            $("#form1")[0].reset();
-        });
-    });
-</script>
+
 <script type="text/javascript">
     var base_url = '<?php echo base_url() ?>';
     function printDiv(elem) {
@@ -325,8 +301,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/dist/css/skins/_all-skins.min.css">');
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/plugins/iCheck/flat/blue.css">');
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/plugins/morris/morris.css">');
-
-
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/plugins/jvectormap/jquery-jvectormap-1.2.2.css">');
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/plugins/datepicker/datepicker3.css">');
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/plugins/daterangepicker/daterangepicker-bs3.css">');
@@ -341,8 +315,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             window.frames["frame1"].print();
             frame1.remove();
         }, 500);
-
-
         return true;
     }
 </script>
@@ -380,10 +352,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
     function valueChanged()
     {
         if ($('#enable_student_img').is(":checked"))
-            $("#enableImageDiv").show();
-        // alert("Hii")
+            $("#enableImageDiv").show();       
         else
-            $("#enableImageDiv").hide();
-        //alert("Bye")
+            $("#enableImageDiv").hide();        
     }
 </script>

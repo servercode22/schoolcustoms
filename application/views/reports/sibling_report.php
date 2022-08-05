@@ -17,7 +17,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
 
-                    <form role="form" action="<?php echo site_url('report/sibling_report') ?>" method="post" class="">
+                    <form role="form" action="<?php echo site_url('report/sibling_report') ?>" method="post" class="" id="class_search_form"  >
                         <div class="box-body row">
                             <?php echo $this->customlib->getCSRF(); ?>
                             <div class="col-sm-6 col-md-3">
@@ -38,7 +38,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 }
                                                 ?>
                                     </select>
-                                    <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+                                    <span class="text-danger" id="error_class_id"></span>
                                 </div>
                             </div>
 
@@ -59,7 +59,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             }
                                             ?>
                                     </select>
-                                    <span class="text-danger"><?php echo form_error('section_id'); ?></span>
+                                   <span class="text-danger" id="error_section_id"></span>
                                 </div>
                             </div>
 
@@ -78,8 +78,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <h3 class="box-title titlefix"><i class="fa fa-money"> </i> <?php echo $this->lang->line('sibling') . " " . $this->lang->line('report'); ?></h3>
                         </div>
                         <div class="box-body table-responsive">
-                            <div class="download_label"><?php echo $this->lang->line('sibling') . " " . $this->lang->line('report') . "<br>";
-                                            $this->customlib->get_postmessage();
+                            
+                            <div class="download_label"><?php echo $this->lang->line('sibling') . " " . $this->lang->line('report');$this->customlib->get_postmessage();
                                             ?></div>
                             <table class="table table-striped table-bordered table-hover example">
                                 <thead>
@@ -88,9 +88,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             <th><?php echo $this->lang->line('father_name'); ?></th>
 <?php } if ($sch_setting->mother_name) { ?>
                                             <th><?php echo $this->lang->line('mother_name'); ?></th>
-<?php } ?>
+<?php } if($sch_setting->guardian_name){?>
                                         <th><?php echo $this->lang->line('guardian') . " " . $this->lang->line('name') ?></th>
+                                        <?php } if($sch_setting->guardian_phone){?>
                                         <th><?php echo $this->lang->line('guardian') . " " . $this->lang->line('phone') ?></th>
+                                    <?php } ?>
                                         <th><?php echo $this->lang->line('student_name') . " (" . $this->lang->line('sibling') . ")"; ?></th>
                                         <th><?php echo $this->lang->line('class'); ?></th>
 <?php if ($sch_setting->admission_date) { ?>
@@ -100,7 +102,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php if (empty($resultlist)) {  //print_r($resultlist);die;  ?>
+                                    <?php if (empty($resultlist)) {    ?>
                                         <?php
                                     } else {
                                         $count = 1;
@@ -112,14 +114,16 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                         <td><?php echo $student[0]['father_name']; ?></td>
             <?php } if ($sch_setting->mother_name) { ?>
                                                         <td><?php echo $student[0]['mother_name']; ?></td>
-            <?php } ?>
+             <?php } if($sch_setting->guardian_name){?>
                                                     <td><?php echo $student[0]['guardian_name']; ?></td>
+                                                      <?php } if($sch_setting->guardian_phone){?>
                                                     <td><?php echo $student[0]['guardian_phone']; ?></td>
+                                                <?php } ?>
                                                     <td>
                                                         <table>
                                                     <?php foreach ($student as $value) { ?>
                                                                 <tr><td>
-                                                                        <a href="<?php echo base_url(); ?>student/view/<?php echo $value['id']; ?>"><?php echo $value['firstname'] . ' ' . $value['lastname']; ?></a>
+                                                                        <a href="<?php echo base_url(); ?>student/view/<?php echo $value['id']; ?>"><?php echo $this->customlib->getFullName($value['firstname'],$value['middlename'],$value['lastname'],$sch_setting->middlename,$sch_setting->lastname); ?></a>
                                                                 </tr></td>
             <?php } ?>
                                         </table>
@@ -208,4 +212,3 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         });
     });
 </script>
-

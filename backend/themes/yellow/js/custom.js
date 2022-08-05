@@ -9,14 +9,14 @@ $(document).ready(function(){
         $strip.addClass("newsticker")
         var stripHeight = 1;
         $strip.find("li").each(function(i){
-          stripHeight += jQuery(this, i).outerHeight(true); // thanks to Michael Haszprunar and Fabien Volpi
+          stripHeight += jQuery(this, i).outerHeight(true); 
         });
         var $mask = $strip.wrap("<div class='mask'></div>");
         var $tickercontainer = $strip.parent().wrap("<div class='tickercontainer'></div>");               
-        var containerHeight = $strip.parent().parent().height();  //a.k.a. 'mask' width   
+        var containerHeight = $strip.parent().parent().height();
         $strip.height(stripHeight);     
         var totalTravel = stripHeight;
-        var defTiming = totalTravel/settings.travelocity; // thanks to Scott Waye   
+        var defTiming = totalTravel/settings.travelocity
         function scrollnews(spazio, tempo){
         $strip.animate({top: '-='+ spazio}, tempo, "linear", function(){$strip.css("top", containerHeight); scrollnews(totalTravel, defTiming);});
         }
@@ -41,40 +41,6 @@ $(function(){
 });
 
 
- /* ----------------------------------------------------------- */
-  /* counter scroll
-  /* ----------------------------------------------------------- */
- //        var a = 0;
- //        $(window).scroll(function() {
-
- //          var oTop = $('.counter').offset().top - window.innerHeight;
- //          if (a == 0 && $(window).scrollTop() > oTop) {
- //            $('.counter-value').each(function() {
- //              var $this = $(this),
- //                countTo = $this.attr('data-count');
- //              $({
- //                countNum: $this.text()
- //              }).animate({
- //                  countNum: countTo
- //                },
-
- //                {
-
- //                  duration: 2000,
- //                  easing: 'swing',
- //                  step: function() {
- //                    $this.text(Math.floor(this.countNum));
- //                  },
- //                  complete: function() {
- //                    $this.text(this.countNum);
- //                    //alert('finished');
- //                  }
-
- //                });
- //            });
- //            a = 1;
- //          }
- // });
 
            jQuery('.counter-value').counterUp({
                 delay: 10,
@@ -84,7 +50,6 @@ $(function(){
 
 
         $(document).ready(function ($) {
-                // delegate calls to data-toggle="lightbox"
                 $(document).on('click', '[data-toggle="lightbox"]:not([data-gallery="navigateTo"]):not([data-gallery="example-gallery"])', function(event) {
                     event.preventDefault();
                     return $(this).fancyLightbox({
@@ -136,19 +101,6 @@ $('#alert').affix({
 });
 
 
-
-// $('.counter-count').each(function () {
-//        $(this).prop('counter',0).animate({
-//            Counter: $(this).text()
-//        }, {
-//            duration: 5000,
-//            easing: 'swing',
-//            step: function (now) {
-//                $(this).text(Math.ceil(now));
-//            }
-//        });
-//    });
-
     //Check to see if the window is top if not then display button
     jQuery(window).scroll(function(){
       if (jQuery(this).scrollTop() > 300) {
@@ -161,7 +113,6 @@ $('#alert').affix({
 
      
     //Click event to scroll to top
-
     jQuery('.scrollToTop').click(function(){
       jQuery('html, body').animate({scrollTop : 0},800);
       return false;
@@ -239,3 +190,8 @@ $('#carouselExample').on('slide.bs.carousel', function (e) {
     });
   });
 
+/*--dropify--*/
+$(document).ready(function(){
+    $('.filestyle').dropify();
+});
+/*--end dropify--*/

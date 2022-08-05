@@ -19,8 +19,7 @@ class ComplaintType_model extends MY_Model {
         $message = INSERT_RECORD_CONSTANT . " On  " . $table . " id " . $id;
         $action = "Insert";
         $record_id = $id;
-        $this->log($message, $record_id, $action);
-        //echo $this->db->last_query();die;
+        $this->log($message, $record_id, $action);       
         //======================Code End==============================
 
         $this->db->trans_complete(); # Completing transaction

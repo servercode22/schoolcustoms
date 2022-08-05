@@ -1,5 +1,5 @@
 <?php
-
+ 
 if (!defined('BASEPATH'))
     exit('No direct script access allowed');
 
@@ -7,6 +7,7 @@ class Feediscount extends Admin_Controller {
 
     function __construct() {
         parent::__construct();
+        $this->sch_setting_detail = $this->setting_model->getSetting();
     }
 
     function delete($id) {
@@ -102,10 +103,10 @@ class Feediscount extends Admin_Controller {
             $data['rte_status'] = $this->input->post('rte');
             $data['class_id'] = $this->input->post('class_id');
             $data['section_id'] = $this->input->post('section_id');
-
             $resultlist = $this->feediscount_model->searchAssignFeeByClassSection($data['class_id'], $data['section_id'], $id, $data['category_id'], $data['gender'], $data['rte_status']);
             $data['resultlist'] = $resultlist;
         }
+        $data['sch_setting'] = $this->sch_setting_detail;
         $this->load->view('layout/header', $data);
         $this->load->view('admin/feediscount/assign', $data);
         $this->load->view('layout/footer', $data);
@@ -156,7 +157,7 @@ class Feediscount extends Admin_Controller {
     }
 
     function applydiscount() {
-        if (!$this->rbac->hasPrivilege('fees_discount_assign', 'can_add')) {
+        if (!$this->rbac->hasPrivilege('fees_discount_assign', 'can_view')) {
             access_denied();
         }
         $this->form_validation->set_rules('discount_payment_id', $this->lang->line('fees_payment_id'), 'required|trim|xss_clean');

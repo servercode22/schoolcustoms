@@ -8,6 +8,7 @@ class Messages_model extends MY_Model {
     public function __construct() {
         parent::__construct();
         $this->current_session = $this->setting_model->getCurrentSession();
+        $this->sch_setting_detail = $this->setting_model->getSetting();
     }
 
     public function get($id = null) {
@@ -66,7 +67,6 @@ class Messages_model extends MY_Model {
             $record_id = $id = $insert_id;
             $this->log($message, $record_id, $action);
         }
-        //echo $this->db->last_query();die;
         //======================Code End==============================
 
         $this->db->trans_complete(); # Completing transaction
@@ -107,8 +107,8 @@ class Messages_model extends MY_Model {
     }
 
     public function get_student_name($id) {
-        $filter_get_student_name = $this->db->select('CONCAT_WS(" ",firstname,lastname,"(",admission_no,")") as name')->from('students')->where('students.id', $id)->get()->row_array();
-        return $this->lang->line('student') . " " . $this->lang->line('name') . " : " . $filter_get_student_name['name'];
+        $filter_get_student_name = $this->db->select('firstname,middlename,lastname')->from('students')->where('students.id', $id)->get()->row_array();
+        return $this->lang->line('student') . " " . $this->lang->line('name') . " : " . $this->customlib->getFullName($filter_get_student_name['firstname'],$filter_get_student_name['middlename'],$filter_get_student_name['lastname'],$this->sch_setting_detail->middlename,$this->sch_setting_detail->lastname);
     }
 
     public function get_staff_name($id) {
@@ -178,6 +178,12 @@ class Messages_model extends MY_Model {
         $filter_get_route_title = $this->db->select('route_title')->from('transport_route')->where('transport_route.id', $id)->get()->row_array();
 
         return $this->lang->line('route_title') . " : " . $filter_get_route_title['route_title'];
+    }
+
+    public function get_student_full_name($id){
+
+      return $this->db->select('firstname,middlename,lastname')->from('students')->where('students.id', $id)->get()->row_array(); 
+
     }
 
 }

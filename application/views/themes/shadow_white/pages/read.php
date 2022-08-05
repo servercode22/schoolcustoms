@@ -1,6 +1,5 @@
 <div class="about-title relative fullwidthinner">
     <div class="innermain">
-
     </div>
 </div>
 <div class="spacet30 spaceb50">

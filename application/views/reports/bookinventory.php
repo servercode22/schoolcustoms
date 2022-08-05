@@ -89,7 +89,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
 
-                    <form role="form" action="<?php echo site_url('report/bookinventory') ?>" method="post" class="">
+                    <form role="form" action="<?php echo site_url('report/getbookissueparameter') ?>" method="post" class="" id="reportform" >
                         <div class="box-body row">
 
                             <?php echo $this->customlib->getCSRF(); ?>
@@ -131,10 +131,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <h3 class="box-title titlefix"><i class="fa fa-money"></i> <?php echo $this->lang->line('book') . " " . $this->lang->line('inventory') . " " . $this->lang->line('report'); ?></h3>
                         </div>
                         <div class="box-body table-responsive">
-                            <div class="download_label"> <?php echo $this->lang->line('book') . " " . $this->lang->line('inventory') . " " . $this->lang->line('report') . "<br>";
+                            <div class="download_label"> <?php echo $this->lang->line('book') . " " . $this->lang->line('inventory') . " " . $this->lang->line('report');
                                                 $this->customlib->get_postmessage();
                                                 ?> </div>
-                            <table class="table table-striped table-bordered table-hover example">
+                          
+                            <table class="table table-striped table-bordered table-hover record-list" data-export-title="<?php echo $this->lang->line('book') . " " . $this->lang->line('inventory') . " " . $this->lang->line('report');
+                                                $this->customlib->get_postmessage();
+                                                ?> ">
                                 <thead>
                                     <tr>
                                         <th><?php echo $this->lang->line('book_title'); ?></th>
@@ -151,60 +154,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <th><?php echo $this->lang->line('issued'); ?></th>
                                         <th><?php echo $this->lang->line('bookprice'); ?></th>
                                         <th><?php echo $this->lang->line('postdate'); ?></th>
-                                        <th class="no-print text text-right"><?php echo $this->lang->line('action'); ?></th>
+                                        <th class="no-print noExport text text-right"><?php echo $this->lang->line('action'); ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    $count = 1;
-                                    if (!empty($listbook)) {
-                                        foreach ($listbook as $book) {
-                                            ?>
-                                            <tr>
-                                                <td class="mailbox-name">
-                                                    <a href="#" data-toggle="popover" class="detail_popover"><?php echo $book['book_title'] ?></a>
-                                                    <div class="fee_detail_popover" style="display: none">
-                                                        <?php
-                                                        if ($book['description'] == "") {
-                                                            ?>
-                                                            <p class="text text-danger"><?php echo $this->lang->line('no_description'); ?></p>
-                                                            <?php
-                                                        } else {
-                                                            ?>
-                                                            <p class="text text-info"><?php echo $book['description']; ?></p>
-                                                            <?php
-                                                        }
-                                                        ?>
-                                                    </div>
-                                                </td>
-                                                <td class="mailbox-name"> <?php echo $book['book_no'] ?></td>
-                                                <td class="mailbox-name"> <?php echo $book['isbn_no'] ?></td>
-                                                <td class="mailbox-name"> <?php echo $book['publish'] ?></td>
-                                                <td class="mailbox-name"> <?php echo $book['author'] ?></td>
-                                                <td class="mailbox-name"><?php echo $book['subject'] ?></td>
-                                                <td class="mailbox-name"><?php echo $book['rack_no'] ?></td>
-                                                <td class="mailbox-name"> <?php echo $book['qty'] ?></td>
-                                                <td class="mailbox-name"> <?php echo $book['qty'] - $book['total_issue']; ?></td>
-                                                <td class="mailbox-name"> <?php echo $book['qty'] - ($book['qty'] - $book['total_issue']); ?></td>
-                                                <td class="mailbox-name"> <?php echo ($currency_symbol . $book['perunitcost']); ?></td>
-                                                <td class="mailbox-name"> <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($book['postdate'])); ?></td>
-                                                <td class="mailbox-date no-print text text-right">
-        <?php if ($this->rbac->hasPrivilege('books', 'can_edit')) { ?> 
-                                                        <a href="<?php echo base_url(); ?>admin/book/edit/<?php echo $book['id'] ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
-                                                            <i class="fa fa-pencil"></i>
-                                                        </a>
-        <?php }if ($this->rbac->hasPrivilege('books', 'can_delete')) { ?> 
-                                                        <a href="<?php echo base_url(); ?>admin/book/delete/<?php echo $book['id'] ?>"class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
-                                                            <i class="fa fa-remove"></i>
-                                                        </a>
-        <?php } ?>
-                                                </td>
-                                            </tr>
-                                            <?php
-                                            $count++;
-                                        }
-                                    }
-                                    ?>
                                 </tbody>
                             </table>
                         </div>
@@ -228,4 +181,52 @@ if ($search_type == 'period') {
 }
 ?>
 
+</script>
+
+<script>
+$(document).ready(function() {
+   initDatatable('record-list','report/dtbookinventoryreportlist',[],[],100);
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+$(document).on('submit','#reportform',function(e){
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+    var $this = $(this).find("button[type=submit]:focus");  
+    var form = $(this);
+    var url = form.attr('action');
+    var form_data = form.serializeArray();
+    $.ajax({
+           url: url,
+           type: "POST",
+           dataType:'JSON',
+           data: form_data, // serializes the form's elements.
+              beforeSend: function () {
+                $('[id^=error]').html("");
+                $this.button('loading');
+               },
+              success: function(response) { // your success handler
+                
+                if(!response.status){
+                    $.each(response.error, function(key, value) {
+                    $('#error_' + key).html(value);
+                    });
+                }else{
+                 
+                   initDatatable('record-list','report/dtbookinventoryreportlist',response.params);
+                }
+              },
+             error: function() { // your error handler
+                 $this.button('reset');
+             },
+             complete: function() {
+               $this.button('reset');
+             }
+         });
+
+        });
+
+    });
+   
 </script>

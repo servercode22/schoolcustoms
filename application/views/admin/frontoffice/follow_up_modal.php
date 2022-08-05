@@ -137,26 +137,19 @@
     </div>  
 </div>
 <script>
-
-
-
-
     function follow_save() {
-        //alert('Jai Shree Ram');
+       
         var id = $('#enquiry_id').val();
         var status = $('#enquiry_status').val();
         var responce = $('#response').val();
-        var follow_date = $('#follow_date').val();
-        //  alert(follow_date);
+        var follow_date = $('#follow_date').val();       
 
         $.ajax({
             url: '<?php echo base_url(); ?>admin/enquiry/follow_up_insert',
             type: 'POST',
             dataType: 'json',
             data: $("#folow_up_data").serialize(),
-            success: function (data) {
-
-                //alert(data);
+            success: function (data) {               
 
                 if (data.status == "fail") {
 
@@ -171,39 +164,13 @@
                     successMsg(data.message);
                     follow_up_new(id, status);
                 }
-
-
             },
 
             error: function () {
                 alert("Fail")
             }
         });
-
-
     }
-
-    // function follow_up(id) {
-    //     $.ajax({
-    //         url: '<?php echo base_url(); ?>admin/enquiry/follow_up/' + id,
-    //         success: function (data) {
-    //             $('#getdetails_follow_up').html(data);
-    //             $.ajax({
-    //                 url: '<?php echo base_url(); ?>admin/enquiry/follow_up_list/' + id,
-    //                 success: function (data) {
-    //                     $('#timeline').html(data);
-    //                 },
-    //                 error: function () {
-    //                     alert("Fail")
-    //                 }
-    //             });
-    //         },
-    //         error: function () {
-    //             alert("Fail")
-    //         }
-    //     });
-    // }
-
 
     function follow_up_new(id, status) {
 
@@ -227,9 +194,7 @@
         });
     }
 
-    function changeStatus(status, id) {
-
-        //alert(status+id);
+    function changeStatus(status, id) {      
 
         $.ajax({
             url: '<?php echo base_url(); ?>admin/enquiry/change_status/',
@@ -238,10 +203,8 @@
             data: {status: status, id: id},
             success: function (data) {
                 if (data.status == "fail") {
-
                     errorMsg(data.message);
                 } else {
-
                     successMsg(data.message);
                     follow_up_new(id, status);
                 }
@@ -249,5 +212,4 @@
 
         })
     }
-
 </script>

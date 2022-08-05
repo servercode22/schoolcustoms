@@ -140,7 +140,7 @@
                                         <div class="pull-right">
                                         </div>
                                     </div>
-                                    <div class="download_label"><?php echo $this->lang->line('staff'); ?> <?php echo $this->lang->line('attendance'); ?> <?php echo $this->lang->line('report') . "<br>";
+                                    <div class="download_label"><?php echo $this->lang->line('staff'); ?> <?php echo $this->lang->line('attendance'); ?> <?php echo $this->lang->line('report') ?></div>  <div> <?php echo 
                             $this->customlib->get_postmessage();
                                     ?></div>
                                     <table class="table table-striped table-bordered table-hover example xyz">
@@ -154,14 +154,14 @@
                                                 if (!empty($attendence_array)) {
                                                     foreach ($attendencetypeslist as $key => $value) {
                                                         ?>
-                                                        <th colspan="" ><br/><span data-toggle="tooltip" title="<?php echo "Total " . $value["type"]; ?>"><?php echo strip_tags($value["key_value"]); ?>
+                                                        <th colspan="" ><br/><span data-toggle="tooltip" title="<?php echo $this->lang->line('total'). ' ' . $value["type"]; ?>"><?php echo strip_tags($value["key_value"]); ?>
 
                                                             </span></th>
 
                                                         <?php
                                                     }
                                                 }
-                                                ?>
+                                                ?>  
                                                 <?php
                                                 foreach ($attendence_array as $at_key => $at_value) {
 
@@ -170,9 +170,9 @@
                                                         <th class="tdcls text text-center bg-danger">
                                                             <?php
                                                             echo date('d', $this->customlib->dateyyyymmddTodateformat($at_value)) . "<br/>" .
-                                                            date('D', $this->customlib->dateyyyymmddTodateformat($at_value))
+                                                            $this->lang->line(strtolower(date('D', $this->customlib->dateyyyymmddTodateformat($at_value))))
                                                             ;
-                                                            ?>
+                                                            ?> 
                                                         </th>
 
                                                         <?php
@@ -181,7 +181,7 @@
                                                         <th class="tdcls text text-center">
                                                             <?php
                                                             echo date('d', $this->customlib->dateyyyymmddTodateformat($at_value)) . "<br/>" .
-                                                            date('D', $this->customlib->dateyyyymmddTodateformat($at_value))
+                                                            $this->lang->line(strtolower(date('D', $this->customlib->dateyyyymmddTodateformat($at_value))))
                                                             ;
                                                             ?>
                                                         </th>
@@ -189,9 +189,6 @@
                                                     }
                                                 }
                                                 ?>
-
-
-
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -202,22 +199,12 @@
                                                 </tr>
                                                 <?php
                                             } else {
-
                                                 $row_count = 1;
                                                 $i = 0;
-
                                                 foreach ($student_array as $student_key => $student_value) {
-
                                                     $total_present = ($monthAttendance[$i][$student_value['id']]['present'] + $monthAttendance[$i][$student_value['id']]['late'] + $monthAttendance[$i][$student_value['id']]['half_day']);
 
                                                     $total_days = $monthAttendance[$i][$student_value['id']]['present'] + $monthAttendance[$i][$student_value['id']]['late'] + $monthAttendance[$i][$student_value['id']]['absent'] + $monthAttendance[$i][$student_value['id']]['half_day'];
-
-
-                                                    // if($total_days == 0){
-                                                    //  $percentage = "-";
-                                                    // }else{
-                                                    //     $percentage = ($total_present/$total_days)*100 ; 
-                                                    // } 
 
                                                     if ($total_days == 0) {
                                                         $percentage = -1;
@@ -237,14 +224,13 @@
 
                                                         $label = "class='label label-default'";
                                                     }
-                                                    // echo "<label $label>". $print_percentage."</label>";
                                                     ?>
                                                     <tr>
 
                                                         <th class="tdclsname"><span data-toggle="popover" class="detail_popover" data-original-title="" title=""><a href="#" style="color:#333"><?php echo $student_value['name'] . " " . $student_value['surname']; ?></a></span>
                                                             <div class="fee_detail_popover" style="display: none"><?php echo $this->lang->line('staff_id'); ?>: <?php echo $student_value['employee_id']; ?></div>
                                                         </th>
-                                                        <th><?php echo "<label $label>" . $print_percentage . "</label>"; //echo round($percentage,2);    ?></th>
+                                                        <th><?php echo "<label $label>" . $print_percentage . "</label>"; ?></th>
                                                         <th><?php echo $monthAttendance[$i][$student_value['id']]['present']; ?></th>
                                                         <th><?php echo $monthAttendance[$i][$student_value['id']]['late']; ?></th>
                                                         <th><?php echo $monthAttendance[$i][$student_value['id']]['absent']; ?></th>
@@ -262,12 +248,10 @@
                                                                         echo $resultlist[$at_value][$student_value['id']]['remark'];
                                                                     }
                                                                     ?></div>
-
                                                             </th>
                                                             <?php
                                                         }
                                                         ?>
-
 
                                                     </tr>
                                                     <?php
@@ -299,36 +283,12 @@
 
 
 <script type="text/javascript">
-
-
-    $(document).ready(function () {
-
-        var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
-        $('#date').datepicker({
-            format: date_format,
-            autoclose: true
-        });
-
-        $('.detail_popover').popover({
-            placement: 'right',
-            title: '',
-            trigger: 'hover',
-            container: 'body',
-            html: true,
-            content: function () {
-                return $(this).closest('th').find('.fee_detail_popover').html();
-            }
-        });
-    });
-</script>
-<script type="text/javascript">
     var base_url = '<?php echo base_url() ?>';
     function printDiv(elem) {
         Popup(jQuery(elem).html());
     }
     function Popup(data)
     {
-
         var frame1 = $('<iframe />');
         frame1[0].name = "frame1";
         frame1.css({"position": "absolute", "top": "-1000000px"});
@@ -346,8 +306,6 @@
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/dist/css/skins/_all-skins.min.css">');
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/plugins/iCheck/flat/blue.css">');
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/plugins/morris/morris.css">');
-
-
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/plugins/jvectormap/jquery-jvectormap-1.2.2.css">');
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/plugins/datepicker/datepicker3.css">');
         frameDoc.document.write('<link rel="stylesheet" href="' + base_url + 'backend/plugins/daterangepicker/daterangepicker-bs3.css">');

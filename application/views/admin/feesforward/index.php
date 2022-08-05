@@ -90,17 +90,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 ?>
                                             </div>
                                             <div class="row col-xs-12">
-
-                                                <div class="col-md-4">
-                                                    <!-- <div class="pull-right">
-                                                        <h4 class="box-title"><span class="text text-danger"><?php //echo $this->lang->line('due_date');     ?>:</span> <?php //echo set_value('due_date', $due_date_formated);     ?></h4>
-                                                        <input id="due_date" name="due_date" placeholder="" type="hidden" class="form-control date"  value="<?php //echo set_value('due_date', $due_date_formated);     ?>" readonly /> 
-                                                    </div> -->
+                                                <div class="col-md-4">                                            
 
                                                 </div>
-
                                             </div>
-
                                             <div class="col-xs-12 table-responsive">
                                                 <div class="download_label"><?php echo $this->lang->line('previous_session_balance_fees'); ?></div>
                                                 <table class="table table-striped example">
@@ -119,11 +112,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                             <th class="text-right"><?php echo $this->lang->line('balance'); ?> <span><?php echo "(" . $currency_symbol . ")"; ?></span></th>
                                                         </tr>
 
-                                                    </thead>
+                                                    </thead> 
                                                     <tbody>
                                                         <?php
                                                         $i = 1;
                                                         foreach ($student_due_fee as $due_fee_key => $due_fee_value) {
+                                                           
                                                             ?>
                                                             <tr>
                                                                 <td>
@@ -255,14 +249,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             info: false
         });
     });
-    $(document).ready(function () {
-        var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
-
-
-        $('.date').datepicker({
-            format: date_format,
-            autoclose: true
-        });
-    });
+ 
 
 </script>

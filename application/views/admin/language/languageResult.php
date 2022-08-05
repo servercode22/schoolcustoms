@@ -28,11 +28,15 @@ foreach ($languagelist as $language) {
                            ?>>
         <?php }
     }
-    ?>
+    ?> 
         </td>
         <td class="mailbox-date">
-
-    <?php
+        	<?php  if($language['is_deleted']=='yes' && $this->customlib->getSessionLanguage() != $language['id'] && ($this->rbac->hasPrivilege('languages', 'can_delete'))){ ?>
+<a data-placement="right" onclick="return confirm('<?php echo $this->lang->line('delete_confirm')?>');" href="<?php echo base_url();?>admin/language/delete/<?php echo $language['id']; ?>" class="btn btn-default btn-xs" data-toggle="tooltip" title=""  data-original-title="<?php  echo $this->lang->line('delete')?>">
+                                                                        <i class="fa fa-remove"></i>
+                                                                    </a>
+    <?php  
+}
     if ($this->customlib->getSessionLanguage() != $language['id']) {
         if (!empty($selected_lang)) {
             ?>
@@ -52,6 +56,7 @@ foreach ($languagelist as $language) {
         <?php }
     }
     ?>
+    
         </td>
 
     </tr>

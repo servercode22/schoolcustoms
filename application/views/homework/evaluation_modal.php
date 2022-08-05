@@ -21,13 +21,11 @@
 
                 <div class="dual-list">
                     <div class="test">
-                        <label><?php echo $this->lang->line('student_lists'); ?></label>
+                        <div class="form-group mb0"><label><?php echo $this->lang->line('student_lists'); ?><small class="req"> *</small></label></div>
                         <div class="dualbg">
 
                             <ul multiple=""  class="list-group" id="slist">
                                 <?php
-                                // print_r($studentlist);
-                                // exit();
                                 foreach ($studentlist as $key => $value) {
                                     $active_status = false;
                                     if ($value["homework_evaluation_id"] != 0) {
@@ -37,7 +35,13 @@
 
                                     <li class="list-group-item <?php echo ($active_status) ? "active" : "" ?>">
                                         <div class="checkbox">
-                                            <label><input type="checkBox" <?php echo ($active_status) ? "checked='checked'" : "" ?>name="student_list[<?php echo $value["id"] ?>]" value="<?php echo $value["homework_evaluation_id"] ?>"><?php echo $value["firstname"] . " " . $value["lastname"] . " (" . $value['admission_no'] . ")"; ?></label>
+                                            <label><input type="checkBox" <?php echo ($active_status) ? "checked='checked'" : "" ?>name="student_list[<?php echo $value["id"] ?>]" value="<?php echo $value["homework_evaluation_id"] ?>">
+                                                <?php 
+                        
+                        echo $this->customlib->getFullName($value['firstname'],$value['middlename'],$value['lastname'],$sch_setting->middlename,$sch_setting->lastname) . " (" . $value['admission_no'] . ")";
+
+                         ?>
+                                            </label>
                                         </div>
 
 
@@ -51,20 +55,13 @@
                         </div>
                     </div>
                 </div>
-
-
-
             </div>
-
-
             <div class="row">
-
-
                 <div class="col-lg-12 col-md-12 col-sm-12">
                     <div class="row">   
                         <div class="col-md-3 col-sm-5 col-xs-4">  
                             <div class="form-group">
-                                <label class="pt5"><?php echo $this->lang->line('evaluation_date'); ?></label>
+                                <label class="pt5"><?php echo $this->lang->line('evaluation_date'); ?> <small class="req"> *</small></label>
                             </div>
                         </div> 
                         <div class="col-md-3 col-sm-4 col-xs-4">      
@@ -75,7 +72,7 @@
                                     $evl_date = date($this->customlib->getSchoolDateFormat(), $this->customlib->dateYYYYMMDDtoStrtotime($result['evaluation_date']));
                                 }
                                 ?>
-                                <input type="text" id="evaluation_date" name="evaluation_date" class="form-control modalddate97" value="<?php echo $evl_date; ?>" readonly="">
+                                <input type="text" id="evaluation_date" name="evaluation_date" class="form-control modalddate97 date" value="<?php echo $evl_date; ?>" readonly="">
                                 <input type="hidden" name="homework_id" value="<?php echo $result["id"] ?>">
                                 <?php
                                 if (!empty($report)) {
@@ -106,7 +103,6 @@
     </div><!--/.col (left) -->
     <div class="col-lg-4 col-md-4 col-sm-4 col-eq">
         <div class="taskside">
-
             <h4><?php echo $this->lang->line('summary'); ?></h4>
             <div class="box-tools pull-right">
             </div><!-- /.box-tools -->
@@ -160,8 +156,6 @@
                     <?php } ?>
                 <label><span><?php echo $this->lang->line('description'); ?></span>: <br/><?php echo $result['description']; ?></label>
 
-
-
             </div> 
         </div>
     </div>  
@@ -173,9 +167,6 @@
         $('body').on('click', '.list-group .list-group-item', function () {
             $(this).removeClass('active');
             $(this).toggleClass('active');
-            //  $(this).attr('selected');
-            // $('select option[value="' + this.value + '"]').attr("selected", "true");
-            //$(this).selected = true;
         });
         $('.list-arrows a').click(function () {
             var $button = $(this), actives = '';
@@ -222,12 +213,6 @@
 </script>
 <script>
     $(document).ready(function () {
-        var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
-        $('#evaluation_date').datepicker({
-            format: date_format,
-            autoclose: true
-        });
-
         $("#evaluation_data").on('submit', (function (e) {
             $("#hlist").find('option.active').attr("selected", "selected");
 

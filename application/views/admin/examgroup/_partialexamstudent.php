@@ -33,7 +33,7 @@
                                 </tr>
                                 <?php
                             } else {
-                                $counter = 1;
+                                $counter = 1; 
                                 foreach ($resultlist as $student) {
                                     ?>
                                     <tr>
@@ -48,7 +48,7 @@
 
                                         <td><?php echo $student['admission_no']; ?></td>
 
-                                        <td><?php echo $student['firstname'] . " " . $student['lastname']; ?></td>
+                                        <td><?php echo $this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname);?></td>
                                         <td><?php echo $student['father_name']; ?></td>
                                         <?php if ($sch_setting->category) { ?>
                                             <td><?php echo $student['category']; ?></td>
@@ -74,8 +74,7 @@
         </div>
         <?php
     } else {
-        ?>
-        <div style="padding-top: 10px;"><?php //echo $this->lang->line('no_record_found');  ?></div>
+        ?>        
         <div class="alert alert-danger "><?php echo $this->lang->line('no_record_found'); ?></div>
         <?php
     }

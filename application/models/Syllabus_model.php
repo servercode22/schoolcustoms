@@ -12,13 +12,14 @@ class syllabus_model extends CI_Model {
         $this->start_month = $this->setting_model->getStartMonth();
     }
 
-    public function getmysubjects($class_id, $section_id) {
-        $sql = "SELECT subject_group_subjects.id as subject_group_subjects_id,subject_group_class_sections.id as subject_group_class_sections_id,subjects.name,subjects.code,subjects.id as subject_id FROM `class_sections` join subject_group_class_sections on subject_group_class_sections.class_section_id=class_sections.id join subject_group_subjects on subject_group_subjects.subject_group_id=subject_group_class_sections.subject_group_id join subjects on subject_group_subjects.subject_id=subjects.id WHERE class_sections.class_id=" . $this->db->escape($class_id) . " and class_sections.section_id=" . $this->db->escape($section_id);
+ 
+  public function getmysubjects($class_id, $section_id) {
+        $sql = "SELECT subject_group_subjects.id as subject_group_subjects_id,subject_group_class_sections.id as subject_group_class_sections_id,subjects.name,subjects.code,subjects.id as subject_id FROM `class_sections` join subject_group_class_sections on subject_group_class_sections.class_section_id=class_sections.id join subject_group_subjects on subject_group_subjects.subject_group_id=subject_group_class_sections.subject_group_id join subjects on subject_group_subjects.subject_id=subjects.id WHERE subject_group_class_sections.session_id=".$this->current_session." and class_sections.class_id=" . $this->db->escape($class_id) . " and class_sections.section_id=" . $this->db->escape($section_id);
 
         $query = $this->db->query($sql);
+       
         return $query->result();
     }
-
     public function get_subjectstatus($id, $subject_group_class_sections_id) {
 
         $sql = "SELECT COUNT(CASE WHEN topic.status = 0 then 1 ELSE NULL END) as 'incomplete', COUNT(CASE WHEN topic.status = 1 then 1 ELSE NULL END) as 'complete',count('*') as total FROM `lesson` inner join topic on lesson.id=topic.lesson_id WHERE lesson.subject_group_class_sections_id=" . $this->db->escape($subject_group_class_sections_id) . " and `subject_group_subject_id`=" . $this->db->escape($id);
@@ -31,7 +32,7 @@ class syllabus_model extends CI_Model {
 
     public function get_studentsyllabus($data) {
 
-        $sql = "SELECT class_sections.id as class_section_id,subject_group_class_sections.id as subject_group_class_section_id FROM `class_sections` inner join subject_group_class_sections on subject_group_class_sections.class_section_id=class_sections.id WHERE `class_id`=" . $this->db->escape($data->class_id) . " and `section_id`=" . $this->db->escape($data->section_id);
+        $sql = "SELECT class_sections.id as class_section_id,subject_group_class_sections.id as subject_group_class_section_id FROM `class_sections` inner join subject_group_class_sections on subject_group_class_sections.class_section_id=class_sections.id WHERE `subject_group_class_sections`.`session_id`=".$this->current_session." and  `class_id`=" . $this->db->escape($data->class_id) . " and `section_id`=" . $this->db->escape($data->section_id);
 
         $query = $this->db->query($sql);
         return $query->result();

@@ -47,7 +47,7 @@ if (isset($banner_images) && !empty($banner_images)) {
                                         foreach ($banner_notices as $banner_notice_key => $banner_notice_value) {
                                             ?>
                                             <li><a href="<?php echo site_url('read/' . $banner_notice_value['slug']) ?>">
-                                                    <div class="date">
+                                                    <div class="datenews">
                                                         <?php
                                                         echo date('d', strtotime($banner_notice_value['date'])) . " " . $this->lang->line(strtolower(date('F', strtotime($banner_notice_value['date'])))) . " " . date('Y', strtotime($banner_notice_value['date']));
                                                         ?>

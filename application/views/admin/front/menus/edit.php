@@ -148,13 +148,7 @@
 </div><!-- /.content-wrapper -->
 <script type="text/javascript">
     $(document).ready(function () {
-        $('#postdate').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true
-        });
-
-
-        $('.detail_popover').popover({
+    $('.detail_popover').popover({
             placement: 'right',
             trigger: 'hover',
             container: 'body',

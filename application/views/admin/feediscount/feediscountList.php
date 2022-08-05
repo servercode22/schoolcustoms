@@ -127,7 +127,7 @@
                                             </td>
 
 
-                                            <td class="mailbox-date pull-right">
+                                            <td class="mailbox-date pull-right white-space-nowrap">
                                                 <?php
                                                 if ($this->rbac->hasPrivilege('fees_discount_assign', 'can_view')) {
                                                     ?>

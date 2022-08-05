@@ -115,7 +115,7 @@ class Lessonplan_model extends MY_model {
         return $this->db->select('*')->from('topic')->where('lesson_id', $lessonid)->where('session_id', $session)->get()->result_array();
     }
 
-    public function gettopic($id = null, $session) {
+    public function gettopic($session, $id = null) {
 
         $this->db->select('topic.*,subject_groups.name as sgname,subjects.name as subname,sections.section as sname,sections.id as sectionid,subject_groups.id as subjectgroupsid,subjects.id as subjectid,class_sections.id as csectionid,classes.class as cname,classes.id as classid,lesson.name as lessonname,lesson.subject_group_class_sections_id,lesson.subject_group_subject_id')->from('topic');
 
@@ -142,7 +142,6 @@ class Lessonplan_model extends MY_model {
         } else {
             return $query->result_array();
         }
-        //echo $this->db->last_query();die;
     }
 
     public function deletetopic($id, $session) {
@@ -187,16 +186,15 @@ class Lessonplan_model extends MY_model {
 
         if (isset($data['id']) && $data['id'] > 0) {
             $this->db->where('id', $data['id']);
-            $this->db->update('subject_syllabus', $data);
-            // echo $this->db->last_query();die;
+            $this->db->update('subject_syllabus', $data);            
             $insert_id = $data['id'];
             $message = UPDATE_RECORD_CONSTANT . " On Subject Syllabus id " . $insert_id;
             $action = "Update";
             $record_id = $insert_id;
-
-            //$this->log($message, $record_id, $action);
+          
             return $record_id;
         } else {
+			
             $this->db->insert('subject_syllabus', $data);
             $insert_id = $this->db->insert_id();
             $message = INSERT_RECORD_CONSTANT . " On Subject Syllabus id " . $insert_id;
@@ -245,7 +243,7 @@ class Lessonplan_model extends MY_model {
         }
     }
 
-    public function get($id = null, $session, $subject_group_subject_id = null) {
+    public function get($session, $id = null, $subject_group_subject_id = null) {
 
         $this->db->select('lesson.*,subject_groups.name as sgname,subjects.name as subname,sections.section as sname,sections.id as sectionid,subject_groups.id as subjectgroupsid,subjects.id as subjectid,class_sections.id as csectionid,classes.class as cname,classes.id as classid')->from('lesson');
 
@@ -326,7 +324,7 @@ class Lessonplan_model extends MY_model {
             return 1;
         } else {
             $subject_teacher = $this->db->select('*')->from('subject_timetable')->where('class_id', $class_id)->where('section_id', $section_id)->where('staff_id', $staff_id)->where('subject_group_id', $subject_group_id)->where('subject_group_subject_id', $subject_group_subject_id)->get()->num_rows();
-            //echo $this->db->last_query();die;
+            
             if ($subject_teacher > 0) {
                 return 1;
             } else {
@@ -335,4 +333,46 @@ class Lessonplan_model extends MY_model {
         }
     }
 
+    public function gettopiclist($session) {
+
+       
+        $this->datatables
+            ->select('topic.*,subject_groups.name as sgname,subjects.name as subname,sections.section as sname,sections.id as sectionid,subject_groups.id as subjectgroupsid,subjects.id as subjectid,class_sections.id as csectionid,classes.class as cname,classes.id as classid,lesson.name as lessonname,lesson.subject_group_class_sections_id,lesson.subject_group_subject_id')
+            ->searchable('classes.class,sections.section,subjects.name,subject_groups.name,classes.class,lesson.name')
+            ->orderable('cname,sname,sgname,subname,lessonname," " ')
+        ->join("lesson", "lesson.id = topic.lesson_id")
+        ->join("subject_group_subjects", "subject_group_subjects.id = lesson.subject_group_subject_id")
+        ->join("subject_groups", "subject_groups.id = subject_group_subjects.subject_group_id")
+        ->join("subjects", "subjects.id = subject_group_subjects.subject_id")
+        ->join("subject_group_class_sections", "subject_group_class_sections.id = lesson.subject_group_class_sections_id", 'inner')
+        ->join("class_sections", "class_sections.id = subject_group_class_sections.class_section_id")
+        ->join("sections", "sections.id = class_sections.section_id")
+        ->join("classes", "classes.id = class_sections.class_id")
+        ->where('topic.session_id', $session)
+        ->group_by("lesson.subject_group_subject_id")
+        ->group_by("topic.lesson_id")
+        ->from('topic');
+         return $this->datatables->generate('json');
+        
+    }
+    public function getlessonlist($session, $id = null) 
+    {
+
+         $this->datatables
+            ->select('lesson.*,subject_groups.name as sgname,subjects.name as subname,sections.section as sname,sections.id as sectionid,subject_groups.id as subjectgroupsid,subjects.id as subjectid,class_sections.id as csectionid,classes.class as cname,classes.id as classid')
+            ->searchable('classes.class,sections.section,subject_groups.name,subjects.name,lesson.name')
+            ->orderable('classes.class,sections.section,subject_groups.name,subjects.name,lesson.name')
+        ->join("subject_group_subjects", "subject_group_subjects.id = lesson.subject_group_subject_id")
+        ->join("subject_groups", "subject_groups.id = subject_group_subjects.subject_group_id")
+        ->join("subjects", "subjects.id = subject_group_subjects.subject_id")
+        ->join("subject_group_class_sections", "subject_group_class_sections.id = lesson.subject_group_class_sections_id", 'inner')
+        ->join("class_sections", "class_sections.id = subject_group_class_sections.class_section_id")
+        ->join("sections", "sections.id = class_sections.section_id")
+        ->join("classes", "classes.id = class_sections.class_id")
+        ->where('lesson.session_id', $session)
+        ->group_by("lesson.subject_group_subject_id")
+        ->group_by("lesson.subject_group_class_sections_id")
+        ->from('lesson');
+         return $this->datatables->generate('json');
+    }
 }

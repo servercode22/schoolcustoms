@@ -257,8 +257,8 @@ class Teacher extends Student_Controller {
 
     public function rating() {
 
-        $this->form_validation->set_rules('comment', 'Comment', 'required');
-        $this->form_validation->set_rules('rate', 'Rating', 'required');
+        $this->form_validation->set_rules('comment', $this->lang->line('comment'), 'required');
+        $this->form_validation->set_rules('rate', $this->lang->line('rating'), 'required');
 
         if ($this->form_validation->run() == false) {
             $msg = array(

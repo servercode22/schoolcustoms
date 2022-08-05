@@ -19,12 +19,12 @@ class Feemaster extends Admin_Controller {
         $data['feegroupList'] = $feegroup;
         $feetype = $this->feetype_model->get();
         $data['feetypeList'] = $feetype;
-
+ 
         $feegroup_result = $this->feesessiongroup_model->getFeesByGroup();
         $data['feemasterList'] = $feegroup_result;
 
         $this->form_validation->set_rules('feetype_id', $this->lang->line('feetype'), 'required');
-        $this->form_validation->set_rules('amount', $this->lang->line('amount'), 'required');
+        $this->form_validation->set_rules('amount', $this->lang->line('amount'), 'required|numeric');
 
         $this->form_validation->set_rules(
                 'fee_groups_id', $this->lang->line('feegroup'), array(
@@ -32,6 +32,16 @@ class Feemaster extends Admin_Controller {
             array('check_exists', array($this->feesessiongroup_model, 'valid_check_exists'))
                 )
         );
+
+        if(isset($_POST['account_type'] ) && $_POST['account_type'] =='fix'){
+            $this->form_validation->set_rules('fine_amount', $this->lang->line('fine') . " " . $this->lang->line('amount'), 'required|numeric');
+            $this->form_validation->set_rules('due_date', $this->lang->line('due_date'), 'trim|required|xss_clean');
+
+        }elseif(isset($_POST['account_type']) && ($_POST['account_type']=='percentage')){
+            $this->form_validation->set_rules('fine_percentage', $this->lang->line('percentage'), 'required|numeric');
+            $this->form_validation->set_rules('fine_amount', $this->lang->line('fine') . " " . $this->lang->line('amount'), 'required|numeric');
+             $this->form_validation->set_rules('due_date', $this->lang->line('due_date'), 'trim|required|xss_clean');
+        }
 
         if ($this->form_validation->run() == FALSE) {
             
@@ -47,13 +57,13 @@ class Feemaster extends Admin_Controller {
                 'fine_type' => $this->input->post('account_type'),
                 'fine_percentage' => $this->input->post('fine_percentage'),
                 'fine_amount' => $this->input->post('fine_amount'),
-            );
+            ); 
 
             $feegroup_result = $this->feesessiongroup_model->add($insert_array);
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('success_message') . '</div>');
             redirect('admin/feemaster/index');
         }
-
+ 
         $this->load->view('layout/header', $data);
         $this->load->view('admin/feemaster/feemasterList', $data);
         $this->load->view('layout/footer', $data);
@@ -98,6 +108,15 @@ class Feemaster extends Admin_Controller {
                 )
         );
 
+        if(isset($_POST['account_type'] ) && $_POST['account_type'] =='fix'){
+            $this->form_validation->set_rules('fine_amount', $this->lang->line('fine') . " " . $this->lang->line('amount'), 'required|numeric');
+            $this->form_validation->set_rules('due_date', $this->lang->line('due_date'), 'trim|required|xss_clean');
+
+        }elseif(isset($_POST['account_type']) && ($_POST['account_type']=='percentage')){
+            $this->form_validation->set_rules('fine_percentage', $this->lang->line('percentage'), 'required|numeric');
+            $this->form_validation->set_rules('fine_amount', $this->lang->line('fine') . " " . $this->lang->line('amount'), 'required|numeric');
+             $this->form_validation->set_rules('due_date', $this->lang->line('due_date'), 'trim|required|xss_clean');
+        }
         if ($this->form_validation->run() == FALSE) {
             $this->load->view('layout/header', $data);
             $this->load->view('admin/feemaster/feemasterEdit', $data);
@@ -112,6 +131,7 @@ class Feemaster extends Admin_Controller {
                 'fine_percentage' => $this->input->post('fine_percentage'),
                 'fine_amount' => $this->input->post('fine_amount'),
             );
+            
             $feegroup_result = $this->feegrouptype_model->add($insert_array);
 
             $this->session->set_flashdata('msg', '<div class="alert alert-success text-left">' . $this->lang->line('update_message') . '</div>');

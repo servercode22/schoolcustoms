@@ -100,8 +100,6 @@
                         <div class="box-body">
                             <?php
                             if ($this->session->flashdata('msg')) {
-
-
                                 echo $this->session->flashdata('msg');
                             }
                             ?>
@@ -156,9 +154,7 @@
                                 </div>   
                             </div>
                         </div>
-
                     </form>
-
                     <?php
                     if (isset($resultlist)) {
                         ?>
@@ -233,18 +229,19 @@
                                                             ?>
                                                             <th><?php echo $this->lang->line('date'); ?></th>
                                                             <?php
-                                                        }
+                                                        } 
                                                         ?>
                                                         <th><?php echo $this->lang->line('roll_no'); ?></th>
                                                         <th><?php echo $this->lang->line('name'); ?></th>
                                                         <th class=""><?php echo $this->lang->line('attendance'); ?></th>
-                                                        <th><?php echo $this->lang->line('note'); ?></th>
+                                                        <th class="noteinput"><?php echo $this->lang->line('note'); ?></th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <?php
                                                     $row_count = 1;
                                                     foreach ($resultlist as $key => $value) {
+
                                                         ?>
                                                         <tr>
                                                             <td>
@@ -268,13 +265,15 @@
                                                                 </td>
                                                                 <?php
                                                             }
-                                                            ?>
+                                                             ?>
                                                             <td>
             <?php echo $value['roll_no']; ?>
                                                             </td>
 
                                                             <td>
-            <?php echo $value['firstname'] . " " . $value['lastname']; ?>
+
+            <?php 
+            echo $this->customlib->getFullName($value['firstname'],$value['middlename'],$value['lastname'],$sch_setting->middlename,$sch_setting->lastname);  ?>
                                                             </td>
                                                             <td>
                                                                 <?php
@@ -324,10 +323,10 @@
 
                                                             </td>
                                                             <?php if ($date == 'xxx') { ?> 
-                                                                <td><input type="text" name="remark<?php echo $value["student_session_id"] ?>" ></td>
+                                                                <td class="text-right"><input type="text" class="noteinput" name="remark<?php echo $value["student_session_id"] ?>" ></td>
             <?php } else { ?>
 
-                                                                <td><input type="text" name="remark<?php echo $value["student_session_id"] ?>" value="<?php echo $value["remark"]; ?>" ></td>
+                                                                <td class="text-right"><input type="text" class="noteinput" name="remark<?php echo $value["student_session_id"] ?>" value="<?php echo $value["remark"]; ?>" ></td>
                                                         <?php } ?>
                                                         </tr>
                                                         <?php
@@ -341,7 +340,7 @@
                                     <?php
                                 } else {
                                     ?>
-                                    <div class="alert alert-info">No student admitted in this Class-Section</div>
+                                    <div class="alert alert-info"><?php echo $this->lang->line('admited_alert'); ?></div>
                                     <?php
                                 }
                                 ?>
@@ -472,11 +471,11 @@
                         init();
                     });
                 });
-
+ 
                 $('#checkbox1').change(function () {
 
                     if (this.checked) {
-                        var returnVal = confirm("Are you sure?");
+                        var returnVal = confirm("<?php echo $this->lang->line('are_you_sure'); ?>");
                         $(this).prop("checked", returnVal);
 
                         $("input[type=radio]").attr('disabled', true);

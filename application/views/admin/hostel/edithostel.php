@@ -172,14 +172,7 @@
         </div>   <!-- /.row -->
     </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
-<script type="text/javascript">
-    $(document).ready(function () {
-        $('#postdate').datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true
-        });
-    });
-</script>
+
 <script>
     $(document).ready(function () {
         $('.detail_popover').popover({

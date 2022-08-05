@@ -53,8 +53,6 @@
             </div>
         </div>
     </section>
-
-
 </div>
 
 <div class="modal fade syllbus" id="assignsyllabus"  role="dialog" aria-labelledby="evaluation" style="padding-left: 0 !important">
@@ -157,7 +155,7 @@
                                             <label for="pwd"><?php echo $this->lang->line('lecture_youtube_url'); ?></label>
                                             <input type="text" id="lacture_youtube_url" name="lacture_youtube_url" class="form-control">
                                         </div>
-                                    </div>
+                                    </div> 
                                     <div class="col-lg-4 col-md-4 col-sm-6">
                                         <div class="form-group">
                                             <label for="pwd"><?php echo $this->lang->line('lecture_video'); ?></label>
@@ -269,6 +267,7 @@
     }
 </script>
 <script>
+    CKEDITOR.env.isCompatible = true;
     function run_video(lacture_youtube_url) {
         $('#lacture_youtube_modal').modal('show');
         var str = lacture_youtube_url;
@@ -300,7 +299,6 @@
         $.ajax({
             url: "<?php echo site_url("admin/syllabus/getsubject_syllabus/") ?>" + id,
             type: "POST",
-            //data: new FormData(this),
             dataType: 'json',
             contentType: false,
             cache: false,
@@ -371,16 +369,13 @@
 </script>
 
 <script>
-    function add_syllabus(subject_group_subject_id, time_from, time_to, new_date, subject_group_class_section_id) {
+    function add_syllabus(subject_group_subject_id, time_from, time_to, new_date, subject_group_class_section_id, staff_id) {
         $('#add_assignsyllabus').modal('show');
         $('#title').html('<?php echo $this->lang->line('add') . " " . $this->lang->line('lesson_plan') ?>');
-
         $('#time_from').val(time_from);
         $('#time_to').val(time_to);
         $('#date').val(new_date);
-
         $('#subject_group_subject_id').val(subject_group_subject_id);
-
         $('#teaching_method').val('');
         $('#general_objectives').html('');
         $('#previous_knowledge').html('');
@@ -388,16 +383,17 @@
         $('#subject_syllabusid').val('');
         $('#topicid').html('');
         $('#lacture_youtube_url').val('');
-        $("#lacture_video").attr("data-default-file", "http://www.adamanthr.com/wp-content/uploads/2016/04/dummy-man-570x570.png");
+        $('#created_for').val(staff_id);
+
         $(document).on('focus', '.time', function () {
             var $this = $(this);
             $this.datetimepicker({
-                format: 'LT'
+                format: 'LT',
+                 lang:'en'
             });
         });
 
         get_lesson(subject_group_subject_id, '', subject_group_class_section_id);
-
     }
 
     function get_lesson(subject_group_subject_id, lesson_id, subject_group_class_section_id) {
@@ -546,7 +542,6 @@
             {
 
                 $('label.total').html("").html("<?php echo $this->lang->line('total_record'); ?> :" + data.count).css("display", "block");
-
                 $('.imgModal-body #media_div').html("").html(data.page);
                 $('.imgModal-body #pagination').html("").html(data.pagination);
                 $('.loading-overlay').css("display", "none");
@@ -577,8 +572,6 @@
         var content_type = $('div#media_div').find('.fadeoverlay.active').find('img').data('content_type');
         var vid_url = $('div#media_div').find('.fadeoverlay.active').find('img').data('vid_url');
         var content = "";
-
-
         if (typeof content_html !== "undefined") {
             if (is_image === 1) {
                 content = '<img src="' + content_html + '">';
@@ -586,7 +579,6 @@
             InsertHTML(content);
             $('#myimgModal').modal('hide');
         }
-
     });
 
 
@@ -646,7 +638,7 @@
         $("form#getTimetable").submit(function (e) {
 
             e.preventDefault(); // avoid to execute the actual submit of the form.
-            var staff_id = $('#teacher').val();
+            var staff_id = $('#teacher').val();			
             $('#created_for').val(staff_id);
             if (staff_id !== '') {
                 get_weekdates('current_week', '<?php echo $this_week_start; ?>', staff_id);

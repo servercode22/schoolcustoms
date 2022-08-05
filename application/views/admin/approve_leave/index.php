@@ -69,7 +69,7 @@
                         </div>
 
                     </div>
-
+ 
 
                     <div class="box-body table-responsive">
                         <div class="download_label"> <?php echo $this->lang->line('approve') . " " . $this->lang->line('leave') . " " . $this->lang->line('list'); ?> </div>
@@ -94,7 +94,7 @@
                                     foreach ($results as $value) {
                                         ?>
                                         <tr>
-                                            <td><?php echo $value['firstname'] . " " . $value['lastname']; ?></td>
+                                            <td><?php echo $this->customlib->getFullName($value['firstname'],$value['middlename'],$value['lastname'],$sch_setting->middlename,$sch_setting->lastname); ?></td>
                                             <td><?php echo $value['class']; ?></td>
                                             <td><?php echo $value['section']; ?></td>
                                             <td><?php echo date($this->customlib->getSchoolDateFormat(), strtotime($value['apply_date'])); ?></td>
@@ -111,7 +111,7 @@
                                                 ?>
                                             </td>
                                             <td><?php echo $value['staff_name'] . " " . $value['surname']; ?></td>
-                                            <td class="text-right">
+                                            <td class="text-right white-space-nowrap">
                                                 <?php
                                                 if ($value['status'] == 1) {
                                                     ?>
@@ -172,7 +172,7 @@
                              <!--    <input type="hidden" id="leave_id"  name="leave_id"> -->
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="pwd"><?php echo $this->lang->line('class'); ?></label>
+                                        <label for="pwd"><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
                                         <select type="text" onchange="get_section(this.value)" name="class" id="class" class="form-control ">
                                             <option value="" ><?php echo $this->lang->line('select'); ?></option>
                                             <?php foreach ($classlist as $value) {
@@ -188,7 +188,7 @@
                                 </div>
                                 <div class="col-sm-4">
                                     <div class="form-group">
-                                        <label for="pwd"><?php echo $this->lang->line('section'); ?></label>
+                                        <label for="pwd"><?php echo $this->lang->line('section'); ?></label><small class="req"> *</small>
                                         <select type="text" name="section" id="section_id" onchange="get_student(this.value)" class="form-control ">
 
                                         </select>
@@ -430,9 +430,6 @@
             url: "<?php echo site_url("admin/approve_leave/searchByClassSection") ?>/" + class_id + "/" + student_id,
             type: "POST",
             data: {section_id: id},
-            //contentType: false,
-            //cache: false,
-            //processData: true,
             success: function (res)
             {
 

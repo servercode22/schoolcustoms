@@ -31,8 +31,6 @@
                                     ?>
                                     <script>
                                         $(document).ready(function () {
-                                            // var msg='<?php echo $msg; ?>';
-                                            //alert(msg);
 
                                         });
                                     </script>

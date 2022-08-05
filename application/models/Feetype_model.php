@@ -69,18 +69,7 @@ class Feetype_model extends MY_Model {
             $action = "Update";
             $record_id = $data['id'];
             $this->log($message, $record_id, $action);
-            //======================Code End==============================
-
-            $this->db->trans_complete(); # Completing transaction
-            /* Optional */
-
-            if ($this->db->trans_status() === false) {
-                # Something went wrong.
-                $this->db->trans_rollback();
-                return false;
-            } else {
-                //return $return_value;
-            }
+            
         } else {
             $this->db->insert('feetype', $data);
             $id = $this->db->insert_id();
@@ -88,8 +77,9 @@ class Feetype_model extends MY_Model {
             $action = "Insert";
             $record_id = $id;
             $this->log($message, $record_id, $action);
-            //echo $this->db->last_query();die;
-            //======================Code End==============================
+            
+        }
+		//======================Code End==============================
 
             $this->db->trans_complete(); # Completing transaction
             /* Optional */
@@ -99,11 +89,8 @@ class Feetype_model extends MY_Model {
                 $this->db->trans_rollback();
                 return false;
             } else {
-                //return $return_value;
-            }
-            return $id;
-            ;
-        }
+                return $id;
+            }            
     }
 
     public function check_exists($str) {

@@ -37,11 +37,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                         </div>
                         <div class="mailbox-messages table-responsive">
-                            <div class="download_label"><?php echo $this->lang->line('book_list'); ?></div>
-                            <table id="" class="table table-striped table-bordered table-hover example" cellspacing="0" width="100%">
+                            <table class="table table-striped table-bordered table-hover book-list" data-export-title="<?php echo $this->lang->line('book_list'); ?>">
                                 <thead>
                                     <tr>
                                         <th><?php echo $this->lang->line('book_title'); ?></th>
+                                        <th><?php echo $this->lang->line('description'); ?></th>
                                         <th><?php echo $this->lang->line('book_no'); ?></th>
                                         <th><?php echo $this->lang->line('isbn_no'); ?></th>
                                         <th><?php echo $this->lang->line('publisher'); ?>
@@ -54,63 +54,10 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <th><?php echo $this->lang->line('available'); ?></th>
                                         <th><?php echo $this->lang->line('bookprice'); ?></th>
                                         <th><?php echo $this->lang->line('postdate'); ?></th>
-                                        <th class="no-print text text-right"><?php echo $this->lang->line('action'); ?></th>
+                                        <th class="no-print text text-right noExport "><?php echo $this->lang->line('action'); ?></th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    $count = 1;
-                                    if (!empty($listbook)) {
-                                        foreach ($listbook as $book) {
-                                            ?>
-                                            <tr>
-                                                <td class="mailbox-name">
-                                                    <a href="#" data-toggle="popover" class="detail_popover"><?php echo $book['book_title'] ?></a>
-                                                    <div class="fee_detail_popover" style="display: none">
-                                                        <?php
-                                                        if ($book['description'] == "") {
-                                                            ?>
-                                                            <p class="text text-danger"><?php echo $this->lang->line('no_description'); ?></p>
-                                                            <?php
-                                                        } else {
-                                                            ?>
-                                                            <p class="text text-info"><?php echo $book['description']; ?></p>
-                                                            <?php
-                                                        }
-                                                        ?>
-                                                    </div>
-                                                </td>
-                                                <td class="mailbox-name"> <?php echo $book['book_no'] ?></td>
-                                                <td class="mailbox-name"> <?php echo $book['isbn_no'] ?></td>
-                                                <td class="mailbox-name"> <?php echo $book['publish'] ?></td>
-                                                <td class="mailbox-name"> <?php echo $book['author'] ?></td>
-                                                <td class="mailbox-name"><?php echo $book['subject'] ?></td>
-                                                <td class="mailbox-name"><?php echo $book['rack_no'] ?></td>
-                                                <td class="mailbox-name"> <?php echo $book['qty'] ?></td>
-                                                <td class="mailbox-name"> <?php echo $book['qty'] - $book['total_issue'] ?></td>
-                                                <td class="mailbox-name"> <?php echo ($currency_symbol . $book['perunitcost']); ?></td>
-                                                <td class="mailbox-name"> <?php
-                                                    if ($book['postdate'] != '' && $book['postdate'] != '0000-00-00') {
-                                                        echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($book['postdate']));
-                                                    }
-                                                    ?></td>
-                                                <td class="mailbox-date no-print text text-right">
-                                                    <?php if ($this->rbac->hasPrivilege('books', 'can_edit')) { ?> 
-                                                        <a data-placement="left" href="<?php echo base_url(); ?>admin/book/edit/<?php echo $book['id'] ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
-                                                            <i class="fa fa-pencil"></i>
-                                                        </a>
-                                                    <?php }if ($this->rbac->hasPrivilege('books', 'can_delete')) { ?> 
-                                                        <a data-placement="left" href="<?php echo base_url(); ?>admin/book/delete/<?php echo $book['id'] ?>"class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
-                                                            <i class="fa fa-remove"></i>
-                                                        </a>
-                                                    <?php } ?>
-                                                </td>
-                                            </tr>
-                                            <?php
-                                            $count++;
-                                        }
-                                    }
-                                    ?>
                                 </tbody>
                             </table><!-- /.table -->
                         </div><!-- /.mail-box-messages -->
@@ -136,22 +83,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         </div>   <!-- /.row -->
     </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
-<script type="text/javascript">
-    $(document).ready(function () {
-        var date_format = '<?php echo $result = strtr($this->customlib->getSchoolDateFormat(), ['d' => 'dd', 'm' => 'mm', 'Y' => 'yyyy',]) ?>';
-        $('#postdate').datepicker({
-            // format: "dd-mm-yyyy",
-            format: date_format,
-            autoclose: true
-        });
-        $("#btnreset").click(function () {
-            /* Single line Reset function executes on click of Reset Button */
-            $("#form1")[0].reset();
-        });
-
-    });
-</script>
-
 
 
 <script type="text/javascript">
@@ -203,15 +134,17 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
     });
 
 
+   
+</script>
+<script>
+$(document).ready(function() {
+     emptyDatatable('book-list','data');
+});
+
+    ( function ( $ ) {
+    'use strict';
     $(document).ready(function () {
-        $('.detail_popover').popover({
-            placement: 'right',
-            trigger: 'hover',
-            container: 'body',
-            html: true,
-            content: function () {
-                return $(this).closest('td').find('.fee_detail_popover').html();
-            }
-        });
+        initDatatable('book-list','admin/book/getbooklist',[],[],100);
     });
+} ( jQuery ) )
 </script>

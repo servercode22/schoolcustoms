@@ -89,8 +89,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
 
-                    <form role="form" action="<?php echo site_url('report/bookduereport') ?>" method="post" class="">
-                        <div class="box-body row">
+                    <form role="form" action="<?php echo site_url('report/getbookissueparameter') ?>" method="post" class="" id="reportform">
+                        <div class="box-body row"  >
 
                             <?php echo $this->customlib->getCSRF(); ?>
 
@@ -149,10 +149,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                             <h3 class="box-title titlefix"><i class="fa fa-money"></i> <?php echo $this->lang->line('book') . " " . $this->lang->line('due') . " " . $this->lang->line('report'); ?></h3>
                         </div>
                         <div class="box-body table-responsive">
-                            <div class="download_label"><?php echo $this->lang->line('book') . " " . $this->lang->line('due') . " " . $this->lang->line('report') . "<br>";
+                            <div class="download_label"><?php echo $this->lang->line('book') . " " . $this->lang->line('due') . " " . $this->lang->line('report');
                                             $this->customlib->get_postmessage();
                                             ?> </div>
-                            <table class="table table-striped table-bordered table-hover example">
+
+                             <table class="table table-striped table-bordered table-hover record-list" data-export-title="<?php echo $this->lang->line('book') . " " . $this->lang->line('due') . " " . $this->lang->line('report');
+                                            $this->customlib->get_postmessage();
+                                            ?> ">
                                 <thead>
                                     <tr>
 
@@ -169,52 +172,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php
-                                    if (empty($issued_books)) {
-                                        ?>
-                                        <?php
-                                    } else {
-                                        $count = 1;
-                                        foreach ($issued_books as $book) {
-                                            ?>
-                                            <tr   <?php if (strtotime($book['return_date']) < strtotime(date('Y-m-d'))) { ?>class="danger" <?php } ?>>
-                                                <td class="mailbox-name">
-                                                    <?php echo $book['book_title'] ?>
-                                                </td>
-                                                <td class="mailbox-name">
-                                                    <?php echo $book['book_no'] ?>
-                                                </td>
-                                                <td class="mailbox-name">
-                                                    <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($book['issue_date'])) ?></td>
-        <?php ?>
-                                                <td class="mailbox-name">
-                                                    <?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($book['duereturn_date'])) ?></td>
-
-                                                <td >
-
-                                                    <?php echo $book['members_id']; ?>
-                                                </td>
-                                                <td><?php echo $book['library_card_no']; ?></td>
-                                                <td><?php
-                                                    if ($book['admission'] != 0) {
-                                                        echo $book['admission'];
-                                                    }
-                                                    ?></td>
-                                                <td >
-        <?php echo ucwords($book['fname']) . " " . ucwords($book['lname']); ?>
-
-                                                </td>
-                                                <td >
-                                            <?php echo ucwords($book['member_type']); ?>
-
-                                                </td>
-
-                                            </tr>
-        <?php
-        $count++;
-    }
-}
-?>
+                                   
                                 </tbody>
                             </table>
                         </div>
@@ -238,4 +196,52 @@ if ($search_type == 'period') {
 }
 ?>
 
+</script>
+<script>
+$(document).ready(function() {
+     initDatatable('record-list','report/dtbookduereportlist',[],[],100);
+
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+$(document).on('submit','#reportform',function(e){
+    e.preventDefault(); // avoid to execute the actual submit of the form.
+    var $this = $(this).find("button[type=submit]:focus");  
+    var form = $(this);
+    var url = form.attr('action');
+    var form_data = form.serializeArray();
+    $.ajax({
+           url: url,
+           type: "POST",
+           dataType:'JSON',
+           data: form_data, // serializes the form's elements.
+              beforeSend: function () {
+                $('[id^=error]').html("");
+                $this.button('loading');
+               },
+              success: function(response) { // your success handler
+                
+                if(!response.status){
+                    $.each(response.error, function(key, value) {
+                    $('#error_' + key).html(value);
+                    });
+                }else{
+                 
+                   initDatatable('record-list','report/dtbookduereportlist',response.params);
+                }
+              },
+             error: function() { // your error handler
+                 $this.button('reset');
+             },
+             complete: function() {
+               $this.button('reset');
+             }
+         });
+
+        });
+
+    });
+   
 </script>

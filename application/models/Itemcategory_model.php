@@ -1,11 +1,14 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
-class Itemcategory_model extends MY_Model {
+class Itemcategory_model extends MY_Model
+{
 
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
     }
 
@@ -15,7 +18,8 @@ class Itemcategory_model extends MY_Model {
      * @param int $id
      * @return mixed
      */
-    public function get($id = null) {
+    public function get($id = null)
+    {
         $this->db->select()->from('item_category');
         if ($id != null) {
             $this->db->where('id', $id);
@@ -34,14 +38,15 @@ class Itemcategory_model extends MY_Model {
      * This function will delete the record based on the id
      * @param $id
      */
-    public function remove($id) {
+    public function remove($id)
+    {
         $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
         $this->db->where('id', $id);
         $this->db->delete('item_category');
-        $message = DELETE_RECORD_CONSTANT . " On item category id " . $id;
-        $action = "Delete";
+        $message   = DELETE_RECORD_CONSTANT . " On item category id " . $id;
+        $action    = "Delete";
         $record_id = $id;
         $this->log($message, $record_id, $action);
         //======================Code End==============================
@@ -62,15 +67,16 @@ class Itemcategory_model extends MY_Model {
      * else an insert. One function doing both add and edit.
      * @param $data
      */
-    public function add($data) {
+    public function add($data)
+    {
         $this->db->trans_start(); # Starting Transaction
         $this->db->trans_strict(false); # See Note 01. If you wish can remove as well
         //=======================Code Start===========================
         if (isset($data['id'])) {
             $this->db->where('id', $data['id']);
             $this->db->update('item_category', $data);
-            $message = UPDATE_RECORD_CONSTANT . " On  item category id " . $data['id'];
-            $action = "Update";
+            $message   = UPDATE_RECORD_CONSTANT . " On  item category id " . $data['id'];
+            $action    = "Update";
             $record_id = $data['id'];
             $this->log($message, $record_id, $action);
             //======================Code End==============================
@@ -88,11 +94,10 @@ class Itemcategory_model extends MY_Model {
         } else {
             $this->db->insert('item_category', $data);
             $insert_id = $this->db->insert_id();
-            $message = INSERT_RECORD_CONSTANT . " On item category id " . $insert_id;
-            $action = "Insert";
+            $message   = INSERT_RECORD_CONSTANT . " On item category id " . $insert_id;
+            $action    = "Insert";
             $record_id = $insert_id;
             $this->log($message, $record_id, $action);
-            //echo $this->db->last_query();die;
             //======================Code End==============================
 
             $this->db->trans_complete(); # Completing transaction

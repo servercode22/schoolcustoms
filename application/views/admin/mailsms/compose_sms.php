@@ -1,26 +1,3 @@
-<style type="text/css">
-    .scrollit {
-        height:210px;
-        overflow-y:scroll;
-        list-style-type: none;
-    }
-    .dual-list .list-group {
-        margin-top: 8px;
-    }
-
-    .list-left li, .list-right li {
-        cursor: pointer;
-    }
-
-    .list-arrows {
-        padding-top: 100px;
-    }
-
-    .list-arrows button {
-        margin-bottom: 20px;
-    }
-</style>
-
 <link rel="stylesheet" href="<?php echo base_url(); ?>backend/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.min.css">
 <script src="<?php echo base_url(); ?>backend/plugins/bootstrap-wysihtml5/bootstrap3-wysihtml5.all.min.js"></script>
 <div class="content-wrapper">
@@ -68,6 +45,10 @@
                                                 <span class="text-danger"><?php echo form_error('message'); ?></span>
                                             </div>
                                             <div class="form-group">
+                                                <label><?php echo $this->lang->line('template_id'); ?>  </label> (<?php echo $this->lang->line('this_field_is_reqiured_only_for_indian_sms_gateway');?>) 
+                                                <input type="text" name="group_template_id" id="group_template_id" class="form-control" autocomplete="off">
+                                            </div>
+                                            <div class="form-group">
                                                 <label><?php echo $this->lang->line('message'); ?></label><small class="req"> *</small>
                                                 <textarea id="group_msg_text" name="group_message" class="form-control compose-textarea" rows="12"><?php echo set_value('message'); ?></textarea>
                                                 <span class="text-muted tot_count_group_msg_text pull-right word_counter"><?php echo $this->lang->line('character') . " " . $this->lang->line('count') ?>: 0</span>
@@ -82,9 +63,14 @@
                                                     <div class="checkbox mt0">
                                                         <label><input type="checkbox" name="user[]" value="student"> <b><?php echo $this->lang->line('students'); ?></b> </label>
                                                     </div>
-                                                    <div class="checkbox">
+                                                    <?php if($sch_setting->guardian_name){
+                                                        ?>
+                                                         <div class="checkbox">
                                                         <label><input type="checkbox" name="user[]" value="parent"> <b><?php echo $this->lang->line('guardians'); ?></b></label>
                                                     </div>
+                                                        <?php
+                                                    }?>
+                                                   
                                                     <?php
                                                     foreach ($roles as $role_key => $role_value) {
                                                         ?>
@@ -144,9 +130,14 @@
                                             </div>
 
                                             <div class="form-group">
+                                                <label><?php echo $this->lang->line('template_id'); ?> </label> (<?php echo $this->lang->line('this_field_is_reqiured_only_for_indian_sms_gateway');?>)
+                                                <input type="text" name="individual_template_id" id="individual_template_id" class="form-control" autocomplete="off">
+                                            </div>
+
+                                            <div class="form-group">
                                                 <label><?php echo $this->lang->line('message'); ?></label><small class="req"> *</small>
                                                 <textarea id="individual_msg_text" name="individual_message" class="form-control compose-textarea" rows="12"><?php echo set_value('message'); ?></textarea>
-                                                <span class="text-muted tot_count_individual_msg_text pull-right word_counter">Character Count: 0</span>
+                                                <span class="text-muted tot_count_individual_msg_text pull-right word_counter"><?php echo $this->lang->line('character') . " " . $this->lang->line('count') ?>: 0</span>
                                             </div>
 
                                         </div>
@@ -165,8 +156,13 @@
                                                         <ul class="dropdown-menu" role="menu" style="">
 
                                                             <li data-value="student"><a href="#" ><?php echo $this->lang->line('students'); ?></a></li>
-                                                            <li data-value="parent"><a href="#"><?php echo $this->lang->line('guardians'); ?></a></li>
+                                                            <?php if($sch_setting->guardian_name){
+                                                                ?>
+                                                                 <li data-value="parent"><a href="#"><?php echo $this->lang->line('guardians'); ?></a></li>
                                                             <li data-value="student_guardian"><a href="#" ><?php echo $this->lang->line('students') . " - " . $this->lang->line('guardians'); ?></a></li>
+                                                                <?php
+                                                            }?>
+                                                           
                                                             <?php
                                                             foreach ($roles as $role_key => $role_value) {
                                                                 ?>
@@ -180,7 +176,7 @@
 
                                                     <div id="suggesstion-box"></div>
                                                     <span class="input-group-btn">
-                                                        <button  class="btn btn-primary btn-searchsm add-btn" type="button">Add</button>
+                                                        <button  class="btn btn-primary btn-searchsm add-btn" type="button"><?php echo $this->lang->line('add'); ?></button>
                                                     </span>
                                                 </div>
                                             </div>
@@ -237,10 +233,15 @@
 
                                                 <span class="text-danger"><?php echo form_error('message'); ?></span>
                                             </div>
+
+                                            <div class="form-group">
+                                                <label><?php echo $this->lang->line('template_id'); ?></label> (<?php echo $this->lang->line('this_field_is_reqiured_only_for_indian_sms_gateway');?>)
+                                                <input type="text" name="class_template_id" id="class_template_id" class="form-control" autocomplete="off">
+                                            </div>
                                             <div class="form-group">
                                                 <label><?php echo $this->lang->line('message'); ?></label><small class="req"> *</small>
                                                 <textarea id="class_msg_text" name="class_message" class="form-control compose-textarea" rows="12"><?php echo set_value('message'); ?></textarea>
-                                                <span class="text-muted tot_count_class_msg_text pull-right word_counter">Character Count: 0</span>
+                                                <span class="text-muted tot_count_class_msg_text pull-right word_counter"><?php echo $this->lang->line('character') . " " . $this->lang->line('count') ?>: 0</span>
                                             </div>
 
                                         </div>
@@ -308,7 +309,10 @@
 
                                                 <span class="text-danger"><?php echo form_error('message'); ?></span>
                                             </div>
-
+                                             <div class="form-group">
+                                                <label><?php echo $this->lang->line('template_id'); ?></label> (<?php echo $this->lang->line('this_field_is_reqiured_only_for_indian_sms_gateway');?>)
+                                                <input type="text" name="birthday_template_id" id="birthday_template_id" class="form-control" autocomplete="off">
+                                            </div>
                                             <div class="form-group">
                                                 <label><?php echo $this->lang->line('message'); ?></label><small class="req"> *</small>
 
@@ -328,7 +332,7 @@
 
                                                     <?php
                                                     if (!empty($birthDaysList)) {
-                                                        // print_r($birthDaysList['students']);
+                                                        
 
                                                         if (isset($birthDaysList['students'])) {
                                                             ?>
@@ -450,13 +454,13 @@
                                     var app_key = obj.app_key;
                                     var email = obj.email;
                                     var contact = obj.mobileno;
-                                    var name = obj.firstname + " " + obj.lastname + "(" + obj.admission_no + ")";
+                                    var name = obj.fullname +  "(" + obj.admission_no + ")";
                                 } else if (category_selected == "student_guardian") {
                                     var app_key = '';
                                     var email = obj.email;
                                     var guardian_email = obj.guardian_email;
                                     var contact = obj.mobileno;
-                                    var name = obj.firstname + " " + obj.lastname + "(" + obj.admission_no + ")";
+                                    var name = obj.fullname  + "(" + obj.admission_no + ")";
                                 } else if (category_selected == "parent") {
                                     if (obj.parent_app_key == null) {
                                         obj.app_key = "";
@@ -872,7 +876,7 @@
     $(document).on('keypress keyup keydown paste change focus blur', '.compose-textarea', function (event) {
 
         var total_length = checkTextAreaMaxLength(this, event);
-        $(this).next('span.word_counter').html("Character Count: " + total_length)
+        $(this).next('span.word_counter').html("<?php echo $this->lang->line('character') . " " . $this->lang->line('count') ?>: " + total_length)
 
 
     });

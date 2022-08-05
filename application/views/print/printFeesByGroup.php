@@ -218,7 +218,7 @@
                                 ?>
                             </div>
 
-                        </div>
+                        </div> 
                         <?php
                         if ($settinglist[0]['is_duplicate_fees_invoice']) {
                             ?>
@@ -234,7 +234,9 @@
                             <div class="col-xs-6 text-left">
                                 <br/>
                                 <address>
-                                    <strong><?php echo $feeList->firstname . " " . $feeList->lastname . " (" . $feeList->admission_no . ")"; ?></strong><br>
+                                    <strong><?php
+                                   echo $this->customlib->getFullName($feeList->firstname,$feeList->middlename,$feeList->lastname,$sch_setting->middlename,$sch_setting->lastname);
+                                      ?></strong><?php echo " (".$feeList->admission_no.")"; ?> <br>
 
                                     <?php echo $this->lang->line('father_name'); ?>: <?php echo $feeList->father_name; ?><br>
                                     <?php echo $this->lang->line('class'); ?>: <?php echo $feeList->class . " (" . $feeList->section . ")"; ?>
@@ -243,7 +245,7 @@
                             <div class="col-xs-6 text-right">
                                 <br/>
                                 <address>
-                                    <strong>Date: <?php
+                                    <strong><?php echo $this->lang->line('date') ; ?>: <?php
                                         $date = date('d-m-Y');
 
                                         echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($date));

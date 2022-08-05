@@ -1,7 +1,7 @@
 <?php
 $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 ?>
-<div class="content-wrapper" style="min-height: 946px;">
+<div class="content-wrapper">
     <section class="content-header">
         <h1>
             <i class="fa fa-money"></i> <?php echo $this->lang->line('fees_collection'); ?></h1>
@@ -24,15 +24,15 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 <form role="form" action="<?php echo site_url('studentfee/searchpayment') ?>" method="post" class="form-inline">
                                     <?php echo $this->customlib->getCSRF(); ?>
                                     <div class="form-group">
-                                        <div class="col-sm-">
+                                        <div class="col-sm-12">
                                             <label><?php echo $this->lang->line('payment_id'); ?>
                                             </label><small class="req"> *</small>
                                             <input autofocus="" id="paymentid" name="paymentid" placeholder="" type="text" class="form-control"  value="<?php echo set_value('paymentid'); ?>"/>
                                             <span class="text-danger"><?php echo form_error('paymentid'); ?></span>
                                         </div>
                                     </div>
-                                    <div class="form-group">
-                                        <div class="col-sm-3">
+                                    <div class="form-group align-text-top">
+                                        <div class="col-sm-12">
                                             <button type="submit" name="search" value="search_filter" class="btn btn-primary btn-sm checkbox-toggle mmius15"><i class="fa fa-search"></i> <?php echo $this->lang->line('search'); ?></button>
                                         </div>
                                     </div>
@@ -77,9 +77,11 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         $total = 0;
                                         $grd_total = 0;
                                         if (empty($feeList)) {
+
                                             ?>
                                             <?php
                                         } else {
+                                            
                                             $count = 1;
 
                                             $a = json_decode($feeList->amount_detail);
@@ -94,7 +96,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                     <?php echo date($this->customlib->getSchoolDateFormat(), strtotime($record->date)); ?>
                                                 </td> 
                                                 <td>
-                                                    <?php echo $feeList->firstname . " " . $feeList->lastname . " (" . $feeList->admission_no . ")"; ?>
+                                                    <?php echo $this->customlib->getFullName($feeList->firstname,$feeList->middlename,$feeList->lastname,$sch_setting->middlename,$sch_setting->lastname) . " (" . $feeList->admission_no . ")"; ?>
                                                 </td> 
                                                 <td>
                                                     <?php echo $feeList->class . " (" . $feeList->section . ")"; ?>

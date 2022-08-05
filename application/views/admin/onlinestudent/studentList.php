@@ -16,94 +16,35 @@
                     </div><!-- /.box-header -->
                     <div class="box-body table-responsive">
                         <div class="mailbox-messages">
-                            <div class="download_label"><?php echo $this->lang->line('student') . " " . $this->lang->line('list') ?></div>
-                            <table class="table table-striped table-bordered table-hover example" cellspacing="0" width="100%">
+                            
+                            <table class="table table-striped table-bordered table-hover student-list" data-export-title="<?php echo $this->lang->line('student')." ".$this->lang->line('list'); ?>">
                                 <thead>
                                     <tr>
 
                                         <th style="width:5%"><?php echo $this->lang->line('reference_no'); ?></th>
                                         <th><?php echo $this->lang->line('student_name'); ?></th>
                                         <th><?php echo $this->lang->line('class'); ?></th>
-                                        <th><?php echo $this->lang->line('father_name'); ?></th>
+                                         <?php if ($sch_setting->father_name) { ?>
+                                            <th><?php echo $this->lang->line('father_name'); ?></th>
+                                        <?php } ?>
                                         <th><?php echo $this->lang->line('date_of_birth'); ?></th>
                                         <th><?php echo $this->lang->line('gender'); ?></th>
                                         <th><?php echo $this->lang->line('category'); ?></th>
+                                          <?php  if ($sch_setting->mobile_no) { ?>
                                         <th style="width:10%"><?php echo $this->lang->line('student') . " " . $this->lang->line('mobile_no'); ?></th>
+                                       <?php } ?>
+                                        <th><?php echo $this->lang->line('form').' '.$this->lang->line('status'); ?></th>
+                                        <?php if($sch_setting->online_admission_payment=='yes'){ ?>
+                                            <th><?php echo $this->lang->line('payment').' '.$this->lang->line('status'); ?></th>
+                                            <?php } ?>
+                                        
                                         <th><?php echo $this->lang->line('enrolled'); ?></th>
-
-
-                                        <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
+                                        <th class="text-right noExport "><?php echo $this->lang->line('action'); ?></th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <?php
-                                    foreach ($studentlist as $student) {
-                                        ?>
-                                        <tr>
-                                            <td><?php echo $student['id']; ?></td>
-                                            <td>
-
-                                                <?php
-                                                if ($student['is_enroll']) {
-                                                    echo $student['firstname'] . " " . $student['lastname'];
-                                                } else {
-                                                    echo $student['firstname'] . " " . $student['lastname'];
-                                                }
-                                                ?>  
-                                            </td>
-                                            <td><?php echo $student['class'] . "(" . $student['section'] . ")" ?></td>
-                                            <td><?php echo $student['father_name']; ?></td>
-                                            <td><?php
-                                                if ($student["dob"] != null) {
-                                                    echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob']));
-                                                }
-                                                ?></td>
-                                            <td><?php echo $student['gender']; ?></td>
-                                            <td><?php echo $student['category']; ?></td>
-                                            <td><?php echo $student['mobileno']; ?></td>
-                                            <td><?php echo ($student['is_enroll']) ? "<i class='fa fa-check'></i><span style='display:none'>Yes</span>" : "<i class='fa fa-minus-circle'></i><span style='display:none'>No</span>"; ?></td>
-
-
-                                            <td class="mailbox-date pull-right">
-                                                <?php
-                                                if ($student['document'] != "") {
-                                                    ?>
-                                                    <a data-placement="left" href="<?php echo base_url(); ?>admin/onlinestudent/download/<?php echo $student['document'] ?>"class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('download'); ?>">
-                                                        <i class="fa fa-download"></i>
-                                                    </a>
-                                                    <?php
-                                                }
-                                                ?>
-
-
-                                                <?php
-                                                if ($this->rbac->hasprivilege('online_admission', 'can_edit')) {
-                                                    if (!$student['is_enroll']) {
-                                                        ?>
-                                                        <a data-placement="left" href="<?php echo site_url('admin/onlinestudent/edit/' . $student['id']); ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('edit'); ?>">
-                                                            <i class="fa fa-pencil"></i>
-                                                        </a>
-                                                        <?php
-                                                    }
-                                                }
-                                                if ($this->rbac->hasprivilege('online_admission', 'can_delete')) {
-                                                    ?>
-
-                                                    <a data-placement="left" href="<?php echo site_url('admin/onlinestudent/delete/' . $student['id']); ?>" class="btn btn-default btn-xs"  data-toggle="tooltip" title="<?php echo $this->lang->line('delete'); ?>" onclick="return confirm('<?php echo $this->lang->line('delete_confirm') ?>');">
-                                                        <i class="fa fa-remove"></i>
-                                                    </a>
-                                                <?php } ?>
-                                            </td>
-                                        </tr>
-                                        <?php
-                                    }
-                                    ?>
-
+                                <tbody> 
                                 </tbody>
                             </table><!-- /.table -->
-
-
-
                         </div><!-- /.mail-box-messages -->
                     </div><!-- /.box-body -->
 
@@ -115,3 +56,33 @@
 
     </section><!-- /.content -->
 </div><!-- /.content-wrapper -->
+<script>
+    ( function ( $ ) {
+    'use strict';
+    $(document).ready(function () {
+        initDatatable('student-list','admin/onlinestudent/getstudentlist',[],[],100);
+    });
+} ( jQuery ) )
+</script>
+<script>
+    function checkpaymentstatus(id){
+       $.ajax({
+            url: '<?php echo base_url(); ?>admin/onlinestudent/checkpaymentstatus',
+            type: "POST",
+            data: {id:id},
+            success: function (data) {
+
+               if(data!=""){
+                    if(confirm(data)){
+                      window.location.href="<?php echo base_url().'admin/onlinestudent/edit/' ?>"+id ;
+                    }else{
+                         return false ;
+                    }
+                }else{
+                     window.location.href="<?php echo base_url().'admin/onlinestudent/edit/' ?>"+id ;
+                }
+            }
+        });
+
+    }
+</script>

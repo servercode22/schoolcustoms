@@ -1,54 +1,59 @@
 <?php
 
-if (!defined('BASEPATH'))
+if (!defined('BASEPATH')) {
     exit('No direct script access allowed');
+}
 
-class Lessonplan extends Admin_Controller {
+class Lessonplan extends Admin_Controller
+{
 
-    function __construct() {
+    public function __construct()
+    {
         parent::__construct();
 
         $this->load->library('Customlib');
         $this->sch_current_session = $this->setting_model->getCurrentSession();
-        $this->staff_id = $this->customlib->getStaffID();
+        $this->staff_id            = $this->customlib->getStaffID();
+        $this->load->library("datatables");
     }
 
-    public function index() {
-        if (!($this->rbac->hasPrivilege('manage_syllabus_status', 'can_view') )) {
+    public function index()
+    {
+        if (!($this->rbac->hasPrivilege('manage_syllabus_status', 'can_view'))) {
             access_denied();
         }
         $this->session->set_userdata('top_menu', 'lessonplan');
         $this->session->set_userdata('sub_menu', 'admin/lessonplan');
-        $data = array();
-        $class = $this->class_model->get();
-        $data['classlist'] = $class;
-        $data['class_id'] = "";
-        $data['section_id'] = "";
+        $data                     = array();
+        $class                    = $this->class_model->get();
+        $data['classlist']        = $class;
+        $data['class_id']         = "";
+        $data['section_id']       = "";
         $data['subject_group_id'] = "";
-        $data['subject_id'] = "";
-        $data['subject_name'] = "";
-        $data['lessons'] = array();
+        $data['subject_id']       = "";
+        $data['subject_name']     = "";
+        $data['lessons']          = array();
         $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('subject_group_id', $this->lang->line('subject') . " " . $this->lang->line('group'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('subject_id', $this->lang->line('subject'), 'trim|required|xss_clean');
 
-        if ($this->form_validation->run() == FALSE) {
-            
+        if ($this->form_validation->run() == false) {
+
         } else {
-            $data['class_id'] = $_POST['class_id'];
-            $data['section_id'] = $_POST['section_id'];
-            $data['subject_group_id'] = $_POST['subject_group_id'];
-            $data['subject_id'] = $_POST['subject_id'];
-            $subject_details = $this->lessonplan_model->get_subjectNameBySubjectGroupSubjectId($_POST['subject_id']);
+            $data['class_id']               = $_POST['class_id'];
+            $data['section_id']             = $_POST['section_id'];
+            $data['subject_group_id']       = $_POST['subject_group_id'];
+            $data['subject_id']             = $_POST['subject_id'];
+            $subject_details                = $this->lessonplan_model->get_subjectNameBySubjectGroupSubjectId($_POST['subject_id']);
             $subject_group_class_sectionsId = $this->lessonplan_model->getsubject_group_class_sectionsId($_POST['class_id'], $_POST['section_id'], $_POST['subject_group_id']);
-            $data['subject_name'] = $subject_details['name'] . " (" . $subject_details['code'] . ")";
-            $lessonlist = $this->lessonplan_model->getlessonBysubjectid($_POST['subject_id'], $subject_group_class_sectionsId['id']);
+            $data['subject_name']           = $subject_details['name'] . " (" . $subject_details['code'] . ")";
+            $lessonlist                     = $this->lessonplan_model->getlessonBysubjectid($_POST['subject_id'], $subject_group_class_sectionsId['id']);
 
             foreach ($lessonlist as $key => $value) {
 
                 $data['lessons'][$value['id']] = $value;
-                $topics = $this->lessonplan_model->gettopicBylessonid($value['id'], $this->sch_current_session);
+                $topics                        = $this->lessonplan_model->gettopicBylessonid($value['id'], $this->sch_current_session);
                 foreach ($topics as $topic_key => $topic_value) {
                     $data['lessons'][$value['id']]['topic'][] = $topic_value;
                 }
@@ -61,8 +66,9 @@ class Lessonplan extends Admin_Controller {
         $this->load->view('layout/footer');
     }
 
-    public function lesson() {
-        if (!($this->rbac->hasPrivilege('lesson', 'can_view') )) {
+    public function lesson()
+    {
+        if (!($this->rbac->hasPrivilege('lesson', 'can_view'))) {
             access_denied();
         }
         $this->session->set_userdata('top_menu', 'lessonplan');
@@ -73,27 +79,26 @@ class Lessonplan extends Admin_Controller {
         foreach ($class as $class_key => $class_value) {
             $data['class_array'][] = $class_value['id'];
         }
-        $carray = array();
-        $data['class_id'] = "";
-        $data['section_id'] = "";
+        $carray                   = array();
+        $data['class_id']         = "";
+        $data['section_id']       = "";
         $data['subject_group_id'] = "";
-        $data['subject_id'] = "";
-        $userdata = $this->customlib->getUserData();
-        $role_id = $userdata["role_id"];
-        $staff_id = $userdata["id"];
-        // print_r($userdata);die;
-        $concate = "no";
-        $condition = "";
-        $where_in = array();
+        $data['subject_id']       = "";
+        $userdata                 = $this->customlib->getUserData();
+        $role_id                  = $userdata["role_id"];
+        $staff_id                 = $userdata["id"];
+        $concate                  = "no";
+        $condition                = "";
+        $where_in                 = array();
         if (isset($role_id) && ($userdata["role_id"] == 2) && ($userdata["class_teacher"] == "yes")) {
             $myclasssubjects = $this->subjecttimetable_model->getByStaffClassTeachersubjects($staff_id);
 
             if (!empty($myclasssubjects[0]->subject_group_subject_id)) {
-                // $condition.=" and subject_timetable.id in(".$myclasssubjects[0]->timetable_id.") ";
+
                 $timetableid = $myclasssubjects[0]->subject_group_subject_id;
-                $concate = "yes";
+                $concate     = "yes";
             }
-            //echo $timetableid;die;
+
             $mysubjects = $this->subjecttimetable_model->getByTeacherSubjects($staff_id);
             if (!empty($mysubjects[0]->subject_group_subject_id)) {
                 if ($concate == 'yes') {
@@ -102,8 +107,6 @@ class Lessonplan extends Admin_Controller {
                     $timetableid = $mysubjects[0]->subject_group_subject_id;
                 }
             }
-
-
 
             if ($timetableid == '') {
 
@@ -115,30 +118,13 @@ class Lessonplan extends Admin_Controller {
             $where_in = explode(',', $timetableid);
         }
 
-
-        // echo $condition;die;
-        $result = $this->lessonplan_model->get('', $this->sch_current_session);
-        //echo $this->db->last_query();die;
-        if (!empty($result)) {
-            foreach ($result as $key => $value) {
-                $lesson = $this->lessonplan_model->getlesson($value["subject_group_subject_id"], $value["subject_group_class_sections_id"], $this->sch_current_session);
-                $lessonname[$key] = $lesson;
-            }
-        }
-
-        $data['result'] = $result;
-        if (!empty($lessonname)) {
-            $data['lessonname'] = $lessonname;
-        }
-
         $this->load->view('layout/header');
         $this->load->view('admin/lessonplan/lesson', $data);
         $this->load->view('layout/footer');
     }
 
-    function createlesson() {
-
-
+    public function createlesson()
+    {
 
         $data['title'] = 'Add Library';
         $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
@@ -157,25 +143,25 @@ class Lessonplan extends Admin_Controller {
             $validate = 0;
         }
 
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == false) {
             $msg = array(
-                'class_id' => form_error('class_id'),
-                'section_id' => form_error('section_id'),
+                'class_id'         => form_error('class_id'),
+                'section_id'       => form_error('section_id'),
                 'subject_group_id' => form_error('subject_group_id'),
-                'subject_id' => form_error('subject_id'),
+                'subject_id'       => form_error('subject_id'),
             );
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
         } elseif ($validate == 0) {
-            $msg = array('lesson' => $this->lang->line('lesson') . " " . $this->lang->line('name') . " field is required");
+            $msg   = array('lesson' => $this->lang->line('lesson') . " " . $this->lang->line('name') . " field is required");
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
         } else {
             $subject_group_class_sectionsId = $this->lessonplan_model->getsubject_group_class_sectionsId($_POST['class_id'], $_POST['section_id'], $_POST['subject_group_id']);
             foreach ($_POST['lessons'] as $key => $value) {
                 $data = array(
-                    'subject_group_subject_id' => $_POST['subject_id'],
-                    'name' => $value,
+                    'subject_group_subject_id'        => $_POST['subject_id'],
+                    'name'                            => $value,
                     'subject_group_class_sections_id' => $subject_group_class_sectionsId['id'],
-                    'session_id' => $this->sch_current_session
+                    'session_id'                      => $this->sch_current_session,
                 );
 
                 $this->lessonplan_model->add_lesson($data);
@@ -185,16 +171,18 @@ class Lessonplan extends Admin_Controller {
         echo json_encode($array);
     }
 
-    function deletelesson($id) {
-        if (!($this->rbac->hasPrivilege('lesson', 'can_delete') )) {
+    public function deletelesson($id)
+    {
+        if (!($this->rbac->hasPrivilege('lesson', 'can_delete'))) {
             access_denied();
         }
         $this->lessonplan_model->deletelesson($id, $this->sch_current_session);
         redirect('admin/lessonplan/lesson');
     }
 
-    function deletelessonbulk($id, $subject_group_subject_id) {
-        if (!($this->rbac->hasPrivilege('lesson', 'can_delete') )) {
+    public function deletelessonbulk($id, $subject_group_subject_id)
+    {
+        if (!($this->rbac->hasPrivilege('lesson', 'can_delete'))) {
             access_denied();
         }
         $this->lessonplan_model->deletelessonbulk($id, $this->sch_current_session, $subject_group_subject_id);
@@ -202,13 +190,14 @@ class Lessonplan extends Admin_Controller {
         echo json_encode($array);
     }
 
-    public function editlesson($id, $subject_group_subject_id) {
-        if (!($this->rbac->hasPrivilege('lesson', 'can_edit') )) {
+    public function editlesson($id, $subject_group_subject_id)
+    {
+        if (!($this->rbac->hasPrivilege('lesson', 'can_edit'))) {
             access_denied();
         }
         $this->session->set_userdata('top_menu', 'lessonplan');
         $this->session->set_userdata('sub_menu', 'admin/lessonplan/lesson');
-        $class = $this->class_model->get();
+        $class             = $this->class_model->get();
         $data['classlist'] = $class;
 
         foreach ($class as $class_key => $class_value) {
@@ -216,11 +205,7 @@ class Lessonplan extends Admin_Controller {
         }
 
         $carray = array();
-
-
-
-        $result = $this->lessonplan_model->get('', $this->sch_current_session);
-
+		$result = $this->lessonplan_model->get($this->sch_current_session, '');		
         if (!empty($result)) {
             foreach ($result as $key => $value) {
                 $lesson = $this->lessonplan_model->getlesson($value["subject_group_subject_id"], $value["subject_group_class_sections_id"], $this->sch_current_session);
@@ -233,16 +218,15 @@ class Lessonplan extends Admin_Controller {
         if (!empty($lessonname)) {
             $data['lessonname'] = $lessonname;
         }
-
-        $editresult = $this->lessonplan_model->get($id, $this->sch_current_session, $subject_group_subject_id);
-
+		
+		$editresult = $this->lessonplan_model->get($this->sch_current_session, $id, $subject_group_subject_id);
         $editlesson = $this->lessonplan_model->getlesson($editresult["subject_group_subject_id"], $editresult["subject_group_class_sections_id"], $this->sch_current_session);
 
-        $data['editlessonname'] = $editlesson;
-        $data['class_id'] = $editresult['classid'];
-        $data['section_id'] = $editresult['sectionid'];
-        $data['subject_group_id'] = $editresult['subjectgroupsid'];
-        $data['subject_id'] = $editresult['subjectid'];
+        $data['editlessonname']                 = $editlesson;
+        $data['class_id']                       = $editresult['classid'];
+        $data['section_id']                     = $editresult['sectionid'];
+        $data['subject_group_id']               = $editresult['subjectgroupsid'];
+        $data['subject_id']                     = $editresult['subjectid'];
         $data['lesson_subject_group_subjectid'] = $editresult['subject_group_subject_id'];
 
         $this->load->view('layout/header');
@@ -250,9 +234,10 @@ class Lessonplan extends Admin_Controller {
         $this->load->view('layout/footer');
     }
 
-    function updatelesson() {
+    public function updatelesson()
+    {
 
-        $can_edit = 1;
+        $can_edit      = 1;
         $data['title'] = 'Add Library';
         $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean');
@@ -260,8 +245,8 @@ class Lessonplan extends Admin_Controller {
         $this->form_validation->set_rules('subject_id', $this->lang->line('subject'), 'trim|required|xss_clean');
 
         $subject_group_class_sectionsId = $this->lessonplan_model->getsubject_group_class_sectionsId($_POST['class_id'], $_POST['section_id'], $_POST['subject_group_id']);
-        $all_lessons = $this->lessonplan_model->getlessonBysubjectid($_POST['subject_id'], $subject_group_class_sectionsId['id']);
-        $userdata = $this->customlib->getUserData();
+        $all_lessons                    = $this->lessonplan_model->getlessonBysubjectid($_POST['subject_id'], $subject_group_class_sectionsId['id']);
+        $userdata                       = $this->customlib->getUserData();
 
         $role_id = $userdata["role_id"];
         if (isset($role_id) && ($userdata["role_id"] == 2) && ($userdata["class_teacher"] == "yes")) {
@@ -296,22 +281,19 @@ class Lessonplan extends Admin_Controller {
             }
         }
 
-
-
-
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == false) {
             $msg = array(
-                'class_id' => form_error('class_id'),
-                'section_id' => form_error('section_id'),
+                'class_id'         => form_error('class_id'),
+                'section_id'       => form_error('section_id'),
                 'subject_group_id' => form_error('subject_group_id'),
-                'subject_id' => form_error('subject_id'),
+                'subject_id'       => form_error('subject_id'),
             );
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
         } elseif ($validate == 0) {
-            $msg = array('lesson' => $this->lang->line('lesson') . " " . $this->lang->line('name') . " field is required");
+            $msg   = array('lesson' => $this->lang->line('lesson') . " " . $this->lang->line('name') . " field is required");
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
         } elseif ($can_edit == 0) {
-            $msg = array('lesson' => $this->lang->line('you_are_not_authorised_to_update_lessons'));
+            $msg   = array('lesson' => $this->lang->line('you_are_not_authorised_to_update_lessons'));
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
         } else {
 
@@ -321,32 +303,30 @@ class Lessonplan extends Admin_Controller {
                 }
             }
 
-
             $subject_group_class_sectionsId = $this->lessonplan_model->getsubject_group_class_sectionsId($_POST['class_id'], $_POST['section_id'], $_POST['subject_group_id']);
-            $all_lessons = $this->lessonplan_model->getlessonBysubjectid($_POST['subject_id'], $subject_group_class_sectionsId['id']);
+            $all_lessons                    = $this->lessonplan_model->getlessonBysubjectid($_POST['subject_id'], $subject_group_class_sectionsId['id']);
 
             foreach ($all_lessons as $lessonkey => $lessonvalue) {
                 if (isset($_POST['lessons_' . $lessonvalue['id']])) {
                     $data = array(
-                        'subject_group_subject_id' => $_POST['subject_id'],
-                        'name' => $_POST['lessons_' . $lessonvalue['id']],
+                        'subject_group_subject_id'        => $_POST['subject_id'],
+                        'name'                            => $_POST['lessons_' . $lessonvalue['id']],
                         'subject_group_class_sections_id' => $subject_group_class_sectionsId['id'],
-                        'session_id' => $this->sch_current_session,
-                        'id' => $lessonvalue['id']
+                        'session_id'                      => $this->sch_current_session,
+                        'id'                              => $lessonvalue['id'],
                     );
 
                     $this->lessonplan_model->add_lesson($data);
                 }
             }
 
-
             if (isset($_POST['lessons'])) {
                 foreach ($_POST['lessons'] as $key => $value) {
                     $data = array(
-                        'subject_group_subject_id' => $_POST['subject_id'],
-                        'name' => $value,
+                        'subject_group_subject_id'        => $_POST['subject_id'],
+                        'name'                            => $value,
                         'subject_group_class_sections_id' => $subject_group_class_sectionsId['id'],
-                        'session_id' => $this->sch_current_session
+                        'session_id'                      => $this->sch_current_session,
                     );
 
                     $this->lessonplan_model->add_lesson($data);
@@ -358,65 +338,54 @@ class Lessonplan extends Admin_Controller {
     }
 
     //==================================Topic Start===============================
-    public function topic() {
-        if (!($this->rbac->hasPrivilege('topic', 'can_view') )) {
+    public function topic()
+    {
+        if (!($this->rbac->hasPrivilege('topic', 'can_view'))) {
             access_denied();
         }
 
         $this->session->set_userdata('top_menu', 'lessonplan');
         $this->session->set_userdata('sub_menu', 'admin/lessonplan/topic');
-        $class = $this->class_model->get();
+        $class             = $this->class_model->get();
         $data['classlist'] = $class;
         foreach ($class as $class_key => $class_value) {
             $data['class_array'][] = $class_value['id'];
         }
-        $carray = array();
-        $data['class_id'] = "";
-        $data['section_id'] = "";
+        $carray                   = array();
+        $data['class_id']         = "";
+        $data['section_id']       = "";
         $data['subject_group_id'] = "";
-        $data['subject_id'] = "";
-
-        $result = $this->lessonplan_model->gettopic('', $this->sch_current_session);
-
-        if (!empty($result)) {
-            foreach ($result as $key => $value) {
-                $topic = $this->lessonplan_model->gettopicBylessonid($value["lesson_id"], $this->sch_current_session);
-                $topicresult[$key] = $topic;
-            }
-        }
-
-        $data['result'] = $result;
-        if (!empty($topicresult)) {
-            $data['topicresult'] = $topicresult;
-        }
-
-
+        $data['subject_id']       = "";
         $this->load->view('layout/header');
         $this->load->view('admin/lessonplan/topic', $data);
         $this->load->view('layout/footer');
     }
 
-    public function getlessonBysubjectid($sub_id) {
+    public function getlessonBysubjectid($sub_id)
+    {
         $subject_group_class_sectionsId = $this->lessonplan_model->getsubject_group_class_sectionsId($_POST['class_id'], $_POST['section_id'], $_POST['subject_group_id']);
-        $data = $this->lessonplan_model->getlessonBysubjectid($sub_id, $subject_group_class_sectionsId['id']);
+        $data                           = $this->lessonplan_model->getlessonBysubjectid($sub_id, $subject_group_class_sectionsId['id']);
 
         echo json_encode($data);
     }
 
-    public function getlessonBylessonid($lesson_id) {
+    public function getlessonBylessonid($lesson_id)
+    {
         $data = $this->lessonplan_model->getlessonBylessonid($lesson_id);
 
         echo json_encode($data);
     }
 
-    public function getlessonBysubjectidedit($sub_id) {
+    public function getlessonBysubjectidedit($sub_id)
+    {
         $subject_group_class_sections_id = $_POST['subject_group_class_sections_id'];
-        $data = $this->lessonplan_model->getlessonBysubjectidedit($sub_id, $subject_group_class_sections_id);
+        $data                            = $this->lessonplan_model->getlessonBysubjectidedit($sub_id, $subject_group_class_sections_id);
 
         echo json_encode($data);
     }
 
-    public function createtopic() {
+    public function createtopic()
+    {
         $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('subject_group_id', $this->lang->line('subject') . " " . $this->lang->line('group'), 'trim|required|xss_clean');
@@ -433,27 +402,27 @@ class Lessonplan extends Admin_Controller {
         } else {
             $validate = 0;
         }
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == false) {
 
             $msg = array(
-                'class_id' => form_error('class_id'),
-                'section_id' => form_error('section_id'),
+                'class_id'         => form_error('class_id'),
+                'section_id'       => form_error('section_id'),
                 'subject_group_id' => form_error('subject_group_id'),
-                'subject_id' => form_error('subject_id'),
-                'lesson_id' => form_error('lesson_id'),
+                'subject_id'       => form_error('subject_id'),
+                'lesson_id'        => form_error('lesson_id'),
             );
 
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
         } elseif ($validate == 0) {
-            $msg = array('topic' => $this->lang->line('topic') . " " . $this->lang->line('name') . " field is required");
+            $msg   = array('topic' => $this->lang->line('topic') . " " . $this->lang->line('name') . " field is required");
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
         } else {
 
             foreach ($_POST['topic'] as $key => $value) {
                 $data = array(
-                    'lesson_id' => $_POST['lesson_id'],
-                    'name' => $value,
-                    'session_id' => $this->sch_current_session
+                    'lesson_id'  => $_POST['lesson_id'],
+                    'name'       => $value,
+                    'session_id' => $this->sch_current_session,
                 );
                 $this->lessonplan_model->add_topic($data);
             }
@@ -462,8 +431,9 @@ class Lessonplan extends Admin_Controller {
         echo json_encode($array);
     }
 
-    function deletetopicbulk($id) {
-        if (!($this->rbac->hasPrivilege('topic', 'can_delete') )) {
+    public function deletetopicbulk($id)
+    {
+        if (!($this->rbac->hasPrivilege('topic', 'can_delete'))) {
             access_denied();
         }
         $this->lessonplan_model->deletetopicbulk($id, $this->sch_current_session);
@@ -471,25 +441,25 @@ class Lessonplan extends Admin_Controller {
         echo json_encode($array);
     }
 
-    public function edittopic($id) {
-        if (!($this->rbac->hasPrivilege('topic', 'can_edit') )) {
+    public function edittopic($id)
+    {
+        if (!($this->rbac->hasPrivilege('topic', 'can_edit'))) {
             access_denied();
         }
         $this->session->set_userdata('top_menu', 'lessonplan');
         $this->session->set_userdata('sub_menu', 'admin/lessonplan/topic');
-        $class = $this->class_model->get();
+        $class             = $this->class_model->get();
         $data['classlist'] = $class;
         foreach ($class as $class_key => $class_value) {
             $data['class_array'][] = $class_value['id'];
         }
         $carray = array();
 
-
-        $result = $this->lessonplan_model->gettopic('', $this->sch_current_session);
+        $result = $this->lessonplan_model->gettopic($this->sch_current_session, '');
 
         if (!empty($result)) {
             foreach ($result as $key => $value) {
-                $topic = $this->lessonplan_model->gettopicBylessonid($value["lesson_id"], $this->sch_current_session);
+                $topic             = $this->lessonplan_model->gettopicBylessonid($value["lesson_id"], $this->sch_current_session);
                 $topicresult[$key] = $topic;
             }
         }
@@ -499,17 +469,16 @@ class Lessonplan extends Admin_Controller {
             $data['topicresult'] = $topicresult;
         }
 
-        $editresult = $this->lessonplan_model->gettopic($id, $this->sch_current_session);
-        $edittopic = $this->lessonplan_model->gettopicBylessonid($editresult["lesson_id"], $this->sch_current_session);
-        $data['lesson_id'] = $editresult["lesson_id"];
-        // print_r($editresult); die;
-        $data['topic_lesson_id'] = $id;
-        $data['edittopicname'] = $edittopic;
-        $data['class_id'] = $editresult['classid'];
-        $data['section_id'] = $editresult['sectionid'];
-        $data['subject_group_id'] = $editresult['subjectgroupsid'];
-        $data['subject_id'] = $editresult['subjectid'];
-        $data['lesson_subject_group_subjectid'] = $editresult['subject_group_subject_id'];
+        $editresult                              = $this->lessonplan_model->gettopic($this->sch_current_session,$id);
+        $edittopic                               = $this->lessonplan_model->gettopicBylessonid($editresult["lesson_id"], $this->sch_current_session);
+        $data['lesson_id']                       = $editresult["lesson_id"];
+        $data['topic_lesson_id']                 = $id;
+        $data['edittopicname']                   = $edittopic;
+        $data['class_id']                        = $editresult['classid'];
+        $data['section_id']                      = $editresult['sectionid'];
+        $data['subject_group_id']                = $editresult['subjectgroupsid'];
+        $data['subject_id']                      = $editresult['subjectid'];
+        $data['lesson_subject_group_subjectid']  = $editresult['subject_group_subject_id'];
         $data['subject_group_class_sections_id'] = $editresult['subject_group_class_sections_id'];
 
         $this->load->view('layout/header');
@@ -517,7 +486,8 @@ class Lessonplan extends Admin_Controller {
         $this->load->view('layout/footer');
     }
 
-    public function updatetopic() {
+    public function updatetopic()
+    {
         $can_edit = 1;
         $this->form_validation->set_rules('class_id', $this->lang->line('class'), 'trim|required|xss_clean');
         $this->form_validation->set_rules('section_id', $this->lang->line('section'), 'trim|required|xss_clean');
@@ -527,16 +497,14 @@ class Lessonplan extends Admin_Controller {
 
         $validate = 1;
 
-
         $alltopic = $this->lessonplan_model->gettopicBylessonid($_POST['lesson_id'], $this->sch_current_session);
         $userdata = $this->customlib->getUserData();
-        $role_id = $userdata["role_id"];
+        $role_id  = $userdata["role_id"];
         if (isset($role_id) && ($userdata["role_id"] == 2) && ($userdata["class_teacher"] == "yes")) {
             $class_section = $this->lessonplan_model->ifclassteacher($_POST['class_id'], $_POST['section_id'], $this->staff_id, $_POST['subject_group_id'], $_POST['subject_id']);
 
             $can_edit = $class_section;
         }
-
 
         foreach ($alltopic as $topickey => $topicvalue) {
             if (!empty($_POST['topic_delete'])) {
@@ -564,24 +532,22 @@ class Lessonplan extends Admin_Controller {
             }
         }
 
-
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == false) {
             $msg = array(
-                'class_id' => form_error('class_id'),
-                'section_id' => form_error('section_id'),
+                'class_id'         => form_error('class_id'),
+                'section_id'       => form_error('section_id'),
                 'subject_group_id' => form_error('subject_group_id'),
-                'subject_id' => form_error('subject_id'),
-                'lesson_id' => form_error('lesson_id'),
+                'subject_id'       => form_error('subject_id'),
+                'lesson_id'        => form_error('lesson_id'),
             );
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
         } elseif ($validate == 0) {
-            $msg = array('topic' => $this->lang->line('topic') . " " . $this->lang->line('name') . " field is required");
+            $msg   = array('topic' => $this->lang->line('topic') . " " . $this->lang->line('name') . " field is required");
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
         } elseif ($can_edit == 0) {
-            $msg = array('topic' => $this->lang->line('you_are_not_authorised_to_update_topics'));
+            $msg   = array('topic' => $this->lang->line('you_are_not_authorised_to_update_topics'));
             $array = array('status' => 'fail', 'error' => $msg, 'message' => '');
         } else {
-
 
             if (isset($_POST['topic_delete'])) {
                 foreach ($_POST['topic_delete'] as $delete_key => $delete_value) {
@@ -594,10 +560,10 @@ class Lessonplan extends Admin_Controller {
             foreach ($alltopic as $topickey => $topicvalue) {
                 if (isset($_POST['topic_' . $topicvalue['id']])) {
                     $data = array(
-                        'lesson_id' => $_POST['lesson_id'],
-                        'name' => $_POST['topic_' . $topicvalue['id']],
+                        'lesson_id'  => $_POST['lesson_id'],
+                        'name'       => $_POST['topic_' . $topicvalue['id']],
                         'session_id' => $this->sch_current_session,
-                        'id' => $topicvalue['id']
+                        'id'         => $topicvalue['id'],
                     );
 
                     $this->lessonplan_model->add_topic($data);
@@ -606,9 +572,9 @@ class Lessonplan extends Admin_Controller {
             if (isset($_POST['topic'])) {
                 foreach ($_POST['topic'] as $key => $value) {
                     $data = array(
-                        'lesson_id' => $_POST['lesson_id'],
-                        'name' => $value,
-                        'session_id' => $this->sch_current_session
+                        'lesson_id'  => $_POST['lesson_id'],
+                        'name'       => $value,
+                        'session_id' => $this->sch_current_session,
                     );
 
                     $this->lessonplan_model->add_topic($data);
@@ -619,11 +585,12 @@ class Lessonplan extends Admin_Controller {
         echo json_encode($array);
     }
 
-    function changeTopicStatus() {
-        $id = $this->input->post('id');
+    public function changeTopicStatus()
+    {
+        $id     = $this->input->post('id');
         $status = $this->input->post('status');
 
-        $data = array('id' => $id, 'complete_date' => '0000-00-00', 'status' => $status);
+        $data   = array('id' => $id, 'complete_date' => '0000-00-00', 'status' => $status);
         $result = $this->lessonplan_model->changeTopicStatus($data);
 
         if ($result) {
@@ -632,10 +599,11 @@ class Lessonplan extends Admin_Controller {
         }
     }
 
-    function topic_completedate() {
+    public function topic_completedate()
+    {
 
         $this->form_validation->set_rules('date', $this->lang->line('date'), 'trim|required|xss_clean');
-        if ($this->form_validation->run() == FALSE) {
+        if ($this->form_validation->run() == false) {
 
             $msg = array(
                 'date' => form_error('date'),
@@ -646,8 +614,8 @@ class Lessonplan extends Admin_Controller {
 
             $data = array(
                 'complete_date' => date('Y-m-d', $this->customlib->datetostrtotime($this->input->post('date'))),
-                'status' => 1,
-                'id' => $_POST['id']
+                'status'        => 1,
+                'id'            => $_POST['id'],
             );
 
             $this->lessonplan_model->changeTopicStatus($data);
@@ -659,18 +627,128 @@ class Lessonplan extends Admin_Controller {
 
     //==========================================Syllabus-Assign=========================
 
-
-
-    public function gettopicBylessonid($lessonid) {
+    public function gettopicBylessonid($lessonid)
+    {
         $data = $this->lessonplan_model->gettopicBylessonid($lessonid, $this->sch_current_session);
 
         echo json_encode($data);
     }
 
-    public function get_topicbyid() {
-        $this->lessonplan_model->gettopic('', $this->sch_current_session);
+    public function get_topicbyid()
+    {
+        $this->lessonplan_model->gettopic($this->sch_current_session,'');
     }
 
-}
+    public function gettopiclist()
+    {
 
-?>
+        $class             = $this->class_model->get();
+        $data['classlist'] = $class;
+        foreach ($class as $class_key => $class_value) {
+
+            $class_array[] = $class_value['id'];
+        }
+        $carray                   = array();
+        $data['class_id']         = "";
+        $data['section_id']       = "";
+        $data['subject_group_id'] = "";
+        $data['subject_id']       = "";
+        $result                   = $this->lessonplan_model->gettopiclist($this->sch_current_session);
+        $m                        = json_decode($result);
+        $currency_symbol          = $this->customlib->getSchoolCurrencyFormat();
+        $dt_data                  = array();
+        if (!empty($m->data)) {
+            foreach ($m->data as $key => $value) {
+                $topic1    ='';
+                $topic     = "";
+                $lesson_id = $key;
+                $topic     = $this->lessonplan_model->gettopicBylessonid($value->lesson_id, $this->sch_current_session);
+                if ($this->rbac->hasPrivilege('topic', 'can_edit')) {
+                    $editbtn = "<a href='" . base_url() . "admin/lessonplan/edittopic/" . $value->lesson_id . "'   class='btn btn-default btn-xs'  data-toggle='tooltip' data-placement='left' title='" . $this->lang->line('edit') . "'><i class='fa fa-pencil'></i></a>";
+                }
+                if ($this->rbac->hasPrivilege('topic', 'can_delete')) {
+                    $deletebtn = '';
+                    $deletebtn = "<a onclick='deletetopicbulk(" . $this->lang->line('delete_confirm') . ")'  class='btn btn-default btn-xs' data-placement='left' title='" . $this->lang->line('delete') . "' data-toggle='tooltip'><i class='fa fa-trash'></i></a>";
+                }
+
+                foreach ($topic as $rl_value) {
+                    $topic = $rl_value['name'] . '<br>';
+                    $topic1 .=  $topic;
+                }
+                
+                if (in_array($value->classid, $class_array)) {
+                    $lesson_id = $key;
+                    $row       = array();
+                    $row[]     = $value->cname;
+                    $row[]     = $value->sname;
+                    $row[]     = $value->sgname;
+                    $row[]     = $value->subname;
+                    $row[]     = $value->lessonname;
+                    $row[]     = $topic1;
+                    $row[]     = $editbtn . ' ' . $deletebtn;
+                    $dt_data[] = $row;
+                }
+            }
+        }
+
+        $json_data = array(
+            "draw"            => intval($m->draw),
+            "recordsTotal"    => intval($m->recordsTotal),
+            "recordsFiltered" => intval($m->recordsFiltered),
+            "data"            => $dt_data,
+        );
+        echo json_encode($json_data);
+    }
+
+    public function getlessonlist()
+    {
+        $class = $this->class_model->get();
+
+        foreach ($class as $class_key => $class_value) {
+            $class_array[] = $class_value['id'];
+        }
+        $result  = $this->lessonplan_model->getlessonlist($this->sch_current_session, '');
+        $m       = json_decode($result);
+        $dt_data = array();
+        if (!empty($m->data)) {
+            foreach ($m->data as $key => $value) {
+
+                $topic       = "";
+                $lesson_id   = $key;
+                $lesson_name = "";
+                $lesson      = $this->lessonplan_model->getlesson($value->subject_group_subject_id, $value->subject_group_class_sections_id, $this->sch_current_session);
+
+                if ($this->rbac->hasPrivilege('lesson', 'can_edit')) {
+                    $editbtn = "<a href='" . base_url() . "admin/lessonplan/editlesson/" . $value->subject_group_class_sections_id . "/" . $value->subject_group_subject_id . "'   class='btn btn-default btn-xs'  data-toggle='tooltip' data-placement='left' title='" . $this->lang->line('edit') . "'><i class='fa fa-pencil'></i></a>";
+                }
+                if ($this->rbac->hasPrivilege('lesson', 'can_delete')) {
+                    $deletebtn = '';
+                    $deletebtn = "<a onclick='deletelessonbulk(" . '"' . $value->subject_group_class_sections_id . '"' . ',' . '"' . $value->subject_group_subject_id . '"' . "  )'  class='btn btn-default btn-xs' data-placement='left' title='" . $this->lang->line('delete') . "' data-toggle='tooltip'><i class='fa fa-remove'></i></a>";
+                }
+
+                if (in_array($value->classid, $class_array)) {
+
+                    foreach ($lesson as $rl_value) {
+                        $lesson_name .= $rl_value['name'] . '<br>';
+                    };
+                    $row       = array();
+                    $row[]     = $value->cname;
+                    $row[]     = $value->sname;
+                    $row[]     = $value->sgname;
+                    $row[]     = $value->subname;
+                    $row[]     = $lesson_name;
+                    $row[]     = $editbtn . ' ' . $deletebtn;
+                    $dt_data[] = $row;
+                }
+            }
+        }
+
+        $json_data = array(
+            "draw"            => intval($m->draw),
+            "recordsTotal"    => intval($m->recordsTotal),
+            "recordsFiltered" => intval($m->recordsFiltered),
+            "data"            => $dt_data,
+        );
+        echo json_encode($json_data);
+    }
+}

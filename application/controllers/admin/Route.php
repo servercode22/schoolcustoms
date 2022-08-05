@@ -8,6 +8,7 @@ class Route extends Admin_Controller {
     function __construct() {
         parent::__construct();
         $this->load->model("classteacher_model");
+         $this->sch_setting_detail = $this->setting_model->getSetting();
     }
 
     public function index() {
@@ -129,7 +130,7 @@ class Route extends Admin_Controller {
             $data["resultlist"] = $details;
         }
 
-
+        $data['sch_setting'] = $this->sch_setting_detail;
         $this->load->view("layout/header", $data);
         $this->load->view("admin/route/studentroutedetails", $data);
         $this->load->view("layout/footer", $data);

@@ -154,14 +154,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 <thead>
                                     <tr>
 
-                                        <th>Exam --r</th>
-                                        <th>Attempt --r</th>
-                                        <th>Exam From --r</th>
-                                        <th>Exam To --r</th>
-                                        <th>Duration --r</th>
-
-                                        <th class="text text-center">Exam Publish --r</th>
-                                        <th class="text text-center">Result Publish --r</th>
+                                        <th> <?php echo $this->lang->line('exam'); ?></th>
+                                        <th> <?php echo $this->lang->line('attempt'); ?></th>
+                                        <th> <?php echo $this->lang->line('exam_from'); ?></th>
+                                        <th> <?php echo $this->lang->line('exam_to'); ?></th>
+                                        <th> <?php echo $this->lang->line('duration'); ?></th>
+                                        <th class="text text-center"> <?php echo $this->lang->line('exam_publish'); ?></th>
+                                        <th class="text text-center"> <?php echo $this->lang->line('result_publish'); ?></th>
 
 
                                     </tr>

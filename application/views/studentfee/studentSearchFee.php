@@ -68,7 +68,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('class'); ?></label><small class="req"> *</small>
+                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('class'); ?></label>
                                         <select  id="class_id" name="class_id" class="form-control" >
                                             <option value=""><?php echo $this->lang->line('select'); ?></option>
                                             <?php
@@ -89,7 +89,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
-                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label><small class="req"> *</small>
+                                        <label for="exampleInputEmail1"><?php echo $this->lang->line('section'); ?></label>
                                         <select  id="section_id" name="section_id" class="form-control" >
                                             <option value=""><?php echo $this->lang->line('select'); ?></option>
                                         </select>
@@ -152,7 +152,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <?php if (empty($student_due_fee)) {
                                             ?>
 
-                                            <?php
+                                            <?php 
                                         } else {
                                             $count = 1;
                                             foreach ($student_due_fee as $student) {
@@ -161,8 +161,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                                     <td><?php echo $student['admission_no']; ?></td>
                                                     <td><?php echo $student['roll_no']; ?></td>
-                                                    <td><?php echo $student['firstname'] . " " . $student['lastname']; ?></td>
-                                                    <td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob'])); ?></td><td><?php echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['due_date'])); ?></td>
+                                                    <td><?php echo $this->customlib->getFullName($student['firstname'],$student['middlename'],$student['lastname'],$sch_setting->middlename,$sch_setting->lastname);?></td>										
+													<td>
+                                                        <?php if(!empty($student['dob'])){ echo date($this->customlib->getSchoolDateFormat(), $this->customlib->dateyyyymmddTodateformat($student['dob']));  } ?></td>
+														
+                                                        <td>
+                                                            <?php 
+                                                            echo  $this->customlib->dateformat($student['due_date']); ?></td>
 
                                                     <td class="text text-right"><?php
                                                 echo (number_format($student['amount'], 2, '.', ''));

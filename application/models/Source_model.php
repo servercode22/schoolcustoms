@@ -22,7 +22,6 @@ class source_model extends MY_Model {
         $action = "Insert";
         $record_id = $id;
         $this->log($message, $record_id, $action);
-        //echo $this->db->last_query();die;
         //======================Code End==============================
 
         $this->db->trans_complete(); # Completing transaction

@@ -89,7 +89,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
 
-                    <form role="form" action="<?php echo site_url('report/class_subject') ?>" method="post" class="">
+                    <form role="form" action="<?php echo site_url('report/class_subject') ?>" method="post" class="" id="reportform">
                         <div class="box-body row">
 
                             <?php echo $this->customlib->getCSRF(); ?>
@@ -112,7 +112,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 }
                                                 ?>
                                     </select>
-                                    <span class="text-danger"><?php echo form_error('class_id'); ?></span>
+                                    <span class="text-danger" id="error_class_id"></span>
                                 </div>
                             </div>
 
@@ -133,7 +133,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                             }
                                             ?>
                                     </select>
-                                    <span class="text-danger"><?php echo form_error('section_id'); ?></span>
+                                     <span class="text-danger" id="error_section_id"></span>
                                 </div>
                             </div>
 
@@ -153,7 +153,7 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                         </div>
                         <div class="box-body table-responsive">
                             <div class="download_label"><?php
-                                echo $this->lang->line('class') . "-" . $this->lang->line('subject') . " " . $this->lang->line('report') . "<br>";
+                                echo $this->lang->line('class') . "-" . $this->lang->line('subject') . " " . $this->lang->line('report');
 
                                 $this->customlib->get_postmessage();
                                 ?></div>
@@ -170,7 +170,6 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                 </thead>
                                 <tbody>
                                     <?php
-                                    //print_r($subjects);die;
                                     foreach ($subjects as $value) {
                                         ?>
                                         <tr>
@@ -200,9 +199,9 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 }
                                                 ?></td>
                                         </tr>
-    <?php
-}
-?>
+                                            <?php
+                                        }
+                                        ?>
                                 </tbody>
                             </table>
                         </div>
@@ -238,8 +237,56 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
             }
         });
     });
+</script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+$(document).on('submit','#reportform',function(e){
+   // e.preventDefault(); // avoid to execute the actual submit of the form.
+    var $this = $(this).find("button[type=submit]:focus");  
+    var form = $(this);
+    var url = form.attr('action');
+    var form_data = form.serializeArray();
+   // form_data.push({name: 'search_type', value: $this.attr('value')});
+  
+    $.ajax({
+           url: url,
+           type: "POST",
+           dataType:'JSON',
+           data: form_data, // serializes the form's elements.
+              beforeSend: function () {
+                $('[id^=error]').html("");
+                $this.button('loading');
+                resetFields($this.attr('name'));
+               },
+              success: function(response) { // your success handler
+                
+                if(!response.status){
+                    $.each(response.error, function(key, value) {
+                    $('#error_' + key).html(value);
+                    });
+                }else{
+                 
+                   initDatatable('record-list','report/dtclasssubjectreport',response.params);
+                }
+              },
+             error: function() { // your error handler
+                 $this.button('reset');
+             },
+             complete: function() {
+             $this.button('reset');
+             }
+         });
 
+        });
 
-
-
+    });
+    function resetFields(search_type){
+        if(search_type == "keyword_search"){
+            $('#class_id').prop('selectedIndex',0);
+            $('#section_id').find('option').not(':first').remove();
+        }else if (search_type == "class_search") {
+            
+             $('#search_text').val("");
+        }
+    }
 </script>

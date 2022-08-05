@@ -1,3 +1,9 @@
+<?php $cookie_consent	=	$this->customlib->cookie_consent();
+if(!empty($cookie_consent)){ ?>
+<div id="cookieConsent" class="cookieConsent"> 
+    <?php echo $cookie_consent; ?> <a href="<?php echo base_url() . "page/cookie-policy" ?>" target="_blank" ></a> <a onclick="setsitecookies()" class="cookieConsentOK"><?php echo $this->lang->line('accept') ?></a>
+</div>
+<?php } ?>
 <footer>
     <div class="container spacet40 spaceb40">
         <div class="row">
@@ -92,17 +98,8 @@
                             <p class="sub-title"><?php echo $school_setting->address; ?></p>
                         </div>
                     </div>
-                </div>
-
-                <!--<div class="col-md-4 col-sm-6">
-                    <h3 class="fo-title"><?php echo $this->lang->line('contact'); ?></h3>
-                    <ul class="co-list">
-                        <li><i class="fa fa-envelope"></i>
-                            <a href="mailto:<?php echo $school_setting->email; ?>"><?php echo $school_setting->email; ?></a></li>
-                        <li><i class="fa fa-phone"></i><?php echo $school_setting->phone; ?></li>
-                        <li><i class="fa fa-map-marker"></i><?php echo $school_setting->address; ?></li>
-                    </ul>
-                </div>./col-md-3-->
+                </div>                
+				
                 <div class="col-md-3 col-sm-6">
                     <a class="twitter-timeline" data-tweet-limit="1" href="#"></a>
                 </div><!--./col-md-3-->   
@@ -121,3 +118,29 @@
 
 </footer>
 <a class="scrollToTop" href="#"><i class="fa fa-angle-up"></i></a>
+<script>
+    function setsitecookies() {
+        $.ajax({
+            type: "POST",
+            url: "<?php echo base_url(); ?>welcome/setsitecookies",
+            data: {},
+            success: function (data) {
+                $('.cookieConsent').hide();
+
+            }
+        });
+    }
+	
+	function check_cookie_name(name)
+    {
+        var match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
+        if (match) {
+            console.log(match[2]);
+            $('.cookieConsent').hide();
+        }
+        else{
+           $('.cookieConsent').show();
+        }
+    }
+    check_cookie_name('sitecookies');
+</script>

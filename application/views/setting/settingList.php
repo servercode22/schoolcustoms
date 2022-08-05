@@ -198,7 +198,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </div><!--./row-->
                                 <div class="row">
                                     <div class="col-md-12">
@@ -331,7 +330,7 @@
                                     </div><!--./col-md-12-->
 
 
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group row">
                                             <label class="col-sm-4"><?php echo $this->lang->line('date_format'); ?><small class="req"> *</small></label>
                                             <div class="col-sm-8">
@@ -350,10 +349,10 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="col-md-6">
+                                    <div class="col-md-4">
                                         <div class="form-group row">
                                             <label class="col-sm-4"><?php echo $this->lang->line('timezone'); ?><small class="req"> *</small></label>
-                                            <div class="col-sm-8">
+                                            <div class="col-sm-8"> 
                                                 <select  id="language_id" name="sch_timezone" class="form-control" >
                                                     <option value="">--<?php echo $this->lang->line('select') ?>--</option>
                                                     <?php foreach ($timezoneList as $key => $timezone) {
@@ -366,6 +365,25 @@
                                                             <?php } ?>
                                                 </select>
                                                 <span class="text-danger"><?php echo form_error('timezone'); ?></span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4"><?php echo $this->lang->line('start_day_of_week') ?><small class="req"> *</small></label>
+                                            <div class="col-sm-8">
+                                                <select  id="start_week" name="sch_start_week" class="form-control" >
+                                                    <option value=""><?php echo $this->lang->line('select'); ?></option>
+                                                    <?php foreach ($daysList as $day_key => $day_value) {
+                                                        ?>
+                                                        <option value="<?php echo $day_key ?>" <?php
+                                                        if ($day_key == $result->start_week) {
+                                                            echo "selected";
+                                                        }
+                                                        ?> ><?php echo $day_value ?></option>
+                                                            <?php } ?>
+                                                </select>
+                                                <span class="text-danger"><?php echo form_error('sch_start_week'); ?></span>
                                             </div>
                                         </div>
                                     </div>
@@ -425,7 +443,6 @@
                                         </div>
                                     </div>
                                 </div><!--./row-->
-
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="settinghr"></div>
@@ -492,8 +509,9 @@
                                         </div>
                                     </div>
 
-
+ 
                                 </div><!--./row-->
+                                
 
 
                                 <div class="row">
@@ -563,6 +581,34 @@
 
 
                                 </div><!--./row-->
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="settinghr"></div>
+                                        <h4 class="session-head"><?php echo $this->lang->line('online_examination'); ?></h4>
+                                    </div><!--./col-md-12-->
+
+                                    <div class="col-md-6">
+                                        <div class="form-group row">
+                                            <label class="col-sm-4"><?php echo $this->lang->line('show_me_only_my_question'); ?></label>
+                                            <div class="col-sm-8">
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="my_question" value="0" <?php
+                                                    if ($result->my_question == 0) {
+                                                        echo "checked";
+                                                    }
+                                                    ?>  ><?php echo $this->lang->line('disabled'); ?>
+                                                </label>
+                                                <label class="radio-inline">
+                                                    <input type="radio" name="my_question" value="1" <?php
+                                                    if ($result->my_question == 1) {
+                                                        echo "checked";
+                                                    }
+                                                    ?> ><?php echo $this->lang->line('enabled'); ?>
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+								</div><!--./row-->
 
                                 <div class="row">
                                     <div class="col-md-12">
@@ -591,7 +637,6 @@
                                         </div>
                                     </div>
 
-
                                     <div class="col-md-6">
                                         <div class="form-group row">
                                             <label class="col-sm-4"><?php echo $this->lang->line('fee_due_days'); ?><small class="req"> *</small></label>
@@ -602,30 +647,7 @@
                                         </div>
                                     </div>
 
-
-                                    <div class="col-md-6">
-                                        <div class="form-group row">
-                                            <label class="col-sm-4"><?php echo $this->lang->line('online') . " " . $this->lang->line('admission'); ?></label>
-                                            <div class="col-sm-8">
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="online_admission" value="0" <?php
-                                                    if ($result->online_admission == 0) {
-                                                        echo "checked";
-                                                    }
-                                                    ?> ><?php echo $this->lang->line('disabled'); ?>
-                                                </label>
-                                                <label class="radio-inline">
-                                                    <input type="radio" name="online_admission" value="1" <?php
-                                                    if ($result->online_admission == 1) {
-                                                        echo "checked";
-                                                    }
-                                                    ?>><?php echo $this->lang->line('enabled'); ?>
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-
-
+                                    
 
                                     <div class="col-md-6">
                                         <div class="form-group row">
@@ -645,28 +667,27 @@
                                                     }
                                                     ?> value="yes"><?php echo $this->lang->line('enabled'); ?>
                                                 </label>
-
-
                                             </div>
                                         </div>
                                     </div>
-
                                 </div><!--./row-->
 
+                                
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="settinghr"></div>
-                                        <div class="relative">     
-                                            <h4 class="session-head"><?php echo $this->lang->line('mobile_app'); ?></h4>
-                                            <?php if (!$app_ver) {
+                                        <div class="relative">   
+
+                                            <h4 class="session-head"><?php echo $this->lang->line('mobile_app'); ?> <?php if ($app_response) { echo "<small class=' alert-success'>(".$this->lang->line('android_app_purchase_code_already_registered').")</small>"; } ?></h4>
+
+                                            <?php if (!$app_response) {
                                                 ?>
-                                                <button type="button" class="btn btn-info btn-sm impbtntitle3" data-toggle="modal" data-target="#andappModal">Register Your Android App</button>
+                                                <button type="button" class="btn btn-info btn-sm impbtntitle3" data-toggle="modal" data-target="#andappModal"><?php echo $this->lang->line('register_your_android_app')?></button>
                                                 <?php
                                             }
-                                            ?>
+                                            ?>                                     
+                                          
                                         </div>
-
-
                                     </div><!--./col-md-12-->
 
                                     <div class="col-md-12">
@@ -698,7 +719,6 @@
                                         </div>
                                     </div>
 
-
                                 </div><!--./row-->
 
                                 <div class="row">
@@ -707,7 +727,6 @@
                                         <h4 class="session-head"><?php echo $this->lang->line('current_theme'); ?></h4>
                                     </div><!--./col-md-12-->
                                     <div class="col-sm-12">
-
                                         <div id="input-type">
                                             <div class="row">
                                                 <div class="col-sm-3 col-xs-6 col20">
@@ -718,7 +737,9 @@
                                                         }
                                                         ?> value="white.jpg" type="radio" />
                                                         <img src="<?php echo base_url(); ?>backend/images/white.jpg">
+                                                        <span class="radiotext">white</span>
                                                     </label>
+													
                                                 </div>
                                                 <div class="col-sm-3 col-xs-6 col20">
                                                     <label class="radio-img">
@@ -728,7 +749,9 @@
                                                         }
                                                         ?>  value="default.jpg" type="radio" />
                                                         <img src="<?php echo base_url(); ?>backend/images/default.jpg">
+                                                        <span class="radiotext">default</span>
                                                     </label>
+													
                                                 </div>
                                                 <div class="col-sm-3 col-xs-6 col20">
                                                     <label class="radio-img">
@@ -738,7 +761,9 @@
                                                         }
                                                         ?> value="red.jpg" type="radio" />
                                                         <img src="<?php echo base_url(); ?>backend/images/red.jpg">
+                                                        <span class="radiotext">red</span>
                                                     </label>
+													
                                                 </div>
                                                 <div class="col-sm-3 col-xs-6 col20">
                                                     <label class="radio-img">
@@ -748,7 +773,9 @@
                                                         }
                                                         ?> value="blue.jpg" type="radio" />
                                                         <img src="<?php echo base_url(); ?>backend/images/blue.jpg">
+                                                        <span class="radiotext">blue</span>
                                                     </label>
+													
                                                 </div>
                                                 <div class="col-sm-3 col-xs-6 col20">
                                                     <label class="radio-img">
@@ -758,7 +785,9 @@
                                                         }
                                                         ?> value="gray.jpg" type="radio" />
                                                         <img src="<?php echo base_url(); ?>backend/images/gray.jpg">
+                                                        <span class="radiotext">gray</span>
                                                     </label>
+													
                                                 </div>
 
 
@@ -940,7 +969,7 @@
             backdrop: 'static',
             keyboard: false
         });
-    });
+    }); 
 // set focus when modal is opened
     $('#modal-uploadfile').on('shown.bs.modal', function () {
         $('.upload_logo').button('reset');
@@ -958,7 +987,7 @@
         });
     });
 // set focus when modal is opened
-    $('#modal-uploadadmin_logo').on('shown.bs.modal', function () {
+    $('#modal-upload_admin_logo').on('shown.bs.modal', function () {
         $('.upload_admin_logo').button('reset');
     });
 
@@ -1016,7 +1045,7 @@
 <script type="text/javascript">
     $(function () {
 
-
+        $("#online_admission_amount").attr('readonly','true');
 
         // Drag enter
         $('.upload-area').on('dragenter', function (e) {
@@ -1402,5 +1431,15 @@
     }
 
 
+</script>
+<script>
+    $(".amountenable").click(function () {
+    var status=$(this). val();
+   if(status=='yes'){
+    $("#online_admission_amount").removeAttr('readonly','false');
+   }else{
+$("#online_admission_amount").attr('readonly','true');
+   }
+    });
 </script>
 

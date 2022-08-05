@@ -1,49 +1,5 @@
 <style type="text/css">
-    .material-switch > input[type="checkbox"] {
-        display: none;   
-    }
-
-    .material-switch > label { 
-        cursor: pointer;
-        height: 0px;
-        position: relative; 
-        width: 40px;  
-    }
-
-    .material-switch > label::before {
-        background: rgb(0, 0, 0);
-        box-shadow: inset 0px 0px 10px rgba(0, 0, 0, 0.5);
-        border-radius: 8px;
-        content: '';
-        height: 14px;
-        margin-top: -8px;
-        position:absolute;
-        opacity: 0.3;
-        transition: all 0.4s ease-in-out;
-        width: 40px;
-    }
-    .material-switch > label::after {
-        background: rgb(255, 255, 255);
-        border-radius: 16px;
-        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
-        content: '';
-        height: 20px;
-        left: -4px;
-        margin-top: -8px;
-        position: absolute;
-        top: -4px;
-        transition: all 0.3s ease-in-out;
-        width: 20px;
-    }
-    .material-switch > input[type="checkbox"]:checked + label::before {
-        background: inherit;
-        opacity: 0.5;
-    }
-    .material-switch > input[type="checkbox"]:checked + label::after {
-        background: inherit;
-        left: 20px;
-    }
-    .table .pull-right {text-align: initial; width: auto; margin-bottom: 1px}
+    .table .pull-right {text-align: initial; width: auto; margin-bottom: 3px}
 </style>
 <?php
 $language = $this->customlib->getLanguage();
@@ -133,14 +89,15 @@ $language_name = $language["short_code"];
                     <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('syllabus') . " " . $this->lang->line('status') . " " . $this->lang->line('for') . ": " . $subject_name; ?></h3>
                 </div>
                 <div class="box-body" id="transfee">    
-                    <div class="table-responsive mailbox-messages" > 
+                    <div class="table-responsive mailbox-messages"> 
 
 
+                    <p class="pull-right">
+                    <a class="btn btn-default btn-xs displayinline" id="btnExport" onclick="fnExcelReport();"> <i class="fa fa-file-excel-o"></i> </a>  
+                        <a class="btn btn-default btn-xs displayinline" id="print" onclick="printDiv()" ><i class="fa fa-print"></i></a> </p>
 
-                        <a class="btn btn-default btn-xs pull-right" id="print" onclick="printDiv()" ><i class="fa fa-print"></i></a> <a class="btn btn-default btn-xs pull-right" id="btnExport" onclick="fnExcelReport();"> <i class="fa fa-file-excel-o"></i> </a>
 
-
-                        <table class="table table-bordered topictable" id="headerTable">
+                        <table class="table table-bordered topictable ptt10" id="headerTable">
                             <tr class="hide" id="visible">
                                 <td colspan="5"><center><b><?php echo $this->lang->line('syllabus') . " " . $this->lang->line('status') . " " . $this->lang->line('for') . ": " . $subject_name; ?></b></center></td>
                             </tr>
@@ -150,7 +107,7 @@ $language_name = $language["short_code"];
                                 <th width="20%"><?php echo $this->lang->line('topic_completion_date'); ?></th>
                                 <th width=""><?php echo $this->lang->line('status'); ?></th>
                                 <?php if ($this->rbac->hasPrivilege('manage_syllabus_status', 'can_edit')) { ?>
-                                    <th class="pull-right"><?php echo $this->lang->line('action'); ?></th>
+                                    <th class="text-right"><?php echo $this->lang->line('action'); ?></th>
                                 <?php } ?>
                             </tr>
                             <?php
@@ -265,7 +222,7 @@ $language_name = $language["short_code"];
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" onclick="close_modal()" >&times;</button>
-                <h4 class="modal-title" id="modal-title" ><?php echo $this->lang->line('topic_completion_date'); ?></h4>
+                <h4 class="modal-title" id="modal-title" ><?php echo $this->lang->line('topic_completion_date'); ?> <small style="color:red;"> *</small></h4>
             </div>
             <div class="modal-body">
 
@@ -544,6 +501,7 @@ $language_name = $language["short_code"];
     function printDiv() {
         $("#visible").removeClass("hide");
         $(".pull-right").addClass("hide");
+        $(".text-right").addClass("hide");
 
         document.getElementById("print").style.display = "none";
         document.getElementById("btnExport").style.display = "none";
