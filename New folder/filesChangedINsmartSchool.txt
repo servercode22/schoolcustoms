@@ -1,0 +1,62 @@
+1:studentfeeSearch.php  	path=application\views\studentfee\studentfeeSearch.php
+2:studentfee.php 		path=application\controllers\Studentfee.php
+3:New folder+files=Invoce	path=application\views\invoice\invoice.php
+4:siderbar.php			path=application\views\layout\sidebar.php
+5:voucher.php			path=application\controllers\voucher.php
+6:voucher folder+index.php	path=application\views\admin\voucher\index.php
+7:student_model.php		path=application\models\Student_model.php
+8:voucher_settings_model.php	path=application\models\voucher_settings_model.php
+
+
+Step1:
+Create new voucher.php in path=application\controllers\voucher.php
+
+Step2:
+Copy code from studentfee.php file [Amir code to end Amir] path=application\controllers\Studentfee.php
+
+Step3:
+Creane new file voucher_settings_model.php in path=application\models\voucher_settings_model.php
+
+Step4:
+Copy code from student_model.php in path=application\models\Student_model.php
+
+===View====
+
+Step5:
+Copy from 6 to 7 section in studentfeeSearch.php  path=application\views\studentfee\studentfeeSearch.php
+
+Step6:
+Copy Invoice folder from Views Folder from path=application\views\invoice\
+
+Step7:
+Copy code from siderbar.php path=application\views\layout\sidebar.php
+
+Step8:
+
+Copy voucher folder from views folder from this path path=application\views\admin\voucher
+
+=====Database=======
+
+Step9:
+
+Copy code from database.sql
+
+-- --------------------------------------------------------
+
+--  Aththor = Amir Saddiqui
+-- Table structure for table `onlineexam`
+--
+
+
+
+CREATE TABLE `voucher_settings` ( 
+  `id` INT NOT NULL AUTO_INCREMENT , 
+  `bank_info` TEXT NULL ,
+  `school_info` TEXT NULL ,
+  `voucher_types` TEXT NULL , 
+  `students` TEXT NULL ,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP , 
+  `updated_at` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ,
+  PRIMARY KEY (`id`)
+) ENGINE = InnoDB;
+

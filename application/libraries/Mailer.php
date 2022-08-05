@@ -8,7 +8,7 @@ class Mailer {
 
     public $mail_config;
     private $sch_setting;
- 
+
     public function __construct() {
         $this->CI = &get_instance();
         $this->CI->load->model('emailconfig_model');
@@ -16,33 +16,24 @@ class Mailer {
         $this->CI->load->model('setting_model');
         $this->sch_setting = $this->CI->setting_model->get();
     }
- 
+
     public function send_mail($toemail, $subject, $body, $FILES = array(), $cc = "") {
 
         $mail = new PHPMailer();
         $mail->CharSet = 'UTF-8';
         $school_name = $this->sch_setting[0]['name'];
-        $school_email    = $this->sch_setting[0]['email'];
         if ($this->CI->mail_config->email_type == "smtp") {
 
             $mail->IsSMTP();
-            $mail->SMTPAuth   = ($this->CI->mail_config->smtp_auth != "") ? $this->CI->mail_config->smtp_auth : "";
+            $mail->SMTPAuth = true;
             $mail->SMTPSecure = $this->CI->mail_config->ssl_tls;
-            $mail->Host       = $this->CI->mail_config->smtp_server;
-            $mail->Port       = $this->CI->mail_config->smtp_port;
-            $mail->Username   = $this->CI->mail_config->smtp_username;
-            $mail->Password   = $this->CI->mail_config->smtp_password;
-            $mail->SetFrom($this->CI->mail_config->smtp_username, $school_name);
-            $mail->AddReplyTo($this->CI->mail_config->smtp_username, $this->CI->mail_config->smtp_username);
-        } else {
-            $mail->isSMTP();
-            $mail->Host        = 'localhost';
-            $mail->SMTPAuth    = false;
-            $mail->SMTPAutoTLS = false;
-            $mail->Port        = 25;
-            $mail->SetFrom($school_email, $school_name);
-            $mail->AddReplyTo($school_email, $school_name);
+            $mail->Host = $this->CI->mail_config->smtp_server;
+            $mail->Port = $this->CI->mail_config->smtp_port;
+            $mail->Username = $this->CI->mail_config->smtp_username;
+            $mail->Password = $this->CI->mail_config->smtp_password;
         }
+        $mail->SetFrom($this->CI->mail_config->smtp_username, $school_name);
+        $mail->AddReplyTo($this->CI->mail_config->smtp_username, $this->CI->mail_config->smtp_username);
         if (!empty($FILES)) {
             if (isset($_FILES['files']) && !empty($_FILES['files'])) {
                 $no_files = count($_FILES["files"]['name']);

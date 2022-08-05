@@ -39,122 +39,45 @@ if (!function_exists('display_custom_fields')) {
             $fields_html .= '<div class="col-md-' . $field['bs_column'] . '">';
             if ($field['type'] == 'input' || $field['type'] == 'number') {
                 $type = $field['type'] == 'input' ? 'text' : 'number';
-                $fields_html .= render_input_field($field_name, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
+                $fields_html .= render_input_field($field_name, $label, $value, $type, $input_class, $field['belong_to'], $field['id'], $field['validation']);
             } elseif ($field['type'] == 'textarea') {
-                $fields_html .= render_textarea_field($field_name, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
+                $fields_html .= render_textarea_field($field_name, $label, $value, $type, $input_class, $field['belong_to'], $field['id'], $field['validation']);
             } elseif ($field['type'] == 'select') {
 
                 $options = optionSplit($field['field_values']);
 
-                $fields_html .= render_select_field($field_name, $options, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
+                $fields_html .= render_select_field($field_name, $options, $label, $value, $type, $input_class, $field['belong_to'], $field['id'], $field['validation']);
             } elseif ($field['type'] == 'multiselect') {
                 $options = optionSplit($field['field_values']);
-                $fields_html .= render_multiselect_field($field_name, $options, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
+                $fields_html .= render_multiselect_field($field_name, $options, $label, $value, $type, $input_class, $field['belong_to'], $field['id'], $field['validation']);
             } elseif ($field['type'] == 'checkbox') {
 
                 $options = optionSplit($field['field_values']);
-                $fields_html .= render_checkbox_field($field_name, $options, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
+                $fields_html .= render_checkbox_field($field_name, $options, $label, $value, $type, $input_class, $field['belong_to'], $field['id'], $field['validation']);
             } elseif ($field['type'] == 'date_picker') {
 
                 $type = $field['type'];
-                $fields_html .= render_date_picker_field($field_name, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
+                $fields_html .= render_date_picker_field($field_name, $label, $value, $type, $input_class, $field['belong_to'], $field['id'], $field['validation']);
             } elseif ($field['type'] == 'date_picker_time') {
 
                 $type = $field['type'];
-                $fields_html .= render_date_picker_time_field($field_name, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
+                $fields_html .= render_date_picker_time_field($field_name, $label, $value, $type, $input_class, $field['belong_to'], $field['id'], $field['validation']);
             } elseif ($field['type'] == 'colorpicker') {
 
                 $type = $field['type'];
-                $fields_html .= render_colorpicker_field($field_name, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
+                $fields_html .= render_colorpicker_field($field_name, $label, $value, $type, $input_class, $field['belong_to'], $field['id'], $field['validation']);
             } elseif ($field['type'] == 'link') {
 
                 $type = $field['type'];
-                $fields_html .= render_link_field($field_name, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
+                $fields_html .= render_link_field($field_name, $label, $value, $type, $input_class, $field['belong_to'], $field['id'], $field['validation']);
             }
             $fields_html .= '</div>';
         }
 
         return $fields_html;
     }
-     function display_admission_custom_fields($belongs_to, $rel_id = false, $where = array())
-    {
-        $CI = &get_instance();
-        $CI->db->from('custom_fields');
-        $CI->db->where('belong_to', $belongs_to);
-        $CI->db->order_by('custom_fields.belong_to', 'asc');
-        $CI->db->order_by('custom_fields.weight', 'asc');
-        $query       = $CI->db->get();
-        $result      = $query->result_array();
-        $fields_html = '';
 
-        foreach ($result as $result_key => $field) {
-
-            $type = $field['type'];
-
-            $label      = ucfirst($field['name']);
-          
-            
-            if($CI->customlib->getfieldstatus($field['name']))
-            {
-                $field_name = 'custom_fields[' . $field['belong_to'] . '][' . $field['id'] . ']';
-                if ($field['bs_column'] == '' || $field['bs_column'] == 0) {
-                    $field['bs_column'] = 12;
-                }
-                $input_class = "";
-                $value       = "";
-                if ($rel_id !== false) {
-
-                    $return_value = get_custom_field_value($rel_id, $field['id'], $belongs_to);
-                    if (!empty($return_value)) {
-                        $value = $return_value->field_value;
-                    }
-                }
-
-                $fields_html .= '<div class="col-md-' . $field['bs_column'] . '">';
-                if ($field['type'] == 'input' || $field['type'] == 'number') {
-                    $type = $field['type'] == 'input' ? 'text' : 'number';
-                    $fields_html .= render_input_field($field_name, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
-                } elseif ($field['type'] == 'textarea') {
-                    $fields_html .= render_textarea_field($field_name, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
-                } elseif ($field['type'] == 'select') {
-
-                    $options = optionSplit($field['field_values']);
-
-                    $fields_html .= render_select_field($field_name, $options, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
-                } elseif ($field['type'] == 'multiselect') {
-                    $options = optionSplit($field['field_values']);
-                    $fields_html .= render_multiselect_field($field_name, $options, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
-                } elseif ($field['type'] == 'checkbox') {
-
-                    $options = optionSplit($field['field_values']);
-                    $fields_html .= render_checkbox_field($field_name, $options, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
-                } elseif ($field['type'] == 'date_picker') {
-
-                    $type = $field['type'];
-                    $fields_html .= render_date_picker_field($field_name, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
-                } elseif ($field['type'] == 'date_picker_time') {
-
-                    $type = $field['type'];
-                    $fields_html .= render_date_picker_time_field($field_name, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
-                } elseif ($field['type'] == 'colorpicker') {
-
-                    $type = $field['type'];
-                    $fields_html .= render_colorpicker_field($field_name, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
-                } elseif ($field['type'] == 'link') {
-
-                    $type = $field['type'];
-                    $fields_html .= render_link_field($field_name, $field['belong_to'], $field['id'], $field['validation'], $label, $value, $type, $input_class);
-                }
-                $fields_html .= '</div>';
-            }
-
-           
-        }
-
-        return $fields_html;
-    }
-
-    function render_input_field($name, $belong_to, $field_id, $validation, $label = '', $value = '', $type = 'text', $input_class = '')
+    function render_input_field($name, $label = '', $value = '', $type = 'text', $input_class = '', $belong_to, $field_id, $validation)
     {
         $input            = '';
         $_form_group_attr = '';
@@ -184,7 +107,7 @@ if (!function_exists('display_custom_fields')) {
         return $input;
     }
 
-    function render_textarea_field($name, $belong_to, $field_id, $validation, $label = '', $value = '', $type = 'text', $input_class = '')
+    function render_textarea_field($name, $label = '', $value = '', $type = 'text', $input_class = '', $belong_to, $field_id, $validation)
     {
         $input            = '';
         $_form_group_attr = '';
@@ -213,7 +136,7 @@ if (!function_exists('display_custom_fields')) {
         return $input;
     }
 
-    function render_select_field($name, $options, $belong_to, $field_id, $validation, $label = '', $value = '', $type = 'text', $input_class = '')
+    function render_select_field($name, $options, $label = '', $value = '', $type = 'text', $input_class = '', $belong_to, $field_id, $validation)
     {
 
         $input            = '';
@@ -245,7 +168,7 @@ if (!function_exists('display_custom_fields')) {
         return $input;
     }
 
-    function render_multiselect_field($name, $options, $belong_to, $field_id, $validation, $label = '', $value = '', $type = 'text', $input_class = '')
+    function render_multiselect_field($name, $options, $label = '', $value = '', $type = 'text', $input_class = '', $belong_to, $field_id, $validation)
     {
         $input            = '';
         $_form_group_attr = '';
@@ -293,7 +216,7 @@ if (!function_exists('display_custom_fields')) {
         return $input;
     }
 
-    function render_checkbox_field($name, $options, $belong_to, $field_id, $validation, $label = '', $value = '', $type = 'text', $input_class = '')
+    function render_checkbox_field($name, $options, $label = '', $value = '', $type = 'text', $input_class = '', $belong_to, $field_id, $validation)
     {
 
         $input            = '';
@@ -339,7 +262,7 @@ if (!function_exists('display_custom_fields')) {
         return $input;
     }
 
-    function render_date_picker_field($name, $belong_to, $field_id, $validation, $label = '', $value = '', $type = 'text', $input_class = '')
+    function render_date_picker_field($name, $label = '', $value = '', $type = 'text', $input_class = '', $belong_to, $field_id, $validation)
     {
         $input            = '';
         $_form_group_attr = '';
@@ -368,7 +291,7 @@ if (!function_exists('display_custom_fields')) {
         return $input;
     }
 
-    function render_date_picker_time_field($name, $belong_to, $field_id, $validation, $label = '', $value = '', $type = 'text', $input_class = '')
+    function render_date_picker_time_field($name, $label = '', $value = '', $type = 'text', $input_class = '', $belong_to, $field_id, $validation)
     {
         $input            = '';
         $_form_group_attr = '';
@@ -397,7 +320,7 @@ if (!function_exists('display_custom_fields')) {
         return $input;
     }
 
-    function render_colorpicker_field($name, $belong_to, $field_id, $validation, $label = '', $value = '', $type = 'text', $input_class = '')
+    function render_colorpicker_field($name, $label = '', $value = '', $type = 'text', $input_class = '', $belong_to, $field_id, $validation)
     {
         $input            = '';
         $_form_group_attr = '';
@@ -426,7 +349,7 @@ if (!function_exists('display_custom_fields')) {
         return $input;
     }
 
-    function render_link_field($name, $belong_to, $field_id, $validation, $label = '', $value = '', $type = 'text', $input_class = '')
+    function render_link_field($name, $label = '', $value = '', $type = 'text', $input_class = '', $belong_to, $field_id, $validation)
     {
         $input            = '';
         $_form_group_attr = '';
@@ -508,10 +431,9 @@ if (!function_exists('display_custom_fields')) {
         $fields = array(
             'firstname'                  => lang('first_name'),
             'admission_date'             => lang('admission_date'),
-            'middlename'                 => lang('middle_name'),
             'lastname'                   => lang('last_name'),
             'rte'                        => lang('rte'),
-            'student_photo'              => lang('student')." ".lang('photo'),
+            'student_photo'              => lang('image'),
             'mobile_no'                  => lang('mobile_no'),
             'student_email'              => lang('email'),
             'religion'                   => lang('religion'),
@@ -547,65 +469,6 @@ if (!function_exists('display_custom_fields')) {
             'student_height'             => lang('height'),
             'student_weight'             => lang('weight'),
             'previous_school_details'    => lang('previous_school_details')
-        );
-        return $fields;
-    }
-
-    function get_captcha_editable_fields()
-    {
-        $fields = array(
-            'userlogin'  => lang('user')." ".lang('login'),
-            'login'      => lang('admin')." ".lang('login'),
-            'admission'  => lang('online')." ".lang('admission'),
-            'complain'   => lang('complain'),
-            'contact_us' => lang('contact_us'),
-        );
-        return $fields;
-    }
-
-     function get_onlineadmission_editable_fields()
-    {
-         $fields = array(
-            
-            'middlename'                 => lang('middle_name'),
-            'lastname'                   => lang('last_name'),
-            'category'                   => lang('category'),
-            'religion'                   => lang('religion'),
-            'cast'                       => lang('cast'),
-            'mobile_no'                  => lang('mobile_no'),
-            'student_email'              => lang('email'),
-            'student_photo'              => lang('student')." ".lang('photo'),
-            'is_student_house'           => lang('house'),
-            'is_blood_group'             => lang('blood_group'),
-            'student_height'             => lang('height'),
-            'student_weight'             => lang('weight'),
-            'measurement_date'           => lang('measurement_date'),
-            'father_name'                => lang('father_name'),
-            'father_phone'               => lang('father_phone'),
-            'father_occupation'          => lang('father_occupation'),
-            'father_pic'                 => lang('father') . " " . lang('photo'),
-            'mother_name'                => lang('mother_name'),
-            'mother_phone'               => lang('mother_phone'),
-            'mother_occupation'          => lang('mother_occupation'),
-            'mother_pic'                 => lang('mother') . " " . lang('photo'),
-            'if_guardian_is'             => lang('if_guardian_is'),
-            'guardian_name'              => lang('guardian_name'),
-            'guardian_relation'          => lang('guardian_relation'),
-            'guardian_phone'             => lang('guardian_phone'),
-            'guardian_email'             => lang('guardian_email'),
-            'guardian_occupation'        => lang('guardian_occupation'),
-            'guardian_photo'             => lang('guardian')." ".lang('photo'),
-            'guardian_address'           => lang('guardian_address'),
-            'current_address'            => lang('if_guardian_address_is_current_address'),
-            'permanent_address'          => lang('if_permanent_address_is_current_address'),
-            'bank_account_no'            => lang('bank_account_no'),
-            'bank_name'                  => lang('bank_name'),
-            'ifsc_code'                  => lang('ifsc_code'),
-            'national_identification_no' => lang('national_identification_no'),
-            'local_identification_no'    => lang('local_identification_no'),
-            'rte'                        => lang('rte'),
-            'previous_school_details'    => lang('previous_school_details'),
-            'student_note'               => lang('note')         
         );
         return $fields;
     }

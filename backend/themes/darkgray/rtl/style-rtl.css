@@ -1,7 +1,7 @@
 body {
     padding: 0;
     margin:0;
-   font-family: 'Roboto', sans-serif;
+   font-family:"Open Sans",Helvetica,Arial,sans-serif;
   background: #fff;
   text-align:right;
   direction:rtl
@@ -16,7 +16,7 @@ a:hover, a:active, a:focus {
     color: #72afd2;
 }
 ul, ol {direction: rtl;padding-right: 15px;}
-
+h1, h2, h3, h4, h5, h6{font-family:"Montserrat", sans-serif}
 .mt0{margin-top: 0 !important}
 .mt10{margin-top:10px;}
 .relative{position: relative; margin-bottom: 10px;}
@@ -71,6 +71,11 @@ box-sizing: border-box;
 }
 
 
+
+
+
+
+
 .owl-carousel.owl-loaded{direction: ltr;}
 .head-title{text-align: right;}
 .staff-content h3{text-align: center;}
@@ -82,6 +87,7 @@ box-sizing: border-box;
 .contact-item {text-align: right;}
 .scrollToTop {right:auto; left:20px;}
 .service-box .service-box-icon {left: auto;right: 0;}
+/*.newstab {right: 16px;left: auto;}*/
 .service-box .service-box-content {position: relative;padding-right: 60px; padding-left: 0;}
 .service-box:first-child{border:0;}
 .service-box:last-child {border-right: 1px solid rgb(181, 99, 9);}
@@ -106,24 +112,28 @@ box-sizing: border-box;
 .dropdown-menu>li>a {text-align: right;}
 @media(max-width: 767px){
 .top-right {float: none;}
+
 .navbar-toggle{margin-top: 0 !important; margin-right:0 !important;}
 }
 
+@media(min-width: 768px) and (max-width:991px){
 
+}
+
+@media(min-width: 992px) and (max-width:1199px){
+
+}
 
 .fullwidth { width: 100vw;position: relative;right: 50%;
 margin-right: -50vw;margin-left: auto;left: 0;}
 
 /*safari Browser*/
 @media screen and (-webkit-min-device-pixel-ratio:0) {
+  /*::i-block-chrome, .chosebtn{margin-top: -4px;} */ 
   ::i-block-chrome, .fullwidth {width: 102em;margin-left: auto;margin-right: -51em;left: 0;right: 50%;}
   ::i-block-chrome, .galleryfancy .content-overlay{height: 100rem}
   ::i-block-chrome, .gallheight{height: 250px; overflow:hidden;}
 }
 .fancy-lightbox-nav-overlay a:last-child span {
     text-align: left;
-}
-.catpcha{cursor:pointer; padding-right: 10px; padding-left: 0;}
-@media(max-width:767px){
-   #captcha_image img{margin-bottom:5px;} 
 }

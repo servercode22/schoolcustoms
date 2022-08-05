@@ -5,7 +5,7 @@ if (!defined('BASEPATH')) {
 }
 
 class Mailsmsconf {
-  
+
     public function __construct() {
         $this->CI = &get_instance();
         $this->CI->config->load("mailsms");
@@ -14,79 +14,74 @@ class Mailsmsconf {
         $this->CI->load->model('examresult_model');
         $this->CI->load->model('student_model');
         $this->config_mailsms = $this->CI->config->item('mailsms');
-        $this->sch_setting = $this->CI->setting_model->getSetting();
     }
- 
+
     public function mailsms($send_for, $sender_details, $date = null, $exam_schedule_array = null) {
-      
+
         $send_for = $this->config_mailsms[$send_for];
 
         $chk_mail_sms = $this->CI->customlib->sendMailSMS($send_for);
-        $sms_detail = $this->CI->smsconfig_model->getActiveSMS();
-       
-       
+
         if (!empty($chk_mail_sms)) {
             if ($send_for == "student_admission") {
                 if ($chk_mail_sms['mail'] && $chk_mail_sms['template'] != "") {
-                    $this->CI->mailgateway->sentRegisterMail($sender_details['student_id'], $sender_details['email'], $chk_mail_sms['template'], $chk_mail_sms['subject']);
+                    $this->CI->mailgateway->sentRegisterMail($sender_details['student_id'], $sender_details['email'], $chk_mail_sms['template']);
                 }
-                if ($chk_mail_sms['sms'] && $chk_mail_sms['template'] != "" && !empty($sms_detail)) {
-                  
-                    $this->CI->smsgateway->sentRegisterSMS($sender_details['student_id'], $sender_details['contact_no'], $chk_mail_sms['template'],$chk_mail_sms['template_id']);
+                if ($chk_mail_sms['sms'] && $chk_mail_sms['template'] != "") {
+                    $this->CI->smsgateway->sentRegisterSMS($sender_details['student_id'], $sender_details['contact_no'], $chk_mail_sms['template']);
                 }
             } elseif ($send_for == "exam_result") {
 
-                $this->sendResult($chk_mail_sms, $sender_details, $chk_mail_sms['template'], $chk_mail_sms['subject'],$chk_mail_sms['template_id']);
+                $this->sendResult($chk_mail_sms, $sender_details, $chk_mail_sms['template']);
             } elseif ($send_for == "login_credential") {
 
                 if ($chk_mail_sms['mail'] && $chk_mail_sms['template'] != "") {
 
-                    $this->CI->mailgateway->sendLoginCredential($chk_mail_sms, $sender_details, $chk_mail_sms['template'] , $chk_mail_sms['subject']);
+                    $this->CI->mailgateway->sendLoginCredential($chk_mail_sms, $sender_details, $chk_mail_sms['template']);
                 }
-                if ($chk_mail_sms['sms'] && $chk_mail_sms['template'] != "" && !empty($sms_detail)) {
-                    $this->CI->smsgateway->sendLoginCredential($chk_mail_sms, $sender_details, $chk_mail_sms['template'],$chk_mail_sms['template_id']);
+                if ($chk_mail_sms['sms'] && $chk_mail_sms['template'] != "") {
+                    $this->CI->smsgateway->sendLoginCredential($chk_mail_sms, $sender_details, $chk_mail_sms['template']);
                 }
             } elseif ($send_for == "fee_submission") {
 
                 if ($chk_mail_sms['mail'] && $chk_mail_sms['template'] != "") {
-                    $this->CI->mailgateway->sentAddFeeMail($sender_details, $chk_mail_sms['template'], $chk_mail_sms['subject']);
+                    $this->CI->mailgateway->sentAddFeeMail($sender_details, $chk_mail_sms['template']);
                 }
 
-                if ($chk_mail_sms['sms'] && $chk_mail_sms['template'] != "" && !empty($sms_detail)) {
+                if ($chk_mail_sms['sms'] && $chk_mail_sms['template'] != "") {
 
-                    $this->CI->smsgateway->sentAddFeeSMS($sender_details, $chk_mail_sms['template'],$chk_mail_sms['template_id']);
+                    $this->CI->smsgateway->sentAddFeeSMS($sender_details, $chk_mail_sms['template']);
                 }
 
                 if ($chk_mail_sms['notification'] && $chk_mail_sms['template'] != "") {
-                    $this->CI->smsgateway->sentAddFeeNotification($sender_details, $chk_mail_sms['template'], $chk_mail_sms['subject']);
+                    $this->CI->smsgateway->sentAddFeeNotification($sender_details, $chk_mail_sms['template']);
                 }
             } elseif ($send_for == "absent_attendence") {
 
-                $this->sendAbsentAttendance($chk_mail_sms, $sender_details, $date, $chk_mail_sms['template'], $exam_schedule_array, $chk_mail_sms['subject'],$chk_mail_sms['template_id']);
+                $this->sendAbsentAttendance($chk_mail_sms, $sender_details, $date, $chk_mail_sms['template'], $exam_schedule_array);
             } elseif ($send_for == "fees_reminder") {
 
                 if ($chk_mail_sms['mail'] && $chk_mail_sms['template'] != "") {
-                    $this->CI->mailgateway->sentMail($sender_details, $chk_mail_sms['template'], $chk_mail_sms['subject']);
+                    $this->CI->mailgateway->sentMail($sender_details, $chk_mail_sms['template'], 'Fees Reminder');
                 }
 
-                if ($chk_mail_sms['sms'] && $chk_mail_sms['template'] != "" && !empty($sms_detail)) {
-                   
-                    $this->CI->smsgateway->sendSMS($sender_details->guardian_phone, $sender_details,$chk_mail_sms['template_id'], $chk_mail_sms['template']);
+                if ($chk_mail_sms['sms'] && $chk_mail_sms['template'] != "") {
+                    $this->CI->smsgateway->sendSMS($sender_details->guardian_phone, $chk_mail_sms['template'], $sender_details);
                 }
 
                 if ($chk_mail_sms['notification'] && $chk_mail_sms['template'] != "") {
-                    $this->CI->smsgateway->sentNotification($sender_details->parent_app_key, $chk_mail_sms['template'], $sender_details, $chk_mail_sms['subject'], $chk_mail_sms['template']);
+                    $this->CI->smsgateway->sentNotification($sender_details->parent_app_key, $chk_mail_sms['template'], $sender_details);
                 }
             } elseif ($send_for == "homework") {
 
-                $this->sendHomework($chk_mail_sms, $sender_details, $chk_mail_sms['template'], $chk_mail_sms['subject'], $chk_mail_sms['template_id']);
-            } elseif ($send_for == "online_examination_publish_exam") {
+                $this->sendHomework($chk_mail_sms, $sender_details, $chk_mail_sms['template']);
+            } elseif ($send_for == "online_classes") {
 
-                $this->sendOnlineexam($chk_mail_sms, $sender_details, $chk_mail_sms['template'], $chk_mail_sms['subject'],$chk_mail_sms['template_id']);
-            } elseif ($send_for == "online_examination_publish_result") {
+                $this->sendOnlineClass($chk_mail_sms, $sender_details, $chk_mail_sms['template']);
+            } elseif ($send_for == "online_meeting") {
 
-                $this->sendOnlineexam($chk_mail_sms, $sender_details, $chk_mail_sms['template'], $chk_mail_sms['subject'], $chk_mail_sms['template_id']);
-            }  elseif ($send_for == "forgot_password") {
+                $this->sendMeeting($chk_mail_sms, $sender_details, $chk_mail_sms['template']);
+            } elseif ($send_for == "forgot_password") {
                 $school_name = $this->CI->setting_model->getCurrentSchoolName();
                 $sender_details['school_name'] = $school_name;
 
@@ -95,21 +90,15 @@ class Mailsmsconf {
 
                 if ($chk_mail_sms['mail'] && $chk_mail_sms['template'] != "") {
                     if (!empty($sender_details['email'])) {
-                        $subject = $chk_mail_sms['subject'];
+                        $subject = "Password Update Request";
                         $this->CI->mailer->send_mail($sender_details['email'], $subject, $msg);
                     }
                 }
-            }  elseif ($send_for == "online_admission_form_submission") {
-
-                $this->sendOnlineadmission($chk_mail_sms, $sender_details, $chk_mail_sms['template'], $chk_mail_sms['subject'], $chk_mail_sms['template_id']);
-            }  elseif ($send_for == "online_admission_fees_submission") {
-
-                $this->sendOnlineadmissionFees($chk_mail_sms, $sender_details, $chk_mail_sms['template'], $chk_mail_sms['subject'],$chk_mail_sms['template_id']);
-            }else {
+            } else {
                 
             }
         }
-    } 
+    }
 
     public function mailsmsalumnistudent($sender_details) {
         if ($sender_details['email_value'] == 'yes') {
@@ -120,14 +109,14 @@ class Mailsmsconf {
         }
     }
 
-    public function sendResult($chk_mail_sms, $exam_result, $template, $subject, $template_id) {
+    public function sendResult($chk_mail_sms, $exam_result, $template) {
         if ($chk_mail_sms['mail'] or $chk_mail_sms['sms'] or $chk_mail_sms['notification']) {
-             $sms_detail = $this->CI->smsconfig_model->getActiveSMS(); 
+
             if (!empty($exam_result['exam_result'])) {
                 foreach ($exam_result['exam_result'] as $res_key => $res_value) {
 
                     $detail = array(
-                        'student_name' => $this->CI->customlib->getFullName($res_value->firstname,$res_value->middlename,$res_value->lastname,$this->sch_setting->middlename,$this->sch_setting->lastname),
+                        'student_name' => $res_value->firstname . " " . $res_value->lastname,
                         'exam_roll_no' => $res_value->exam_roll_no,
                         'email' => $res_value->email,
                         'exam' => $exam_result['exam']->exam,
@@ -139,34 +128,35 @@ class Mailsmsconf {
 
                     if ($chk_mail_sms['mail'] && $detail['guardian_email'] != "") {
 
-                        $this->CI->mailgateway->sentExamResultMail($detail, $template, $subject);
+                        $this->CI->mailgateway->sentExamResultMail($detail, $template);
                     }
                     if ($chk_mail_sms['mail'] && $detail['email'] != "") {
 
-                        $this->CI->mailgateway->sentExamResultMailStudent($detail, $template, $subject);
+                        $this->CI->mailgateway->sentExamResultMailStudent($detail, $template);
                     }
-                    if ($chk_mail_sms['sms'] && $detail['guardian_phone'] != ""  && !empty($sms_detail)) {
-                        $this->CI->smsgateway->sentExamResultSMS($detail, $template, $template_id);
+                    if ($chk_mail_sms['sms'] && $detail['guardian_phone'] != "") {
+                        $this->CI->smsgateway->sentExamResultSMS($detail, $template);
                     }
                     if ($chk_mail_sms['notification'] && ($detail['parent_app_key'] != "" || $detail['app_key'] != "")) {
-                        $this->CI->smsgateway->sentExamResultNotification($detail, $template, $subject);
+                        $this->CI->smsgateway->sentExamResultNotification($detail, $template);
                     }
                 }
             }
         }
     }
 
-    public function sendAbsentAttendance($chk_mail_sms, $student_session_array, $date, $template, $subject_attendence, $subject,$template_id) {
+    public function sendAbsentAttendance($chk_mail_sms, $student_session_array, $date, $template, $subject_attendence) {
 
         if ($chk_mail_sms['mail'] or $chk_mail_sms['sms'] or $chk_mail_sms['notification']) {
             $student_result = $this->getAbsentStudentlist($student_session_array);
-            $sms_detail = $this->CI->smsconfig_model->getActiveSMS();
             if (!empty($student_result)) {
 
                 foreach ($student_result as $student_result_k => $student_result_v) {
                     $detail = array(
                         'date' => $date,
                         'parent_app_key' => $student_result_v->parent_app_key,
+                        'firstname' => $student_result_v->firstname,
+                        'lastname' => $student_result_v->lastname,
                         'mobileno' => $student_result_v->mobileno,
                         'email' => $student_result_v->email,
                         'father_name' => $student_result_v->father_name,
@@ -187,18 +177,16 @@ class Mailsmsconf {
                         $detail['subject_type'] = $subject_attendence->type;
                     }
 
-                    $detail['student_name'] = $this->CI->customlib->getFullName($student_result_v->firstname,$student_result_v->middlename,$student_result_v->lastname,$this->sch_setting->middlename,$this->sch_setting->lastname);
-
                     if ($chk_mail_sms['mail']) {
-                        $this->CI->mailgateway->sentAbsentStudentMail($detail, $template, $subject);
+                        $this->CI->mailgateway->sentAbsentStudentMail($detail, $template);
                     }
-                    if ($chk_mail_sms['sms'] && !empty($sms_detail)) {
+                    if ($chk_mail_sms['sms']) {
 
-                        $this->CI->smsgateway->sentAbsentStudentSMS($detail, $template, $template_id);
+                        $this->CI->smsgateway->sentAbsentStudentSMS($detail, $template);
                     }
                     if ($chk_mail_sms['notification']) {
 
-                        $this->CI->smsgateway->sentAbsentStudentNotification($detail, $template, $subject);
+                        $this->CI->smsgateway->sentAbsentStudentNotification($detail, $template);
                     }
                 }
             }
@@ -213,9 +201,8 @@ class Mailsmsconf {
         }
         return false;
     }
-      public function sendHomework($chk_mail_sms, $student_details, $template, $subject, $template_id) {
- 
- 
+
+    public function sendHomework($chk_mail_sms, $student_details, $template) {
 
         $student_sms_list = array();
         $student_email_list = array();
@@ -227,9 +214,8 @@ class Mailsmsconf {
             $submit_date = $student_details['submit_date'];
             $subject = $student_details['subject'];
             $student_list = $this->CI->student_model->getStudentByClassSectionID($class_id, $section_id);
-            $sms_detail = $this->CI->smsconfig_model->getActiveSMS();
-            if (!empty($student_list)) {
 
+            if (!empty($student_list)) {
                 foreach ($student_list as $student_key => $student_value) {
 
                     if ($student_value['app_key'] != "") {
@@ -241,7 +227,7 @@ class Mailsmsconf {
                             'submit_date' => $submit_date,
                             'subject' => $subject,
                             'admission_no' => $student_value['admission_no'],
-                            'student_name' => $this->CI->customlib->getFullName($student_value['firstname'],$student_value['middlename'],$student_value['lastname'],$this->sch_setting->middlename,$this->sch_setting->lastname),
+                            'student_name' => $student_value['firstname'] . " " . $student_value['lastname'],
                         );
                     }
                     if ($student_value['parent_app_key'] != "") {
@@ -253,7 +239,7 @@ class Mailsmsconf {
                             'submit_date' => $submit_date,
                             'subject' => $subject,
                             'admission_no' => $student_value['admission_no'],
-                            'student_name' => $this->CI->customlib->getFullName($student_value['firstname'],$student_value['middlename'],$student_value['lastname'],$this->sch_setting->middlename,$this->sch_setting->lastname),
+                            'student_name' => $student_value['firstname'] . " " . $student_value['lastname'],
                         );
                     }
 
@@ -265,7 +251,7 @@ class Mailsmsconf {
                             'submit_date' => $submit_date,
                             'subject' => $subject,
                             'admission_no' => $student_value['admission_no'],
-                            'student_name' => $this->CI->customlib->getFullName($student_value['firstname'],$student_value['middlename'],$student_value['lastname'],$this->sch_setting->middlename,$this->sch_setting->lastname),
+                            'student_name' => $student_value['firstname'] . " " . $student_value['lastname'],
                         );
                     }
                     if ($student_value['guardian_email'] != "") {
@@ -276,7 +262,7 @@ class Mailsmsconf {
                             'submit_date' => $submit_date,
                             'subject' => $subject,
                             'admission_no' => $student_value['admission_no'],
-                            'student_name' =>$this->CI->customlib->getFullName($student_value['firstname'],$student_value['middlename'],$student_value['lastname'],$this->sch_setting->middlename,$this->sch_setting->lastname),
+                            'student_name' => $student_value['firstname'] . " " . $student_value['lastname'],
                         );
                     }
                     if ($student_value['mobileno'] != "") {
@@ -287,7 +273,7 @@ class Mailsmsconf {
                             'submit_date' => $submit_date,
                             'subject' => $subject,
                             'admission_no' => $student_value['admission_no'],
-                            'student_name' => $this->CI->customlib->getFullName($student_value['firstname'],$student_value['middlename'],$student_value['lastname'],$this->sch_setting->middlename,$this->sch_setting->lastname),
+                            'student_name' => $student_value['firstname'] . " " . $student_value['lastname'],
                         );
                     }
                     if ($student_value['guardian_phone'] != "") {
@@ -298,142 +284,214 @@ class Mailsmsconf {
                             'submit_date' => $submit_date,
                             'subject' => $subject,
                             'admission_no' => $student_value['admission_no'],
-                            'student_name' => $this->CI->customlib->getFullName($student_value['firstname'],$student_value['middlename'],$student_value['lastname'],$this->sch_setting->middlename,$this->sch_setting->lastname),
+                            'student_name' => $student_value['firstname'] . " " . $student_value['lastname'],
                         );
                     }
                 }
-           
-             
+
                 if ($chk_mail_sms['mail']) {
 
                     if ($student_email_list) {
-                        $this->CI->mailgateway->sentHomeworkStudentMail($student_email_list, $template, $subject);
+                        $this->CI->mailgateway->sentHomeworkStudentMail($student_email_list, $template);
                     }
                 }
 
-                if ($chk_mail_sms['sms'] && !empty($sms_detail)) {
-                  
+                if ($chk_mail_sms['sms']) {
+
                     if ($student_sms_list) {
-                        $this->CI->smsgateway->sentHomeworkStudentSMS($student_sms_list, $template, $template_id);
+                        $this->CI->smsgateway->sentHomeworkStudentSMS($student_sms_list, $template);
                     }
                 }
 
                 if ($chk_mail_sms['notification']) {
 
                     if (!empty($student_notification_list)) {
-                        $this->CI->smsgateway->sentHomeworkStudentNotification($student_notification_list, $template, $subject);
+                        $this->CI->smsgateway->sentHomeworkStudentNotification($student_notification_list, $template);
                     }
                 }
             }
         }
     }
 
+    public function sendOnlineClass($chk_mail_sms, $student_details, $template) {
 
-    public function sendOnlineexam($chk_mail_sms, $student_details, $template, $subject, $template_id) {
-        
+        $student_guardian_sms_list = array();
         $student_sms_list = array();
         $student_email_list = array();
+        $student_guardian_email_list = array();
         $student_notification_list = array();
+        $student_guardian_notification_list = array();
         if ($chk_mail_sms['mail'] or $chk_mail_sms['sms'] or $chk_mail_sms['notification']) {
-            $student_list=$this->CI->onlineexam_model->getstudentByexam_id($student_details['exam_id']);        
-            $sms_detail = $this->CI->smsconfig_model->getActiveSMS();
+            $class_id = ($student_details['class_id']);
+            $section_id = ($student_details['section_id']);
+            $title = $student_details['title'];
+            $date = $student_details['date'];
+            $duration = $student_details['duration'];
+            $student_list = $this->CI->student_model->getStudentByClassSectionID($class_id, $section_id);
+
             if (!empty($student_list)) {
                 foreach ($student_list as $student_key => $student_value) {
 
-                    if ($student_value['app_key'] != "") {
-                       $student_details['app_key']=$student_value['app_key'];
-                        $student_notification_list[] = $student_details;
-                    }
                     if ($student_value['parent_app_key'] != "") {
-                        $student_details['app_key']=$student_value['app_key'];
-                        $student_notification_list[] = $student_details;
+                        $student_guardian_notification_list[] = array(
+                            'app_key' => $student_value['parent_app_key'],
+                            'class' => $student_value['class'],
+                            'section' => $student_value['section'],
+                            'title' => $title,
+                            'date' => $date,
+                            'duration' => $duration,
+                            'admission_no' => $student_value['admission_no'],
+                            'student_name' => $student_value['firstname'] . " " . $student_value['lastname'],
+                        );
+                    }
+
+                    if ($student_value['app_key'] != "") {
+                        $student_notification_list[] = array(
+                            'app_key' => $student_value['app_key'],
+                            'class' => $student_value['class'],
+                            'section' => $student_value['section'],
+                            'title' => $title,
+                            'date' => $date,
+                            'duration' => $duration,
+                            'admission_no' => $student_value['admission_no'],
+                            'student_name' => $student_value['firstname'] . " " . $student_value['lastname'],
+                        );
                     }
 
                     if ($student_value['email'] != "") {
-                        $student_email_list[$student_value['email']] = $student_details;
+                        $student_email_list[$student_value['email']] = array(
+                            'class' => $student_value['class'],
+                            'section' => $student_value['section'],
+                            'title' => $title,
+                            'date' => $date,
+                            'duration' => $duration,
+                            'admission_no' => $student_value['admission_no'],
+                            'student_name' => $student_value['firstname'] . " " . $student_value['lastname'],
+                        );
                     }
                     if ($student_value['guardian_email'] != "") {
-                        $student_email_list[$student_value['guardian_email']] = $student_details;
+                        $student_guardian_email_list[$student_value['guardian_email']] = array(
+                            'class' => $student_value['class'],
+                            'section' => $student_value['section'],
+                            'title' => $title,
+                            'date' => $date,
+                            'duration' => $duration,
+                            'admission_no' => $student_value['admission_no'],
+                            'student_name' => $student_value['firstname'] . " " . $student_value['lastname'],
+                        );
                     }
+
                     if ($student_value['mobileno'] != "") {
-                        $student_sms_list[$student_value['mobileno']] =$student_details;
+                        $student_sms_list[$student_value['mobileno']] = array(
+                            'class' => $student_value['class'],
+                            'section' => $student_value['section'],
+                            'title' => $title,
+                            'date' => $date,
+                            'duration' => $duration,
+                            'admission_no' => $student_value['admission_no'],
+                            'student_name' => $student_value['firstname'] . " " . $student_value['lastname'],
+                        );
                     }
                     if ($student_value['guardian_phone'] != "") {
-                        $student_sms_list[$student_value['guardian_phone']] = $student_details;
+                        $student_guardian_sms_list[$student_value['guardian_phone']] = array(
+                            'class' => $student_value['class'],
+                            'section' => $student_value['section'],
+                            'title' => $title,
+                            'date' => $date,
+                            'duration' => $duration,
+                            'admission_no' => $student_value['admission_no'],
+                            'student_name' => $student_value['firstname'] . " " . $student_value['lastname'],
+                        );
                     }
                 }
-              
                 if ($chk_mail_sms['mail']) {
-
                     if ($student_email_list) {
-                        $this->CI->mailgateway->sentOnlineexamStudentMail($student_email_list, $template, $subject);
+                        $this->CI->mailgateway->sentOnlineClassStudentMail($student_email_list, $template);
+                    }
+                    if ($student_guardian_email_list) {
+                        $this->CI->mailgateway->sentOnlineClassStudentMail($student_guardian_email_list, $template);
                     }
                 }
-
-                if ($chk_mail_sms['sms'] && !empty($sms_detail)) {
+                if ($chk_mail_sms['sms']) {
 
                     if ($student_sms_list) {
-                        $this->CI->smsgateway->sentOnlineexamStudentSMS($student_sms_list, $template, $template_id);
+                        $this->CI->smsgateway->sentOnlineClassStudentSMS($student_sms_list, $template);
+                    }
+                    if ($student_guardian_sms_list) {
+                        $this->CI->smsgateway->sentOnlineClassStudentSMS($student_guardian_sms_list, $template);
                     }
                 }
-
                 if ($chk_mail_sms['notification']) {
-
                     if (!empty($student_notification_list)) {
-                        $this->CI->smsgateway->sentOnlineexamStudentNotification($student_notification_list, $template, $subject);
+                        $this->CI->smsgateway->sentOnlineClassStudentNotification($student_notification_list, $template);
+                    }
+
+                    if (!empty($student_guardian_notification_list)) {
+                        $this->CI->smsgateway->sentOnlineClassStudentNotification($student_guardian_notification_list, $template);
                     }
                 }
             }
         }
     }
 
-   
+    public function sendMeeting($chk_mail_sms, $staff_details, $template) {
+
+        $staff_sms_list = array();
+        $staff_email_list = array();
+
+        if ($chk_mail_sms['mail'] or $chk_mail_sms['sms']) {
+
+            if (!empty($staff_details)) {
+                foreach ($staff_details as $staff_key => $staff_value) {
+
+                    if ($staff_value['email'] != "") {
+                        $staff_email_list[$staff_value['email']] = array(
+                            'title' => $staff_value['title'],
+                            'date' => $staff_value['date'],
+                            'duration' => $staff_value['duration'],
+                            'employee_id' => $staff_value['employee_id'],
+                            'department' => $staff_value['department'],
+                            'designation' => $staff_value['designation'],
+                            'name' => $staff_value['name'],
+                            'contact_no' => $staff_value['contact_no'],
+                            'email' => $staff_value['email'],
+                        );
+                    }
+
+                    if ($staff_value['contact_no'] != "") {
+                        $staff_sms_list[$staff_value['contact_no']] = array(
+                            'title' => $staff_value['title'],
+                            'date' => $staff_value['date'],
+                            'duration' => $staff_value['duration'],
+                            'employee_id' => $staff_value['employee_id'],
+                            'department' => $staff_value['department'],
+                            'designation' => $staff_value['designation'],
+                            'name' => $staff_value['name'],
+                            'contact_no' => $staff_value['contact_no'],
+                            'email' => $staff_value['email'],
+                        );
+                    }
+                }
+                if ($chk_mail_sms['mail']) {
+                    if ($staff_email_list) {
+                        $this->CI->mailgateway->sentOnlineMeetingStaffMail($staff_email_list, $template);
+                    }
+                }
+                if ($chk_mail_sms['sms']) {
+                    if ($staff_sms_list) {
+                        $this->CI->smsgateway->sentOnlineMeetingStaffSMS($staff_sms_list, $template);
+                    }
+                }
+            }
+        }
+    }
+
     public function getForgotPasswordContent($student_result_detail, $template) {
-      
+
         foreach ($student_result_detail as $key => $value) {
             $template = str_replace('{{' . $key . '}}', $value, $template);
         }
         return $template;
     }
-
-    public function sendOnlineadmission($chk_mail_sms, $student_details, $template, $subject,$template_id) {
-
-        $student_sms_list = array();
-        $student_email_list = array();
-        $student_notification_list = array();
-        if ($chk_mail_sms['mail'] or $chk_mail_sms['sms'] or $chk_mail_sms['notification']) {
-            $sms_detail = $this->CI->smsconfig_model->getActiveSMS();
-                if ($chk_mail_sms['mail']) {
-
-                    $this->CI->mailgateway->sentOnlineadmissionStudentMail($student_details, $template, $subject);
-                }
-
-                if ($chk_mail_sms['sms'] && !empty($sms_detail)) {
-                 
-                     $this->CI->smsgateway->sentOnlineadmissionStudentSMS($student_details, $template,$template_id);
-                }               
-            
-        }
-    }
-
-    public function sendOnlineadmissionFees($chk_mail_sms, $student_details, $template, $subject,$template_id) {
-        $student_sms_list = array();
-        $student_email_list = array();
-        $student_notification_list = array();
-        if ($chk_mail_sms['mail'] or $chk_mail_sms['sms'] or $chk_mail_sms['notification']) {
-            $sms_detail = $this->CI->smsconfig_model->getActiveSMS();
-                if ($chk_mail_sms['mail']) {
-
-                    $this->CI->mailgateway->sentOnlineadmissionFeesMail($student_details, $template, $subject);
-                }
-
-                if ($chk_mail_sms['sms'] && !empty($sms_detail)) {
-
-                        $this->CI->smsgateway->sentOnlineadmissionFeesSMS($student_details, $template, $template_id);
-                }               
-            
-        }
-    }
-
 
 }

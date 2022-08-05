@@ -319,13 +319,13 @@ button.btn:after
 .loginright{ 
     text-align: left;
     color: #333;
-    max-height: 350px;
+    max-height: 320px;
     padding-left: 10px;
     overflow: auto;
     position: relative;
     width: 100%;
     max-width: 100%;
-    height: 330px;
+    height: 300px;
     -webkit-box-sizing: border-box;
     -moz-box-sizing: border-box;
     box-sizing: border-box;
@@ -375,8 +375,6 @@ a.more:hover{color: #0084B4;text-decoration: none;}
 .logowidth{}
 .logowidth img{width:auto; height: 30px;}  
 .loginbg .alert-danger{margin-bottom: 15px;padding: 6px 20px; font-size: 13px;}
-.catpcha{cursor:pointer; padding-left: 10px;}
-#captcha_image img{border-radius: 8px;}
 @media(max-width:767px){
     .separatline {margin-left: 0;width: 100%;height: 2px;margin: 35px auto 0px auto;}
     /*.bgoffsetbg{width:100%;}*/

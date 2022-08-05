@@ -8,6 +8,7 @@ use Omnipay\Omnipay;
 
 require_once(APPPATH . 'third_party/omnipay/vendor/autoload.php');
 
+// require_once(APPPATH . 'third_party/omnipay/vendor/autoload.php');
 class Paymongo {
 
     private $_CI;
@@ -18,7 +19,8 @@ class Paymongo {
 
     public function payment() {
         $gateway = Omnipay::create('Paymongo_Card');
-        
+        // print_r($gateway);
+        //  exit();
         $gateway->setKeys('pk_test_xQBzFMDbKeiTD9GRovJLgkAK', 'sk_test_ttfPyF2BE396vQLVVMfAYGaK');
         $token = $gateway->authorize([
             'number' => '4123 4501 3100 0508',

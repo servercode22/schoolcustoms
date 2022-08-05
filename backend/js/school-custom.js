@@ -1,30 +1,20 @@
  $(document).on('focus', ':input', function() {
      $(this).attr('autocomplete', 'off');
  });
-
  $(document).ready(function() {
 
-       $('body').popover({
-    selector: '[data-toggle="popover"]',
-    trigger: 'hover',
-    container: 'body',
-    html: true,
-    content: function () {
-         return $(this).closest('td').find('.fee_detail_popover').html();
-    }
-});
+
      $('#sessionModal').modal({
          backdrop: 'static',
          keyboard: false,
          show: false
      })
-     //id remove permission
-     $('#').modal({
+     $('#activelicmodal').modal({
          backdrop: false,
          keyboard: false,
          show: false
      });
-       $('#').on('show.bs.modal', function(event) {
+       $('#activelicmodal').on('show.bs.modal', function(event) {
          $('#purchase_code').trigger("reset");
           $('.lic_modal-body .error_message').html("");
         
@@ -66,7 +56,7 @@
                  if (data.status == 1) {
                      $('#sessionModal').modal('hide');
                      window.location.href = baseurl + "admin/admin/dashboard";
-                       successMsg(data.message);
+                     successMsg("Session change successful");
                  }
              },
              error: function(xhr) {
@@ -135,7 +125,7 @@
                  if (data.status == 1) {
                      $('#sessionModal').modal('hide');
                      window.location.href = baseurl + "user/user/dashboard";
-                      successMsg(data.message);
+                     successMsg("Session change successful");
                  }
              },
              error: function(xhr) {
@@ -189,7 +179,7 @@
                  if (data.status == 1) {
                      $('#sessionModal').modal('hide');
                      window.location.href = data.redirect_url;
-                   successMsg(data.message);
+                     successMsg("Session change successful");
                  }
              },
              error: function(xhr) {
@@ -260,10 +250,6 @@
          keyboard: false,
          show: false
      })
-       $('#andappModal').on('hidden.bs.modal', function(e) { 
-         $('#andappModal .andapp_modal-body .alert-danger').remove();
-         $('#andappModal .input-error').html("");        
-       }) ;
 
       $("#andapp_code").on('submit', (function (e) {
         e.preventDefault();
@@ -315,74 +301,6 @@
 
         });
     }));
-$('#addonModal').modal({
-             backdrop: 'static',
-             keyboard: false,
-             show: false
-         });
-        $('#addonModal').on('shown.bs.modal', function(e) { 
-        $('.addon_type',this).val($(e.relatedTarget).data('addon'));
-        $('.addon_version',this).val($(e.relatedTarget).data('addonVersion'));
-       }) ;
-          $('#addonModal').on('hidden.bs.modal', function(e) { 
-          $('#addonModal .addon_modal-body .alert-danger').remove();
-          $('#addonModal .input-error').html("");
-          $('.addon_type',this).val("");
-          $('.addon_version',this).val("");
-
-       }) ;
-
-      $("#addon_verify").on('submit', (function (e) {
-        e.preventDefault();
-
-        var _this = $(this);
-        var $this = _this.find("button[type=submit]:focus");
-
-        $.ajax({
-             type: "POST",
-             url: _this.attr('action'),
-             data: _this.serialize(),
-             dataType: 'JSON',
-            beforeSend: function () {
-                $('.addon_modal-body .error_message').html("");
-                $("[class^='input-error']").html("");
-                $this.button('loading');
-
-            },
-             success: function(response, textStatus, xhr) {
-                 if (xhr.status != 200) {
-                     var $newmsgDiv = $("<div/>") // creates a div element
-                         .addClass("alert alert-danger") // add a class
-                         .html(response.response);
-                     $('.addon_modal-body .error_message').append($newmsgDiv);
-                 }else if(xhr.status == 200){
-
-                 if (response.status == 2) {
-                     $.each(response.error, function(key, value) {
-                         $('#input-' + key).parents('.form-group').find('#error').html(value);
-                     });
-                 }else if (response.status == 1) {
-                     successMsg(response.message);
-                     window.location.href=response.back;
-                     $('#addonModal').modal('hide');
-                 }
-             }
-             },
-            error: function (xhr) { // if error occured
-                 $this.button('reset');
-               var r = jQuery.parseJSON(xhr.responseText);
-               var $newmsgDiv = $("<div/>") // creates a div element
-                         .addClass("alert alert-danger") // add a class
-                         .html(r.response);
-                     $('.addon_modal-body .error_message').append($newmsgDiv);
-            },
-            complete: function () {
-                $this.button('reset');
-            }
-
-        });
-    }));
-      
     });
 
   

@@ -21,8 +21,7 @@ if ($response_json) {
                         <div class="meta">
                             <p class="name">
                                 <?php
-                                 $staff_name= ($user_value->user_details->surname == "")? $user_value->user_details->name : $user_value->user_details->name." ".$user_value->user_details->surname; 
-                                echo $staff_name." ";
+                                echo $user_value->user_details->name;
 
                                 echo ($user_value->user_details->user_type == "staff") ? " (" . $this->lang->line('staff') . ")" : " (" . $this->lang->line('student') . ")";
                                 ?></p>
