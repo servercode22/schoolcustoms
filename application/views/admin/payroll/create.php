@@ -159,7 +159,12 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <div class="feebox">
                                             <table class="table3" id="tableID2">
                                                 <tr id="deduction_row0">
-                                                    <td><input type="text" id="deduction_type" name="deduction_type[]" class="form-control" placeholder="Type"></td>
+                                                    <td>
+														<select id="deduction_type" class="form-control" name="deduction_type[]" >
+															<?php foreach($deductions as $item){ ?>
+																<option value="<?php echo $item['name']?>"><?php echo $item['name']?></option>
+																<?php } ?>
+														</select>
                                                     <td><input type="text" id="deduction_amount" name="deduction_amount[]" class="form-control" value="0"></td>
 
                                                 </tr>
@@ -209,6 +214,34 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <label class="col-sm-4 control-label"><?php echo $this->lang->line('tax'); ?></label>
                                                 <div class="col-sm-8 deductiondred">
                                                     <input class="form-control" name="tax" id="tax" value="0" type="text" />
+                                                </div>
+                                            </div><!--./form-group-->
+
+                                            <?php 
+                                            $deductType = $getloandata->deduct_type;
+                                            $fixamount = $getloandata->deduct_amount;
+                                            $percentamount = $getloandata->loan_percentage;
+                                           
+                                                // $getloandata->loan_amount*$percentamount/100);
+                                            
+                                            if($deductType == "fix"){
+                                                $amount =  $fixamount;
+                                            }
+                                            elseif($deductType == "percentage"){
+                                                
+                                                $amount =  $percentamount.'%';
+                                            }
+                                            else{
+                                                $amount = 0;
+                                            }
+                                            ?>
+                                            <input class="form-control" name="deductType" id="" value="<?php echo $deductType?>" type="hidden" />                   
+                                             <input class="form-control" name="fixamount" id="" value="<?php echo $fixamount?>" type="hidden" />                   
+                                             <input class="form-control" name="percentamount" id="" value="<?php echo $percentamount?>" type="hidden" />                   
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Loan Deduction</label>
+                                                <div class="col-sm-8 deductiondred">
+                                                    <input class="form-control" name="loandeduction" id="loandeduction" value="<?php echo $amount?>" type="text" />
                                                 </div>
                                             </div><!--./form-group-->
 
@@ -297,11 +330,32 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
         }
 
 
-//total_deduction += parseInt(leave_deduction) ;
+        var loandeductionamount = $("#loandeduction").val();
+        var fixloanamount ="<?php echo $getloandata->deduct_amount?>";
+        var percentloanamount = "<?php echo $getloandata->loan_percentage?>";
+        var loanDeductionType = "<?php echo $getloandata->deduct_type?>";
+        var olddata="<?php echo $getloandata->loan_amount?>";
+        if(loanDeductionType == "fix"){
+
+            var loandeductionfrompay = fixloanamount
+        }
+        else if(loanDeductionType == "percentage"){
+            
+            var calpercentage = olddata/100 * percentloanamount;
+           var loandeductionfrompay = calpercentage
+        }
+
+        else{
+            var loandeductionfrompay = 0;
+        }
+
+
+
+// total_deduction += parseInt(leave_deduction) ;
 
         var gross_salary = parseFloat(basic_pay) + parseFloat(total_allowance) - parseFloat(total_deduction);
 
-        var net_salary = parseFloat(basic_pay) + parseFloat(total_allowance) - parseFloat(total_deduction) - parseFloat(tax);
+        var net_salary = parseFloat(basic_pay) + parseFloat(total_allowance) - parseFloat(total_deduction) - parseFloat(tax) - parseFloat(loandeductionfrompay);
 
         $("#total_allowance").val(total_allowance.toFixed(2));
         $("#total_deduction").val(total_deduction.toFixed(2));
@@ -333,8 +387,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
         var table = document.getElementById("tableID2");
         var table_len = (table.rows.length);
-        var id = parseInt(table_len);
-        var row = table.insertRow(table_len).outerHTML = "<tr id='deduction_row" + id + "'><td><input type='text' class='form-control' id='deduction_type' name='deduction_type[]' placeholder='Type'></td><td><input type='text' id='deduction_amount' name='deduction_amount[]' class='form-control' value='0'></td><td><button type='button' onclick='delete_deduction_row(" + id + ")' class='closebtn'><i class='fa fa-remove'></i></button></td></tr>";
+		var id = parseInt(table_len);
+		var html = "<tr id='deduction_row" + id + "'><td><select id='deduction_type' class='form-control' name='deduction_type[]'>";
+		<?php foreach($deductions as $item){ ?>
+		html += '<option value="<?php echo $item['name']?>"><?php echo $item['name']?></option>';
+		<?php } ?>
+		html += "</select></td><td><input type='text' id='deduction_amount' name='deduction_amount[]' class='form-control' value='0'></td><td><button type='button' onclick='delete_deduction_row(" + id + ")' class='closebtn'><i class='fa fa-remove'></i></button></td></tr>";
+        var row = table.insertRow(table_len).outerHTML = html;
 
     }
 

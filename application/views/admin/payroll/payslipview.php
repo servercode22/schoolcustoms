@@ -263,60 +263,85 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                         foreach ($allowance as $key => $value) {
                             ?>
-							<tr>
-
-                                <?php if (array_key_exists($j, $positive_allowance)) { ?>
+                            <tr>
+                            <div class="row">
+                                    <div class="col-md-6">
+                                <?php if (2==2) { ?>
                                     <td><?php echo $positive_allowance[$j]["allowance_type"]; ?></td>
-                                    <td class="pttright reborder"><?php echo number_format($positive_allowance[$j]["amount"],2);?></td>
-                                <?php }else{ echo "<td></td><td></td>";} ?>
+                                    <td class="pttright reborder"><?php echo $positive_allowance[$j]["amount"]; ?></td>
+                                <?php } ?>
+                                </div>
+                                    <div class="col-md-6">
                                 <?php if (array_key_exists($j, $negative_allowance)) { ?>
                                     <td class="pttleft"><?php echo $negative_allowance[$j]["allowance_type"]; ?></td>
-                                    <td class="text-right"><?php echo number_format($negative_allowance[$j]["amount"],2);?>
-									</td>
-                                <?php }else{ echo "<td></td><td></td>";} ?>
+                                    <td class="text-right"><?php echo $negative_allowance[$j]["amount"]; ?></td>
+                                <?php } ?>
+                                </div>
+                            </div>
+
                             </tr>
                             <?php
                             $j++;
+                            $i++;
                         }
                         ?>
 
                         <tr>
                             <th><?php echo $this->lang->line('total'); ?> <?php echo $this->lang->line('earning'); ?></th>
-                            <th class="pttright reborder"><?php echo number_format($result["total_allowance"],2);  ?></th>
+                            <th class="pttright reborder"><?php echo $result["total_allowance"] ?></th>
+                            
                             <th class="pttleft"><?php echo $this->lang->line('total'); ?> <?php echo $this->lang->line('deduction'); ?></th>
-                            <th class="text-right"><?php echo number_format($result["total_deduction"],2);  ?></th>
+                            <th class="text-right"><?php echo $result["total_deduction"] ?></th>
                         </tr>  
                     </table>   
 
                     <table class="totaltable table table-striped table-responsive">
                         <tr>
                             <th width="20%"><?php echo $this->lang->line('payment'); ?> <?php echo $this->lang->line('mode'); ?></th> 
-                            <td class="text-right"><?php echo $payment_mode[$result["payment_mode"]]; ?></td>
+                            <td><?php echo $payment_mode[$result["payment_mode"]]; ?></td>
                         </tr>
                         <tr>
                             <th width="20%"><?php echo $this->lang->line('basic_salary'); ?>(<?php echo $currency_symbol; ?>)</th> 
-                            <td class="text-right"><?php $basic	=	$result["basic"]; echo  number_format($basic,2); ?></td>
+                            <td><?php echo $result["basic"] ?></td>
                         </tr>
 
                         <tr>
                             <th width="20%"><?php echo $this->lang->line('gross_salary'); ?>(<?php echo $currency_symbol; ?>)</th> 
-                            <td class="text-right"><?php $gross_salary	= $result["basic"] + $result["total_allowance"] - $result["total_deduction"]; echo  number_format($gross_salary,2); ?></td>
+                            <td><?php echo $result["basic"] + $result["total_allowance"] - $result["total_deduction"]; ?></td>
                         </tr>
                         <?php if (!empty($result["tax"])) { ?>
 
                             <tr>
                                 <th width="20%"><?php echo $this->lang->line('tax'); ?>(<?php echo $currency_symbol; ?>)</th> 
-                                <td class="text-right"><?php echo $result["tax"] ?></td>
+                                <td><?php echo $result["tax"] ?></td>
                             </tr>
 
 
                         <?php }
                         ?>
+                        <?php
+                        $dedutionType = $result['deducttype'];
+                        if($dedutionType == "fix"){
+                            $loanamount = $result['fix_amount'];
+                        }
+                        elseif($dedutionType == "percentage"){
+                            $loanamount = $result['percent_value'].'%';
+                        }
+                        else{
+                            $loanamount = 0;
+                        }
+                        
+                        ?>
+                         <tr>
+                                <th width="20%">Loan Deduction</th> 
+                                <td><?php echo $loanamount ?></td>
+                            </tr>
+                            
                         <tr>
                             <th width="20%"><?php echo $this->lang->line('net_salary'); ?>(<?php echo $currency_symbol; ?>)</th> 
-                            <td class="text-right"><?php echo number_format($result["net_salary"],2);?>
-                        </td>
+                            <td><?php echo $result["net_salary"] ?></td>
                         </tr>
+
                         <tr>
 
 

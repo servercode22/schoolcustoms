@@ -20,7 +20,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                       <div class="box-header with-border">
                         <h3 class="box-title"><i class="fa fa-search"></i> <?php echo $this->lang->line('select_criteria'); ?></h3>
                     </div>
-                    <div class="box-body">                      
+                    <div class="box-body">
+                       
                            
                                 <form role="form" action="<?php echo site_url('admin/payroll/payrollreport') ?>" method="post" class="">
                                     <?php echo $this->customlib->getCSRF(); ?>
@@ -111,6 +112,8 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                         <thead class="header">
                                             <tr>
 
+
+
                                                 <th><?php echo $this->lang->line('name'); ?></th>
                                                 <th><?php echo $this->lang->line('role'); ?></th>
                                                 <th><?php echo $this->lang->line('designation'); ?></th>
@@ -180,31 +183,31 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
 
                                                     </td>
                                                     <td class="text text-right">
-                                                        <?php echo number_format($value['basic'], 2); ?>
+                                                        <?php echo number_format($value['basic'], 2, '.', ''); ?>
                                                     </td>
 
                                                     <td class="text text-right">
-            <?php echo (number_format($value['total_allowance'], 2)); ?>
+            <?php echo (number_format($value['total_allowance'], 2, '.', '')); ?>
                                                     </td>
                                                     <td class="text text-right">
                                                         <?php
                                                         $t = ($value['total_deduction']);
-                                                        echo (number_format($t, 2))
+                                                        echo (number_format($t, 2, '.', ''))
                                                         ?>
                                                     </td>
                                                     <td class="text text-right">
-                                                        <?php echo number_format($value['basic'] + $value['total_allowance']-$t, 2); ?>
+                                                        <?php echo number_format($value['basic'] + $value['total_allowance']-$t, 2, '.', ''); ?>
                                                     </td>
                                                     <td class="text text-right">
             <?php
             $t = ($value['tax']);
-            echo (number_format($t, 2))
+            echo (number_format($t, 2, '.', ''))
             ?>
                                                     </td>
                                                     <td class="text text-right">
             <?php
             $t = ($value['net_salary']);
-            echo (number_format($t, 2))
+            echo (number_format($t, 2, '.', ''))
             ?>
                                                     </td>
                                                 </tr>
@@ -219,13 +222,13 @@ $currency_symbol = $this->customlib->getSchoolCurrencyFormat();
                                                 <td></td>
                                                 <td></td>
                                                 <td class="text-right"><?php echo $this->lang->line('grand_total'); ?> </td>
-                                                <td class="text text-right"><?php echo ($currency_symbol . number_format($basic, 2)); ?></td>
+                                                <td class="text text-right"><?php echo ($currency_symbol . number_format($basic, 2, '.', '')); ?></td>
 
-                                                <td class="text text-right"><?php echo ($currency_symbol . number_format($earnings, 2)); ?></td>
-                                                <td class="text text-right"><?php echo ($currency_symbol . number_format($deduction, 2)); ?></td>
-                                                <td class="text text-right"><?php echo ($currency_symbol . number_format($gross-$deduction, 2)); ?></td>
-                                                <td class="text text-right"><?php echo ($currency_symbol . number_format($tax, 2)); ?></td>
-                                                <td class="text text-right"><?php echo ($currency_symbol . number_format($net, 2)); ?></td>
+                                                <td class="text text-right"><?php echo ($currency_symbol . number_format($earnings, 2, '.', '')); ?></td>
+                                                <td class="text text-right"><?php echo ($currency_symbol . number_format($deduction, 2, '.', '')); ?></td>
+                                                <td class="text text-right"><?php echo ($currency_symbol . number_format($gross-$deduction, 2, '.', '')); ?></td>
+                                                <td class="text text-right"><?php echo ($currency_symbol . number_format($tax, 2, '.', '')); ?></td>
+                                                <td class="text text-right"><?php echo ($currency_symbol . number_format($net, 2, '.', '')); ?></td>
 
 
 

@@ -879,6 +879,8 @@ class Report extends Admin_Controller
         $this->session->set_userdata('top_menu', 'Reports');
         $this->session->set_userdata('sub_menu', 'Reports/finance');
         $this->session->set_userdata('subsub_menu', '');
+        $data['stockresult'] = $this->itemstock_model->get_currentstock();
+
         $this->load->view('layout/header');
         $this->load->view('reports/finance');
         $this->load->view('layout/footer');

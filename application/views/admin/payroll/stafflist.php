@@ -310,12 +310,13 @@ if (isset($resultlist)) {
 ?>
 
                             </select>
-                            <span class="text-danger"><?php echo form_error('payment_mode'); ?></span>
+                            <span class="text-danger"><?php echo form_error('payment_date'); ?></span>
                         </div>
 
                         <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                            <label for="exampleInputEmail1"><?php echo $this->lang->line('payment'); ?> <?php echo $this->lang->line('date'); ?></label><br/><span id="remark"> </span>
-                            <input type="text" name="payment_date" id="payment_date" class="form-control" value="<?php echo date("m/d/Y") ?>">
+                            <label for="exampleInputEmail1"><?php echo $this->lang->line('payment_date'); ?>  </label><br/><span id="remark"> </span>
+                            <input type="date" name="payment_date" id="payment_date" class="form-control"  value="<?php echo date("d/m/Y") ?>" >
+                            <span class="text-danger"><?php echo form_error('payment_date'); ?></span>
                         </div>
 
                         <div class="form-group col-xs-12 col-sm-12 col-md-12 col-lg-6">
